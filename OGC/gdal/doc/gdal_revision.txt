@@ -1,0 +1,21 @@
+Updating '.':
+U    gnm\gnm_frmts\file\gnmfilenetwork.cpp
+U    apps\gdalinfo_lib.cpp
+U    apps\gdalwarp_lib.cpp
+U    NEWS
+U    ogr\ogrct.cpp
+U    ogr\ogrgeometry.cpp
+U    ogr\ogrsf_frmts\mitab\mitab_tabview.cpp
+U    ogr\ogrsf_frmts\geojson\ogrgeojsonwriter.cpp
+U    ogr\ogrsf_frmts\geojson\ogrgeojsonwritelayer.cpp
+U    ogr\ogrsf_frmts\ntf\ntffilereader.cpp
+U    ogr\ogrsf_frmts\nas\nashandler.cpp
+U    ogr\ogrsf_frmts\carto\ogrcartotablelayer.cpp
+U    frmts\nitf\nitfimage.c
+U    frmts\netcdf\netcdfdataset.cpp
+U    alg\llrasterize.cpp
+Skipped 'swig\python\extensions\gdal_wrap.cpp' -- Node remains in conflict
+U    swig\include\Dataset.i
+Updated to revision 40801.
+Summary of conflicts:
+  Skipped paths: 1
