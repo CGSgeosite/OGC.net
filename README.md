@@ -1,6 +1,6 @@
 ![OGC](https://user-images.githubusercontent.com/18747589/133953815-4e82a879-689c-4e31-9c26-ed66e2884d58.png) is Open Geospatial Consortium - International industry standards group defining open standards for exchange of geospatial information.
 
-![OGC net logo](https://user-images.githubusercontent.com/18747589/133388381-db5fe1ab-ff69-4000-a4e4-9009ad60bed2.png)
+![OGC net](https://user-images.githubusercontent.com/18747589/134123013-a20ca63e-2bc1-437d-84f7-93f63390eaff.png)
 OGC.net is a free tool for reading ShapeFile, MapGIS, TXT/CSV,  converting them into GML, GeoJSON, ShapeFile, KML and GeositeXML, and pushing vector/raster to PostgreSQL database.
 OGC.net provides a dynamic link library (Geosite.OGC.dll) for embedded development.
 
