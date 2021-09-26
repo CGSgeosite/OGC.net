@@ -11,5 +11,6 @@ OGC.net is written in 100% C# language and can be recompiled through Visual Stud
 ![OGC net3](https://user-images.githubusercontent.com/18747589/133953864-e796053c-880e-44c3-a121-5ffd14f572e9.png)
 ![OGC net4](https://user-images.githubusercontent.com/18747589/133953865-7832b9e2-adae-49e9-aa66-ea5a3bd66e4d.png)
 ![OGC net5](https://user-images.githubusercontent.com/18747589/133953867-b58033d1-e8db-481f-b42c-e98dd0d55035.png)
-![OGC net6](https://user-images.githubusercontent.com/18747589/133953869-964a18d0-1fc8-4c7b-8a1c-25aab53b34e0.png)
+![raster](https://user-images.githubusercontent.com/18747589/134790834-200bfa20-d89e-4069-b0b9-84f5c44020dc.png)
+
 
