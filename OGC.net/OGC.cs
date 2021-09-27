@@ -1640,7 +1640,7 @@ namespace Geosite
                                                                                                                                 ;
                                                                                                                             if (PostgreSqlHelper.NonQuery(SQLstring) != null)
                                                                                                                             {
-                                                                                                                                ///////////////////////////////////////////////////////////////////////////////////////
+                                                                                                                                //仅用于充当访问频度缓冲区，重建索引时将自动清除/////////////////////////////////////////////////////////////////////////////////////
                                                                                                                                 this.Invoke(
                                                                                                                                     new Action(
                                                                                                                                         () =>
@@ -1654,8 +1654,8 @@ namespace Geosite
                                                                                                                                     "CREATE TABLE leaf_hits " +
                                                                                                                                     "(" +
                                                                                                                                     "leaf BigInt, hits BigInt DEFAULT 0" +
-                                                                                                                                    ",CONSTRAINT leaf_keyset_pkey PRIMARY KEY (leaf)" +
-                                                                                                                                    ",CONSTRAINT leaf_keyset_cascade FOREIGN KEY (leaf) REFERENCES leaf (id) MATCH SIMPLE ON DELETE CASCADE NOT VALID" +
+                                                                                                                                    ",CONSTRAINT leaf_hits_pkey PRIMARY KEY (leaf)" +
+                                                                                                                                    ",CONSTRAINT leaf_hits_cascade FOREIGN KEY (leaf) REFERENCES leaf (id) MATCH SIMPLE ON DELETE CASCADE NOT VALID" +
                                                                                                                                     ") PARTITION BY HASH (leaf);" + //为应对大数据，特按哈希键进行了分区，以便提升查询性能
                                                                                                                                     "COMMENT ON TABLE leaf_hits IS '叶子要素表（leaf）的搜索命中率子表';" +
                                                                                                                                     "COMMENT ON COLUMN leaf_hits.leaf IS '叶子要素的标识码';" + //leaf表中的id
@@ -1666,24 +1666,56 @@ namespace Geosite
                                                                                                                                     //暂采用CPU核数充当分区个数
                                                                                                                                     for (var i = 0; i < processorCount; i++)
                                                                                                                                     {
-                                                                                                                                        SQLstring = $"CREATE TABLE leaf_keyset_{i} PARTITION OF leaf_hits FOR VALUES WITH (MODULUS {processorCount}, REMAINDER {i});";
+                                                                                                                                        SQLstring = $"CREATE TABLE leaf_hits_{i} PARTITION OF leaf_hits FOR VALUES WITH (MODULUS {processorCount}, REMAINDER {i});";
                                                                                                                                         PostgreSqlHelper.NonQuery(SQLstring);
                                                                                                                                     }
 
-                                                                                                                                    //嵌入式自定义SQL函数/////////////////////////////////////////////////////////////
-                                                                                                                                    //针对大数据表，不宜直接执行【count】函数，特提供高速概略计数函数：Geosite_Count()
-                                                                                                                                    //引自维基百科 https://wiki.postgresql.org/wiki/Count_estimate
-                                                                                                                                    //特别注意：PostgreSQL约束条件中若有单引号，需用2个连续单引号替换！
-                                                                                                                                    const string Geosite_Count = "Geosite_Count";
-                                                                                                                                    int.TryParse(
-                                                                                                                                        $"{PostgreSqlHelper.Scalar($"SELECT 1 FROM pg_proc WHERE proname = '{Geosite_Count}';")}",
-                                                                                                                                        out var Geosite_Count_Exist);
-                                                                                                                                    if (Geosite_Count_Exist != 1)
+                                                                                                                                    ///////////////////////////////////////////////////////////////////////////////////////
+                                                                                                                                    this.Invoke(
+                                                                                                                                        new Action(
+                                                                                                                                            () =>
+                                                                                                                                            {
+                                                                                                                                                statusText.Text = @" Create the age sub table of leaf table（leaf_age）...";
+                                                                                                                                            }
+                                                                                                                                        )
+                                                                                                                                    );
+                                                                                                                                
+                                                                                                                                    SQLstring =
+                                                                                                                                        "CREATE TABLE leaf_age " +
+                                                                                                                                        "(" +
+                                                                                                                                        "leaf BigInt, geotime BigInt[]" + //DDE 深时数字地球计划 -- 地质年龄表
+                                                                                                                                        ",CONSTRAINT leaf_age_pkey PRIMARY KEY (leaf)" +
+                                                                                                                                        ",CONSTRAINT leaf_age_cascade FOREIGN KEY (leaf) REFERENCES leaf (id) MATCH SIMPLE ON DELETE CASCADE NOT VALID" +
+                                                                                                                                        ") PARTITION BY HASH (leaf);" +
+                                                                                                                                        "COMMENT ON TABLE leaf_age IS '叶子要素表（leaf）的年龄子表';" +
+                                                                                                                                        "COMMENT ON COLUMN leaf_age.leaf IS '叶子要素的标识码';" + //leaf表中的id
+                                                                                                                                        "COMMENT ON COLUMN leaf_age.geotime IS '叶子要素的年龄（通常为地质年龄）';";
+                                                                                                                                    if (PostgreSqlHelper.NonQuery(SQLstring) != null)
                                                                                                                                     {
-                                                                                                                                        //Geosite_Count函数用法：SELECT Geosite_Count('SELECT * FROM 表名 WHERE 约束条件'); 
-                                                                                                                                        PostgreSqlHelper
-                                                                                                                                            .NonQuery(
-                                                                                                                                                $@"
+                                                                                                                                        for (var i = 0; i < processorCount; i++)
+                                                                                                                                        {
+                                                                                                                                            SQLstring = $"CREATE TABLE leaf_age_{i} PARTITION OF leaf_age FOR VALUES WITH (MODULUS {processorCount}, REMAINDER {i});";
+                                                                                                                                            PostgreSqlHelper.NonQuery(SQLstring);
+                                                                                                                                        }
+                                                                                                                                        SQLstring =
+                                                                                                                                            "CREATE INDEX leaf_age_geotime_yearmmdd ON leaf_age USING BTREE ((geotime[1]));" +
+                                                                                                                                            "CREATE INDEX leaf_age_geotime_hhmmss ON leaf_age USING BTREE ((geotime[2]));";
+                                                                                                                                        if (PostgreSqlHelper.NonQuery(SQLstring) != null)
+                                                                                                                                        {
+                                                                                                                                            //嵌入式自定义SQL函数/////////////////////////////////////////////////////////////
+                                                                                                                                            //针对大数据表，不宜直接执行【count】函数，特提供高速概略计数函数：Geosite_Count()
+                                                                                                                                            //引自维基百科 https://wiki.postgresql.org/wiki/Count_estimate
+                                                                                                                                            //特别注意：PostgreSQL约束条件中若有单引号，需用2个连续单引号替换！
+                                                                                                                                            const string Geosite_Count = "Geosite_Count";
+                                                                                                                                            int.TryParse(
+                                                                                                                                                $"{PostgreSqlHelper.Scalar($"SELECT 1 FROM pg_proc WHERE proname = '{Geosite_Count}';")}",
+                                                                                                                                                out var Geosite_Count_Exist);
+                                                                                                                                            if (Geosite_Count_Exist != 1)
+                                                                                                                                            {
+                                                                                                                                                //Geosite_Count函数用法：SELECT Geosite_Count('SELECT * FROM 表名 WHERE 约束条件'); 
+                                                                                                                                                PostgreSqlHelper
+                                                                                                                                                    .NonQuery(
+                                                                                                                                                        $@"
                                                                                                                                                 CREATE FUNCTION {Geosite_Count}(query text) RETURNS INTEGER AS
                                                                                                                                                 $func$
                                                                                                                                                 DECLARE
@@ -1697,9 +1729,15 @@ namespace Geosite
                                                                                                                                                     RETURN ROWS;
                                                                                                                                                 END
                                                                                                                                                 $func$ LANGUAGE plpgsql;"
-                                                                                                                                            );
+                                                                                                                                                    );
+                                                                                                                                            }
+                                                                                                                                            ClusterUser.status = true;
+                                                                                                                                        }
+                                                                                                                                        else
+                                                                                                                                            errorMessage = $"Failed to create some indexes of leaf_age - {PostgreSqlHelper.ErrorMessage}";
                                                                                                                                     }
-                                                                                                                                    ClusterUser.status = true;
+                                                                                                                                    else
+                                                                                                                                        errorMessage = $"Failed to create leaf_age - {PostgreSqlHelper.ErrorMessage}";
                                                                                                                                 }
                                                                                                                                 else
                                                                                                                                     errorMessage = $"Failed to create leaf_hits - {PostgreSqlHelper.ErrorMessage}";
