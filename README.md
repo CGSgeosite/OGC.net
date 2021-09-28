@@ -13,4 +13,5 @@ For more information about the GeositeServer system, visit https://hub.docker.co
 ![OGC net3](https://user-images.githubusercontent.com/18747589/133953864-e796053c-880e-44c3-a121-5ffd14f572e9.png)
 ![OGC net4](https://user-images.githubusercontent.com/18747589/133953865-7832b9e2-adae-49e9-aa66-ea5a3bd66e4d.png)
 ![OGC net5](https://user-images.githubusercontent.com/18747589/133953867-b58033d1-e8db-481f-b42c-e98dd0d55035.png)
-![raster](https://user-images.githubusercontent.com/18747589/134790834-200bfa20-d89e-4069-b0b9-84f5c44020dc.png)
+![vectoropen](https://user-images.githubusercontent.com/18747589/135033496-bdeb09e5-5094-4dc7-a7c8-0f22548f8c16.png)
+
