@@ -419,6 +419,8 @@ namespace Geosite
             (
                  (SourcePath: vectorSourceFile.Text, TargetPath: vectorTargetFile.Text)
             );
+
+            //自动调用 FileWorkStart 函数
         }
 
         private string FileWorkStart(BackgroundWorker FileBackgroundWorker, DoWorkEventArgs e)
@@ -2278,6 +2280,8 @@ namespace Geosite
             var status = (short)(PostgresLight.Checked ? 0 : 2);
             var forestChanged = false; // 记录数据库森林结构是否发生变更，以便刷新界面 
 
+            string statusInfo = null;
+
             foreach (var row in vectorFilePool.SelectedRows.Cast<DataGridViewRow>().Where(row => !row.IsNewRow)) //vectorFilePool.Rows
             {
                 var theme = $"{row.Cells[0].Value}";
@@ -2478,7 +2482,6 @@ namespace Geosite
                                                             }
                                                         )
                                                     );
-
                                                     isOK = false;
                                                 }
                                                 else
@@ -2494,473 +2497,12 @@ namespace Geosite
                                                                 progress: 100 * pointer / RecordCount
                                                             );
                                                             var featureId = $"{feature["id"]}";
-                                                            XElement ElementdescriptionX;
-                                                            if (haveFields)
+                                                            try
                                                             {
-                                                                //处理属性问题
-                                                                var FieldValues = ((JObject)feature["properties"])
-                                                                    .Properties()
-                                                                    .Select(field => $"{field.Value["value"]}")
-                                                                    .ToArray();
-
-                                                                ElementdescriptionX = new XElement("property");
-                                                                for (var item = 0; item < Fields.Length; item++)
-                                                                    ElementdescriptionX.Add(
-                                                                        new XElement(
-                                                                            Regex.Replace($"{Fields[item]["name"]}", @"[:""（）\(\)]+", "_",
-                                                                                RegexOptions.IgnoreCase | RegexOptions.Singleline |
-                                                                                RegexOptions.Multiline)
-                                                                            ,
-                                                                            FieldValues[item]
-                                                                        )
-                                                                    );
-                                                            }
-                                                            else
-                                                                ElementdescriptionX = null;
-
-                                                            //处理坐标问题
-                                                            var coordinates = (JArray)((JObject)feature["geometry"])["coordinates"];
-                                                            //内点
-                                                            var centroid = (JArray)feature["centroid"];
-                                                            //边框 (double west, double south, double east, double north)
-                                                            var FeatureBbox = (JArray)feature["bbox"];
-                                                            var FeatureBoundaryX = new XElement(
-                                                                "boundary",
-                                                                new XAttribute(
-                                                                    "centroid", $"{centroid[0]} {centroid[1]}"
-                                                                ),
-                                                                new XElement(
-                                                                    "north", $"{FeatureBbox[3]}"
-                                                                ),
-                                                                new XElement(
-                                                                    "south", $"{FeatureBbox[1]}"
-                                                                ),
-                                                                new XElement(
-                                                                    "west", $"{FeatureBbox[0]}"
-                                                                ),
-                                                                new XElement(
-                                                                    "east", $"{FeatureBbox[2]}"
-                                                                )
-                                                            );
-                                                            var FeatureTimeStamp = feature["timeStamp"]?.Value<string>();  //DateTime.Now.ToString("s");
-
-                                                            var style = (JObject)feature["style"];
-
-                                                            XElement FeatureX = null;
-                                                            switch (featureType)
-                                                            {
-                                                                case "Point":
-                                                                    //var subType = $"{feature["subType"]}"; //subType == "0" || subType == "5" ? style["text"] : ""
-                                                                    FeatureX = new XElement
-                                                                    (
-                                                                        "member",
-                                                                        new XAttribute("type", "Point"),
-                                                                        new XAttribute("typeCode", "1"),
-                                                                        new XAttribute("id", featureId),
-                                                                        new XAttribute("timeStamp", FeatureTimeStamp),
-                                                                        ElementdescriptionX,
-                                                                        new XElement(
-                                                                            "geometry",
-                                                                            $"POINT({coordinates[0]} {coordinates[1]})"
-                                                                        ),
-                                                                        FeatureBoundaryX,
-                                                                        new XElement(
-                                                                            "style",
-                                                                            style.Properties()
-                                                                                .Select(field =>
-                                                                                    new XElement(field.Name,
-                                                                                        field.Value.ToString()))
-                                                                        )
-                                                                    );
-
-                                                                    break;
-                                                                case "LineString":
-                                                                    FeatureX = new XElement
-                                                                    (
-                                                                        "member",
-                                                                        new XAttribute("type", "Line"),
-                                                                        new XAttribute("typeCode", "2"),
-                                                                        new XAttribute("id", featureId),
-                                                                        new XAttribute("timeStamp", FeatureTimeStamp),
-                                                                        ElementdescriptionX,
-                                                                        new XElement(
-                                                                            "geometry",
-                                                                            "LINESTRING(" +
-                                                                            string.Join(
-                                                                                ",",
-                                                                                (
-                                                                                    from coor in coordinates
-                                                                                    select $"{coor[0]} {coor[1]}"
-                                                                                ).ToArray()
-                                                                            ) +
-                                                                            ")"
-                                                                        ),
-                                                                        new XElement(
-                                                                            "style",
-                                                                            style.Properties()
-                                                                                .Select(field =>
-                                                                                    new XElement(field.Name,
-                                                                                        field.Value.ToString()))
-                                                                        )
-                                                                    );
-
-                                                                    break;
-                                                                case "Polygon":
-                                                                    var polygon = new Polygon
-                                                                    {
-                                                                        OuterBoundary = new OuterBoundary
-                                                                        {
-                                                                            LinearRing = new LinearRing
-                                                                            {
-                                                                                Coordinates = new CoordinateCollection((from coor in coordinates[0]
-                                                                                                                        select new Vector(double.Parse($"{coor[1]}"),
-                                                                                                                            double.Parse($"{coor[0]}"))).ToArray())
-                                                                            }
-                                                                        }
-                                                                    };
-                                                                    for (var j = 1; j < coordinates.Count; j++)
-                                                                    {
-                                                                        var lonlat = coordinates[j];
-                                                                        polygon.AddInnerBoundary(new InnerBoundary
-                                                                        {
-                                                                            LinearRing = new LinearRing
-                                                                            {
-                                                                                Coordinates = new CoordinateCollection
-                                                                                    ((from coor in lonlat
-                                                                                      select new Vector(
-                                                                                      double.Parse($"{coor[1]}"),
-                                                                                      double.Parse($"{coor[0]}")))
-                                                                                        .ToArray())
-                                                                            }
-                                                                        }
-                                                                        );
-                                                                    }
-
-                                                                    var polygonSerializer = new Serializer();
-                                                                    polygonSerializer.SerializeRaw(polygon);
-
-                                                                    var PolygonX = GeositeXml.GeositeXml.Removexmlns(XElement.Parse(polygonSerializer.Xml));
-
-                                                                    var outerBoundaryIs = PolygonX.Element("outerBoundaryIs");
-                                                                    var LinearRing = outerBoundaryIs?.Element("LinearRing");
-                                                                    if (LinearRing != null)
-                                                                    {
-                                                                        FeatureX = new XElement
-                                                                        (
-                                                                            "member",
-                                                                            new XAttribute("type", "Polygon"),
-                                                                            new XAttribute("typeCode", "3"),
-                                                                            new XAttribute("id", featureId),
-                                                                            new XAttribute("timeStamp", FeatureTimeStamp),
-                                                                            ElementdescriptionX,
-                                                                            new XElement(
-                                                                                "geometry",
-                                                                                GeositeXML.OGCformat.KmlToWkt(2, PolygonX)
-                                                                            ),
-                                                                            FeatureBoundaryX,
-                                                                            new XElement(
-                                                                                "style",
-                                                                                style.Properties()
-                                                                                    .Select(field => new XElement(field.Name, field.Value.ToString()))
-                                                                            )
-                                                                        );
-                                                                    }
-
-                                                                    break;
-                                                            }
-                                                            if (FeatureX != null)
-                                                            {
-                                                                //写叶子
-
-                                                                //依据枝干正向分类谱系创建叶子记录
-                                                                var createLeaf = oneForest.Leaf(
-                                                                    route: createRoute.Route,
-                                                                    leafX: FeatureX,
-                                                                    timestamp:
-                                                                    $"{DateTime.Parse(FeatureX.Attribute("timeStamp").Value): yyyyMMdd,HHmmss}",
-                                                                    topology: doTopology
-                                                                );
-
-                                                                var scale10 =
-                                                                    (int)Math.Ceiling(10.0 * (++leafPointer) /
-                                                                        RecordCount);
-
-                                                                if (scale10 > oldscale10)
-                                                                {
-                                                                    oldscale10 = scale10;
-                                                                    flag10 += scale1;
-                                                                    if (flag10 < 10)
-                                                                        mapgis.fire(path,
-                                                                            progress: scale10 * 10);
-                                                                    else
-                                                                    {
-                                                                        //目的是凑满10个刻度
-                                                                        var rest = 10 - (flag10 - scale1);
-                                                                        if (rest > 0)
-                                                                            mapgis.fire(path,
-                                                                                progress: 10 * 10);
-                                                                    }
-                                                                }
-                                                                if (!createLeaf.Success)
-                                                                {
-                                                                    this.Invoke(
-                                                                        new Action(
-                                                                            () =>
-                                                                            {
-                                                                                statusCell.Value = "!";
-                                                                                statusCell.ToolTipText = createLeaf.Message;
-                                                                            }
-                                                                        )
-                                                                    );
-
-                                                                    isOK = false;
-                                                                    break;
-                                                                }
-
-                                                                if (!treeType.Contains(createLeaf.Type))
-                                                                    treeType.Add(createLeaf.Type);
-
-                                                                valid++;
-                                                            }
-                                                        }
-                                                    }
-
-                                                    mapgis.fire(
-                                                        $" [{valid} feature{(valid > 1 ? "s" : "")}]");
-                                                }
-
-                                                if (isOK)
-                                                {
-                                                    //（0：非空间数据【默认】、1：Point点、2：Line线、3：Polygon面、4：Image地理贴图、10000：Wmts栅格金字塔瓦片服务类型[epsg:0 - 无投影瓦片]、10001：Wmts瓦片服务类型[epsg:4326 - 地理坐标系瓦片]、10002：Wmts栅格金字塔瓦片服务类型[epsg:3857 - 球体墨卡托瓦片]、11000：Tile栅格金字塔瓦片类型[epsg:0 - 无投影瓦片]、11001：Tile栅格金字塔瓦片类型[epsg:4326 - 地理坐标系瓦片]、11002：Tile栅格金字塔瓦片类型[epsg:3857 - 球体墨卡托瓦片]、12000：Tile栅格平铺式瓦片类型[epsg:0 - 无投影瓦片]、12001：Tile栅格平铺式瓦片类型[epsg:4326 - 地理坐标系瓦片]、12002：Tile栅格平铺式瓦片类型[epsg:3857 - 球体墨卡托瓦片]）
-
-                                                    oneForest.Tree(enclosure: (treeId,
-                                                        treeType)); //向树记录写入完整性标志以及类型数组
-
-                                                    this.Invoke(
-                                                        new Action(
-                                                            () =>
-                                                            {
-                                                                statusCell.Value = "✔";
-                                                                statusCell.ToolTipText = "OK";
-                                                            }
-                                                        )
-                                                    );
-
-                                                }
-                                            }
-                                            else
-                                            {
-                                                this.Invoke(
-                                                    new Action(
-                                                        () =>
-                                                        {
-                                                            statusCell.Value = "✘";
-                                                            statusCell.ToolTipText = treeResult.Message;
-                                                        }
-                                                    )
-                                                );
-
-                                            }
-                                        }
-                                    }
-                                    else
-                                    {
-                                        this.Invoke(
-                                            new Action(
-                                                () =>
-                                                {
-                                                    statusCell.Value = "?";
-                                                    statusCell.ToolTipText = "Cancelled";
-                                                }
-                                            )
-                                        );
-
-                                    }
-                                }
-                                catch (Exception error)
-                                {
-                                    this.Invoke(
-                                        new Action(
-                                            () =>
-                                            {
-                                                statusCell.Value = "!";
-                                                statusCell.ToolTipText = error.Message;
-                                            }
-                                        )
-                                    );
-
-                                }
-                            }
-                            break;
-                        case ".shp":
-                            {
-                                try
-                                {
-                                    {
-                                        var getTreeLayers = new LayersBuilder(new FileInfo(path).FullName);
-                                        getTreeLayers.ShowDialog();
-                                        if (getTreeLayers.OK)
-                                        {
-                                            var codePage = ShapeFile.ShapeFile.GetDbfCodePage(Path.Combine(
-                                                Path.GetDirectoryName(path) ?? "",
-                                                Path.GetFileNameWithoutExtension(path) + ".dbf"));
-
-                                            using var shapeFile = new ShapeFile.ShapeFile();
-                                            shapeFile.onGeositeEvent += delegate (object _, GeositeEventArgs Event)
-                                            {
-                                                VectorBackgroundWorker.ReportProgress(Event.progress ?? -1,
-                                                    Event.message ?? string.Empty);
-                                            };
-
-                                            shapeFile.Open(path, codePage);
-
-                                            //-------------------------------
-                                            {
-                                                if (shapeFile.RecordCount == 0)
-                                                    return "No features found";
-                                                shapeFile.fire("Preprocessing ...");
-                                                var FileInfo = shapeFile.GetCapabilities();
-                                                var FileType = $"{FileInfo["fileType"]}";
-
-                                                //处理属性问题 
-                                                var Fields = shapeFile.GetField();
-                                                var haveFields = Fields.Length > 0;
-
-                                                var FeatureCollectionX = new XElement(
-                                                    "FeatureCollection",
-                                                    new XAttribute("type", FileType),
-                                                    new XAttribute("timeStamp", $"{FileInfo["timeStamp"]}"),
-                                                    new XElement("name", theme)
-                                                    );
-                                                if (getTreeLayers.Description != null)
-                                                {
-                                                    var property = new XElement("property");
-                                                    foreach (var X in getTreeLayers.Description)
-                                                        property.Add(new XElement($"{X.Name}", X.Value));
-                                                    FeatureCollectionX.Add(property);
-                                                }
-                                                var BBOX = (JArray)FileInfo["bbox"]; // $"[{west}, {south}, {east}, {north}]"
-                                                FeatureCollectionX.Add(
-                                                    new XElement(
-                                                        "boundary",
-                                                        new XElement("north", $"{BBOX[3]}"),
-                                                        new XElement("south", $"{BBOX[1]}"),
-                                                        new XElement("west", $"{BBOX[0]}"),
-                                                        new XElement("east", $"{BBOX[2]}")
-                                                        )
-                                                    );
-                                                var pointer = 0;
-                                                var valid = 0;
-                                                var TreePath = getTreeLayers.TreePathString;
-                                                if (string.IsNullOrWhiteSpace(TreePath))
-                                                    TreePath = "Untitled";
-                                                var treeNameArray = Regex.Split(TreePath, @"[\/\\\|]+");
-                                                var treeTimeStamp =
-                                                    $"{forest},{sequence},{DateTime.Parse($"{FileInfo["timeStamp"]}"): yyyyMMdd,HHmmss}";
-                                                var treeResult =
-                                                    oneForest.Tree(
-                                                        treeTimeStamp,
-                                                        FeatureCollectionX,
-                                                        path,
-                                                        status
-                                                    );
-                                                if (treeResult.Success)
-                                                {
-                                                    forestChanged = true;
-
-                                                    var treeId = treeResult.Id;
-                                                    //此时，文档树所容纳的叶子类型type默认值：0
-                                                    var treeType = new List<int>();
-                                                    var isOK = true;
-                                                    var RecordCount = shapeFile.RecordCount;
-
-                                                    // 为提升进度视觉体验，特将进度值限定在0--10之间
-                                                    var leafPointer = 0;
-                                                    var oldscale10 = -1;
-                                                    var flagMany = 10.0 / RecordCount;
-                                                    var scale1 = (int)Math.Ceiling(flagMany);
-                                                    var flag10 = 0;
-
-                                                    //提供追加元数据的机会
-                                                    XElement themeMetadataX = null;
-                                                    if (!DonotPromptMetaData)
-                                                    {
-                                                        var metaData = new MetaData();
-                                                        metaData.ShowDialog();
-                                                        if (metaData.OK)
-                                                        {
-                                                            themeMetadataX = metaData.MetaDataX;
-                                                            DonotPromptMetaData = metaData.DonotPrompt;
-                                                        }
-                                                    }
-
-                                                    //最末层
-                                                    XElement layerX = null;
-                                                    for (var index = treeNameArray.Length - 1; index >= 0; index--)
-                                                    {
-                                                        layerX = new XElement(
-                                                            "layer",
-                                                            new XElement("name", treeNameArray[index].Trim()),
-                                                            //将元数据添加到最末层
-                                                            index == treeNameArray.Length - 1 ? themeMetadataX : null,
-                                                            index == treeNameArray.Length - 1 ? new XElement("member") : null,
-                                                            layerX
-                                                        );
-                                                    }
-                                                    FeatureCollectionX.Add(layerX);
-
-                                                    //写叶子
-                                                    //由叶子对象反向回溯并创建枝干分类谱系，返回枝干谱系id数组
-                                                    var createRoute = oneForest.Branch(
-                                                        forest: forest,
-                                                        sequence: sequence,
-                                                        tree: treeId,
-                                                        leafX: FeatureCollectionX.Descendants("member").First(),
-                                                        leafRootX: FeatureCollectionX
-                                                    );
-                                                    if (!createRoute.Success)
-                                                    {
-                                                        this.Invoke(
-                                                            new Action(
-                                                                () =>
-                                                                {
-                                                                    statusCell.Value = "✘";
-                                                                    statusCell.ToolTipText = createRoute.Message;
-                                                                }
-                                                            )
-                                                        );
-
-                                                        isOK = false;
-                                                    }
-                                                    else
-                                                    {
-                                                        foreach (var feature in shapeFile.GetFeature())
-                                                        {
-                                                            pointer++;
-                                                            if (feature != null)
-                                                            {
-                                                                var featureType = $"{feature["geometry"]["type"]}";
-                                                                shapeFile.fire(
-                                                                    message: $"{featureType} [{pointer} / {RecordCount}]",
-                                                                    progress: 100 * pointer / RecordCount
-                                                                );
-                                                                var featureId = $"{feature["id"]}";
-
-                                                                XElement styleX = null;
-                                                                var style = feature["style"];
-                                                                if (style != null)
-                                                                {
-                                                                    styleX = new XElement(
-                                                                        "style",
-                                                                        ((JObject)style).Properties()
-                                                                        .Select(field => new XElement(field.Name, field.Value.ToString()))
-                                                                    );
-                                                                }
-
                                                                 XElement ElementdescriptionX;
                                                                 if (haveFields)
                                                                 {
-                                                                    //处理属性问题
+                                                                    //处理属性问题 
                                                                     var FieldValues = ((JObject)feature["properties"])
                                                                         .Properties()
                                                                         .Select(field => $"{field.Value["value"]}")
@@ -3007,10 +2549,13 @@ namespace Geosite
                                                                 );
                                                                 var FeatureTimeStamp = feature["timeStamp"]?.Value<string>();  //DateTime.Now.ToString("s");
 
+                                                                var style = (JObject)feature["style"];
+
                                                                 XElement FeatureX = null;
                                                                 switch (featureType)
                                                                 {
                                                                     case "Point":
+                                                                        //var subType = $"{feature["subType"]}"; //subType == "0" || subType == "5" ? style["text"] : ""
                                                                         FeatureX = new XElement
                                                                         (
                                                                             "member",
@@ -3024,7 +2569,13 @@ namespace Geosite
                                                                                 $"POINT({coordinates[0]} {coordinates[1]})"
                                                                             ),
                                                                             FeatureBoundaryX,
-                                                                            styleX
+                                                                            new XElement(
+                                                                                "style",
+                                                                                style.Properties()
+                                                                                    .Select(field =>
+                                                                                        new XElement(field.Name,
+                                                                                            field.Value.ToString()))
+                                                                            )
                                                                         );
 
                                                                         break;
@@ -3049,8 +2600,13 @@ namespace Geosite
                                                                                 ) +
                                                                                 ")"
                                                                             ),
-                                                                            FeatureBoundaryX,
-                                                                            styleX
+                                                                            new XElement(
+                                                                                "style",
+                                                                                style.Properties()
+                                                                                    .Select(field =>
+                                                                                        new XElement(field.Name,
+                                                                                            field.Value.ToString()))
+                                                                            )
                                                                         );
 
                                                                         break;
@@ -3061,15 +2617,9 @@ namespace Geosite
                                                                             {
                                                                                 LinearRing = new LinearRing
                                                                                 {
-                                                                                    Coordinates =
-                                                                                        new CoordinateCollection(
-                                                                                            (from coor in coordinates[0]
-                                                                                             select new Vector(
-                                                                                                 double.Parse(
-                                                                                                     $"{coor[1]}"),
-                                                                                                 double.Parse(
-                                                                                                     $"{coor[0]}")))
-                                                                                            .ToArray())
+                                                                                    Coordinates = new CoordinateCollection((from coor in coordinates[0]
+                                                                                                                            select new Vector(double.Parse($"{coor[1]}"),
+                                                                                                                                double.Parse($"{coor[0]}"))).ToArray())
                                                                                 }
                                                                             }
                                                                         };
@@ -3081,11 +2631,14 @@ namespace Geosite
                                                                                 LinearRing = new LinearRing
                                                                                 {
                                                                                     Coordinates = new CoordinateCollection
-                                                                                    ((from coor in lonlat
-                                                                                      select new Vector(double.Parse($"{coor[1]}"),
-                                                                                      double.Parse($"{coor[0]}"))).ToArray())
+                                                                                        ((from coor in lonlat
+                                                                                          select new Vector(
+                                                                                          double.Parse($"{coor[1]}"),
+                                                                                          double.Parse($"{coor[0]}")))
+                                                                                            .ToArray())
                                                                                 }
-                                                                            });
+                                                                            }
+                                                                            );
                                                                         }
 
                                                                         var polygonSerializer = new Serializer();
@@ -3110,7 +2663,11 @@ namespace Geosite
                                                                                     GeositeXML.OGCformat.KmlToWkt(2, PolygonX)
                                                                                 ),
                                                                                 FeatureBoundaryX,
-                                                                                styleX
+                                                                                new XElement(
+                                                                                    "style",
+                                                                                    style.Properties()
+                                                                                        .Select(field => new XElement(field.Name, field.Value.ToString()))
+                                                                                )
                                                                             );
                                                                         }
 
@@ -3138,91 +2695,106 @@ namespace Geosite
                                                                         oldscale10 = scale10;
                                                                         flag10 += scale1;
                                                                         if (flag10 < 10)
-                                                                            shapeFile.fire(path,
+                                                                            mapgis.fire(path,
                                                                                 progress: scale10 * 10);
                                                                         else
                                                                         {
                                                                             //目的是凑满10个刻度
                                                                             var rest = 10 - (flag10 - scale1);
                                                                             if (rest > 0)
-                                                                                shapeFile.fire(path,
+                                                                                mapgis.fire(path,
                                                                                     progress: 10 * 10);
                                                                         }
                                                                     }
-                                                                    if (!createLeaf.Success)
+
+                                                                    if (createLeaf.Success)
+                                                                    {
+                                                                        if (!treeType.Contains(createLeaf.Type))
+                                                                            treeType.Add(createLeaf.Type);
+
+                                                                        valid++;
+                                                                    }
+                                                                    else
                                                                     {
                                                                         this.Invoke(
                                                                             new Action(
                                                                                 () =>
                                                                                 {
                                                                                     statusCell.Value = "!";
-                                                                                    statusCell.ToolTipText = createLeaf.Message;
+                                                                                    statusCell.ToolTipText =
+                                                                                        createLeaf.Message;
                                                                                 }
                                                                             )
                                                                         );
 
                                                                         isOK = false;
-                                                                        break;
+                                                                        //break; //即使出现异常，也继续遍历
                                                                     }
-
-                                                                    if (!treeType.Contains(createLeaf.Type))
-                                                                        treeType.Add(createLeaf.Type);
-
-                                                                    valid++;
                                                                 }
                                                             }
+                                                            catch (Exception localError)
+                                                            {
+                                                                isOK = false;
+                                                                this.Invoke(
+                                                                    new Action(
+                                                                        () =>
+                                                                        {
+                                                                            statusCell.Value = "!";
+                                                                            statusCell.ToolTipText = localError.Message;
+                                                                        }
+                                                                    )
+                                                                );
+                                                            }
                                                         }
-
-                                                        shapeFile.fire(
-                                                            $" [{valid} feature{(valid > 1 ? "s" : "")}]");
                                                     }
 
-                                                    if (isOK)
-                                                    {
-                                                        //（0：非空间数据【默认】、1：Point点、2：Line线、3：Polygon面、4：Image地理贴图、10000：Wmts栅格金字塔瓦片服务类型[epsg:0 - 无投影瓦片]、10001：Wmts瓦片服务类型[epsg:4326 - 地理坐标系瓦片]、10002：Wmts栅格金字塔瓦片服务类型[epsg:3857 - 球体墨卡托瓦片]、11000：Tile栅格金字塔瓦片类型[epsg:0 - 无投影瓦片]、11001：Tile栅格金字塔瓦片类型[epsg:4326 - 地理坐标系瓦片]、11002：Tile栅格金字塔瓦片类型[epsg:3857 - 球体墨卡托瓦片]、12000：Tile栅格平铺式瓦片类型[epsg:0 - 无投影瓦片]、12001：Tile栅格平铺式瓦片类型[epsg:4326 - 地理坐标系瓦片]、12002：Tile栅格平铺式瓦片类型[epsg:3857 - 球体墨卡托瓦片]）
-
-                                                        oneForest.Tree(enclosure: (treeId,
-                                                            treeType)); //向树记录写入完整性标志以及类型数组
-                                                        this.Invoke(
-                                                            new Action(
-                                                                () =>
-                                                                {
-                                                                    statusCell.Value = "✔";
-                                                                    statusCell.ToolTipText = "OK";
-                                                                }
-                                                            )
-                                                        );
-
-                                                    }
+                                                    mapgis.fire(
+                                                        $" [{valid} feature{(valid > 1 ? "s" : "")}]");
                                                 }
-                                                else
+
+                                                if (isOK)
                                                 {
+                                                    //（0：非空间数据【默认】、1：Point点、2：Line线、3：Polygon面、4：Image地理贴图、10000：Wmts栅格金字塔瓦片服务类型[epsg:0 - 无投影瓦片]、10001：Wmts瓦片服务类型[epsg:4326 - 地理坐标系瓦片]、10002：Wmts栅格金字塔瓦片服务类型[epsg:3857 - 球体墨卡托瓦片]、11000：Tile栅格金字塔瓦片类型[epsg:0 - 无投影瓦片]、11001：Tile栅格金字塔瓦片类型[epsg:4326 - 地理坐标系瓦片]、11002：Tile栅格金字塔瓦片类型[epsg:3857 - 球体墨卡托瓦片]、12000：Tile栅格平铺式瓦片类型[epsg:0 - 无投影瓦片]、12001：Tile栅格平铺式瓦片类型[epsg:4326 - 地理坐标系瓦片]、12002：Tile栅格平铺式瓦片类型[epsg:3857 - 球体墨卡托瓦片]）
+
+                                                    oneForest.Tree(enclosure: (treeId,
+                                                        treeType)); //向树记录写入完整性标志以及类型数组
+
                                                     this.Invoke(
                                                         new Action(
                                                             () =>
                                                             {
-                                                                statusCell.Value = "✘";
-                                                                statusCell.ToolTipText = treeResult.Message;
+                                                                statusCell.Value = "✔";
+                                                                statusCell.ToolTipText = "OK";
                                                             }
                                                         )
                                                     );
-
                                                 }
                                             }
+                                            else
+                                            {
+                                                this.Invoke(
+                                                    new Action(
+                                                        () =>
+                                                        {
+                                                            statusCell.Value = "✘";
+                                                            statusCell.ToolTipText = treeResult.Message;
+                                                        }
+                                                    )
+                                                );
+                                            }
                                         }
-                                        else
-                                        {
-                                            this.Invoke(
-                                                new Action(
-                                                    () =>
-                                                    {
-                                                        statusCell.Value = "?";
-                                                        statusCell.ToolTipText = "Cancelled";
-                                                    }
-                                                )
-                                            );
-
-                                        }
+                                    }
+                                    else
+                                    {
+                                        this.Invoke(
+                                            new Action(
+                                                () =>
+                                                {
+                                                    statusCell.Value = "?";
+                                                    statusCell.ToolTipText = "Cancelled";
+                                                }
+                                            )
+                                        );
                                     }
                                 }
                                 catch (Exception error)
@@ -3236,7 +2808,487 @@ namespace Geosite
                                             }
                                         )
                                     );
+                                }
+                            }
+                            break;
+                        case ".shp":
+                            {
+                                try
+                                {
+                                    var getTreeLayers = new LayersBuilder(new FileInfo(path).FullName);
+                                    getTreeLayers.ShowDialog();
+                                    if (getTreeLayers.OK)
+                                    {
+                                        var codePage = ShapeFile.ShapeFile.GetDbfCodePage(Path.Combine(
+                                            Path.GetDirectoryName(path) ?? "",
+                                            Path.GetFileNameWithoutExtension(path) + ".dbf"));
 
+                                        using var shapeFile = new ShapeFile.ShapeFile();
+                                        shapeFile.onGeositeEvent += delegate(object _, GeositeEventArgs Event)
+                                        {
+                                            VectorBackgroundWorker.ReportProgress(Event.progress ?? -1,
+                                                Event.message ?? string.Empty);
+                                        };
+
+                                        shapeFile.Open(path, codePage);
+
+                                        //-------------------------------
+                                        if (shapeFile.RecordCount == 0)
+                                            return "No features found";
+
+                                        shapeFile.fire("Preprocessing ...");
+                                        var FileInfo = shapeFile.GetCapabilities();
+                                        var FileType = $"{FileInfo["fileType"]}";
+
+                                        //处理属性问题 
+                                        var Fields = shapeFile.GetField();
+                                        var haveFields = Fields.Length > 0;
+
+                                        var FeatureCollectionX = new XElement(
+                                            "FeatureCollection",
+                                            new XAttribute("type", FileType),
+                                            new XAttribute("timeStamp", $"{FileInfo["timeStamp"]}"),
+                                            new XElement("name", theme)
+                                        );
+                                        if (getTreeLayers.Description != null)
+                                        {
+                                            var property = new XElement("property");
+                                            foreach (var X in getTreeLayers.Description)
+                                                property.Add(new XElement($"{X.Name}", X.Value));
+                                            FeatureCollectionX.Add(property);
+                                        }
+
+                                        var BBOX = (JArray) FileInfo[
+                                            "bbox"]; // $"[{west}, {south}, {east}, {north}]"
+                                        FeatureCollectionX.Add(
+                                            new XElement(
+                                                "boundary",
+                                                new XElement("north", $"{BBOX[3]}"),
+                                                new XElement("south", $"{BBOX[1]}"),
+                                                new XElement("west", $"{BBOX[0]}"),
+                                                new XElement("east", $"{BBOX[2]}")
+                                            )
+                                        );
+                                        var pointer = 0;
+                                        var valid = 0;
+                                        var TreePath = getTreeLayers.TreePathString;
+                                        if (string.IsNullOrWhiteSpace(TreePath))
+                                            TreePath = "Untitled";
+                                        var treeNameArray = Regex.Split(TreePath, @"[\/\\\|]+");
+                                        var treeTimeStamp =
+                                            $"{forest},{sequence},{DateTime.Parse($"{FileInfo["timeStamp"]}"): yyyyMMdd,HHmmss}";
+                                        var treeResult =
+                                            oneForest.Tree(
+                                                treeTimeStamp,
+                                                FeatureCollectionX,
+                                                path,
+                                                status
+                                            );
+                                        if (treeResult.Success)
+                                        {
+                                            forestChanged = true;
+
+                                            var treeId = treeResult.Id;
+                                            //此时，文档树所容纳的叶子类型type默认值：0
+                                            var treeType = new List<int>();
+                                            var isOK = true;
+                                            var RecordCount = shapeFile.RecordCount;
+
+                                            // 为提升进度视觉体验，特将进度值限定在0--10之间
+                                            var leafPointer = 0;
+                                            var oldscale10 = -1;
+                                            var flagMany = 10.0 / RecordCount;
+                                            var scale1 = (int) Math.Ceiling(flagMany);
+                                            var flag10 = 0;
+
+                                            //提供追加元数据的机会
+                                            XElement themeMetadataX = null;
+                                            if (!DonotPromptMetaData)
+                                            {
+                                                var metaData = new MetaData();
+                                                metaData.ShowDialog();
+                                                if (metaData.OK)
+                                                {
+                                                    themeMetadataX = metaData.MetaDataX;
+                                                    DonotPromptMetaData = metaData.DonotPrompt;
+                                                }
+                                            }
+
+                                            //最末层
+                                            XElement layerX = null;
+                                            for (var index = treeNameArray.Length - 1; index >= 0; index--)
+                                            {
+                                                layerX = new XElement(
+                                                    "layer",
+                                                    new XElement("name", treeNameArray[index].Trim()),
+                                                    //将元数据添加到最末层
+                                                    index == treeNameArray.Length - 1 ? themeMetadataX : null,
+                                                    index == treeNameArray.Length - 1
+                                                        ? new XElement("member")
+                                                        : null,
+                                                    layerX
+                                                );
+                                            }
+
+                                            FeatureCollectionX.Add(layerX);
+
+                                            //写叶子
+                                            //由叶子对象反向回溯并创建枝干分类谱系，返回枝干谱系id数组
+                                            var createRoute = oneForest.Branch(
+                                                forest: forest,
+                                                sequence: sequence,
+                                                tree: treeId,
+                                                leafX: FeatureCollectionX.Descendants("member").First(),
+                                                leafRootX: FeatureCollectionX
+                                            );
+                                            if (!createRoute.Success)
+                                            {
+                                                this.Invoke(
+                                                    new Action(
+                                                        () =>
+                                                        {
+                                                            statusCell.Value = "✘";
+                                                            statusCell.ToolTipText = createRoute.Message;
+                                                        }
+                                                    )
+                                                );
+                                                isOK = false;
+                                            }
+                                            else
+                                            {
+                                                foreach (var feature in shapeFile.GetFeature())
+                                                {
+                                                    pointer++;
+                                                    if (feature != null)
+                                                    {
+                                                        var featureType = $"{feature["geometry"]["type"]}";
+                                                        shapeFile.fire(
+                                                            message: $"{featureType} [{pointer} / {RecordCount}]",
+                                                            progress: 100 * pointer / RecordCount
+                                                        );
+                                                        var featureId = $"{feature["id"]}";
+
+                                                        try
+                                                        {
+                                                            XElement styleX = null;
+                                                            var style = feature["style"];
+                                                            if (style != null)
+                                                            {
+                                                                styleX = new XElement(
+                                                                    "style",
+                                                                    ((JObject)style).Properties()
+                                                                    .Select(field =>
+                                                                        new XElement(field.Name,
+                                                                            field.Value.ToString()))
+                                                                );
+                                                            }
+
+                                                            XElement ElementdescriptionX;
+                                                            if (haveFields)
+                                                            {
+                                                                //处理属性问题
+                                                                var FieldValues = ((JObject)feature["properties"])
+                                                                    .Properties()
+                                                                    .Select(field => $"{field.Value["value"]}")
+                                                                    .ToArray();
+
+                                                                ElementdescriptionX = new XElement("property");
+                                                                for (var item = 0; item < Fields.Length; item++)
+                                                                    ElementdescriptionX.Add(
+                                                                        new XElement(
+                                                                            Regex.Replace($"{Fields[item]["name"]}",
+                                                                                @"[:""（）\(\)]+", "_",
+                                                                                RegexOptions.IgnoreCase |
+                                                                                RegexOptions.Singleline |
+                                                                                RegexOptions.Multiline)
+                                                                            ,
+                                                                            FieldValues[item]
+                                                                        )
+                                                                    );
+                                                            }
+                                                            else
+                                                                ElementdescriptionX = null;
+
+                                                            //处理坐标问题
+                                                            var coordinates =
+                                                                (JArray)((JObject)feature["geometry"])["coordinates"];
+                                                            //内点
+                                                            var centroid = (JArray)feature["centroid"];
+                                                            //边框 (double west, double south, double east, double north)
+                                                            var FeatureBbox = (JArray)feature["bbox"];
+                                                            var FeatureBoundaryX = new XElement(
+                                                                "boundary",
+                                                                new XAttribute(
+                                                                    "centroid", $"{centroid[0]} {centroid[1]}"
+                                                                ),
+                                                                new XElement(
+                                                                    "north", $"{FeatureBbox[3]}"
+                                                                ),
+                                                                new XElement(
+                                                                    "south", $"{FeatureBbox[1]}"
+                                                                ),
+                                                                new XElement(
+                                                                    "west", $"{FeatureBbox[0]}"
+                                                                ),
+                                                                new XElement(
+                                                                    "east", $"{FeatureBbox[2]}"
+                                                                )
+                                                            );
+                                                            var FeatureTimeStamp =
+                                                                feature["timeStamp"]
+                                                                    ?.Value<string>(); //DateTime.Now.ToString("s");
+
+                                                            XElement FeatureX = null;
+                                                            switch (featureType)
+                                                            {
+                                                                case "Point":
+                                                                    FeatureX = new XElement
+                                                                    (
+                                                                        "member",
+                                                                        new XAttribute("type", "Point"),
+                                                                        new XAttribute("typeCode", "1"),
+                                                                        new XAttribute("id", featureId),
+                                                                        new XAttribute("timeStamp", FeatureTimeStamp),
+                                                                        ElementdescriptionX,
+                                                                        new XElement(
+                                                                            "geometry",
+                                                                            $"POINT({coordinates[0]} {coordinates[1]})"
+                                                                        ),
+                                                                        FeatureBoundaryX,
+                                                                        styleX
+                                                                    );
+
+                                                                    break;
+                                                                case "LineString":
+                                                                    FeatureX = new XElement
+                                                                    (
+                                                                        "member",
+                                                                        new XAttribute("type", "Line"),
+                                                                        new XAttribute("typeCode", "2"),
+                                                                        new XAttribute("id", featureId),
+                                                                        new XAttribute("timeStamp", FeatureTimeStamp),
+                                                                        ElementdescriptionX,
+                                                                        new XElement(
+                                                                            "geometry",
+                                                                            "LINESTRING(" +
+                                                                            string.Join(
+                                                                                ",",
+                                                                                (
+                                                                                    from coor in coordinates
+                                                                                    select $"{coor[0]} {coor[1]}"
+                                                                                ).ToArray()
+                                                                            ) +
+                                                                            ")"
+                                                                        ),
+                                                                        FeatureBoundaryX,
+                                                                        styleX
+                                                                    );
+
+                                                                    break;
+                                                                case "Polygon":
+                                                                    var polygon = new Polygon
+                                                                    {
+                                                                        OuterBoundary = new OuterBoundary
+                                                                        {
+                                                                            LinearRing = new LinearRing
+                                                                            {
+                                                                                Coordinates =
+                                                                                    new CoordinateCollection(
+                                                                                        (from coor in coordinates[0]
+                                                                                         select new Vector(
+                                                                                         double.Parse(
+                                                                                             $"{coor[1]}"),
+                                                                                         double.Parse(
+                                                                                             $"{coor[0]}")))
+                                                                                        .ToArray())
+                                                                            }
+                                                                        }
+                                                                    };
+                                                                    for (var j = 1; j < coordinates.Count; j++)
+                                                                    {
+                                                                        var lonlat = coordinates[j];
+                                                                        polygon.AddInnerBoundary(new InnerBoundary
+                                                                        {
+                                                                            LinearRing = new LinearRing
+                                                                            {
+                                                                                Coordinates = new CoordinateCollection
+                                                                                ((from coor in lonlat
+                                                                                  select new Vector(
+                                                                                  double.Parse($"{coor[1]}"),
+                                                                                  double.Parse($"{coor[0]}")))
+                                                                                    .ToArray())
+                                                                            }
+                                                                        });
+                                                                    }
+
+                                                                    var polygonSerializer = new Serializer();
+                                                                    polygonSerializer.SerializeRaw(polygon);
+
+                                                                    var PolygonX =
+                                                                        GeositeXml.GeositeXml.Removexmlns(
+                                                                            XElement.Parse(polygonSerializer.Xml));
+
+                                                                    var outerBoundaryIs =
+                                                                        PolygonX.Element("outerBoundaryIs");
+                                                                    var LinearRing =
+                                                                        outerBoundaryIs?.Element("LinearRing");
+                                                                    if (LinearRing != null)
+                                                                    {
+                                                                        FeatureX = new XElement
+                                                                        (
+                                                                            "member",
+                                                                            new XAttribute("type", "Polygon"),
+                                                                            new XAttribute("typeCode", "3"),
+                                                                            new XAttribute("id", featureId),
+                                                                            new XAttribute("timeStamp",
+                                                                                FeatureTimeStamp),
+                                                                            ElementdescriptionX,
+                                                                            new XElement(
+                                                                                "geometry",
+                                                                                GeositeXML.OGCformat.KmlToWkt(2,
+                                                                                    PolygonX)
+                                                                            ),
+                                                                            FeatureBoundaryX,
+                                                                            styleX
+                                                                        );
+                                                                    }
+
+                                                                    break;
+                                                            }
+                                                            if (FeatureX != null)
+                                                            {
+                                                                //写叶子
+
+                                                                //依据枝干正向分类谱系创建叶子记录
+                                                                var createLeaf = oneForest.Leaf(
+                                                                    route: createRoute.Route,
+                                                                    leafX: FeatureX,
+                                                                    timestamp:
+                                                                    $"{DateTime.Parse(FeatureX.Attribute("timeStamp").Value): yyyyMMdd,HHmmss}",
+                                                                    topology: doTopology
+                                                                );
+
+                                                                var scale10 =
+                                                                    (int)Math.Ceiling(10.0 * (++leafPointer) /
+                                                                        RecordCount);
+
+                                                                if (scale10 > oldscale10)
+                                                                {
+                                                                    oldscale10 = scale10;
+                                                                    flag10 += scale1;
+                                                                    if (flag10 < 10)
+                                                                        shapeFile.fire(path,
+                                                                            progress: scale10 * 10);
+                                                                    else
+                                                                    {
+                                                                        //目的是凑满10个刻度
+                                                                        var rest = 10 - (flag10 - scale1);
+                                                                        if (rest > 0)
+                                                                            shapeFile.fire(path,
+                                                                                progress: 10 * 10);
+                                                                    }
+                                                                }
+
+                                                                if (createLeaf.Success)
+                                                                {
+                                                                    if (!treeType.Contains(createLeaf.Type))
+                                                                        treeType.Add(createLeaf.Type);
+
+                                                                    valid++;
+                                                                }
+                                                                else
+                                                                {
+                                                                    this.Invoke(
+                                                                        new Action(
+                                                                            () =>
+                                                                            {
+                                                                                statusCell.Value = "!";
+                                                                                statusCell.ToolTipText =
+                                                                                    createLeaf.Message;
+                                                                            }
+                                                                        )
+                                                                    );
+
+                                                                    isOK = false;
+                                                                    //break;  //即使出现异常，也继续遍历
+                                                                }
+                                                            }
+                                                        }
+                                                        catch(Exception localError)
+                                                        {
+                                                            isOK = false;
+                                                            this.Invoke(
+                                                                new Action(
+                                                                    () =>
+                                                                    {
+                                                                        statusCell.Value = "!";
+                                                                        statusCell.ToolTipText =
+                                                                            localError.Message;
+                                                                    }
+                                                                )
+                                                            );
+                                                        }
+                                                    }
+                                                }
+
+                                                shapeFile.fire(
+                                                    $" [{valid} feature{(valid > 1 ? "s" : "")}]");
+                                            }
+
+                                            if (isOK)
+                                            {
+                                                //（0：非空间数据【默认】、1：Point点、2：Line线、3：Polygon面、4：Image地理贴图、10000：Wmts栅格金字塔瓦片服务类型[epsg:0 - 无投影瓦片]、10001：Wmts瓦片服务类型[epsg:4326 - 地理坐标系瓦片]、10002：Wmts栅格金字塔瓦片服务类型[epsg:3857 - 球体墨卡托瓦片]、11000：Tile栅格金字塔瓦片类型[epsg:0 - 无投影瓦片]、11001：Tile栅格金字塔瓦片类型[epsg:4326 - 地理坐标系瓦片]、11002：Tile栅格金字塔瓦片类型[epsg:3857 - 球体墨卡托瓦片]、12000：Tile栅格平铺式瓦片类型[epsg:0 - 无投影瓦片]、12001：Tile栅格平铺式瓦片类型[epsg:4326 - 地理坐标系瓦片]、12002：Tile栅格平铺式瓦片类型[epsg:3857 - 球体墨卡托瓦片]）
+
+                                                oneForest.Tree(enclosure: (treeId,
+                                                    treeType)); //向树记录写入完整性标志以及类型数组
+                                                this.Invoke(
+                                                    new Action(
+                                                        () =>
+                                                        {
+                                                            statusCell.Value = "✔";
+                                                            statusCell.ToolTipText = "OK";
+                                                        }
+                                                    )
+                                                );
+                                            }
+                                        }
+                                        else
+                                        {
+                                            this.Invoke(
+                                                new Action(
+                                                    () =>
+                                                    {
+                                                        statusCell.Value = "✘";
+                                                        statusCell.ToolTipText = treeResult.Message;
+                                                    }
+                                                )
+                                            );
+                                        }
+                                    }
+                                    else
+                                    {
+                                        this.Invoke(
+                                            new Action(
+                                                () =>
+                                                {
+                                                    statusCell.Value = "?";
+                                                    statusCell.ToolTipText = "Cancelled";
+                                                }
+                                            )
+                                        );
+                                    }
+                                }
+                                catch (Exception error)
+                                {
+                                    this.Invoke(
+                                        new Action(
+                                            () =>
+                                            {
+                                                statusCell.Value = "!";
+                                                statusCell.ToolTipText = error.Message;
+                                            }
+                                        )
+                                    );
                                 }
                             }
                             break;
@@ -3409,232 +3461,252 @@ namespace Geosite
                                                                     progress: 100 * pointer / RecordCount
                                                                 );
                                                                 var featureId = $"{feature["id"]}";
-                                                                XElement ElementdescriptionX;
-                                                                if (haveFields)
+                                                                try
                                                                 {
-                                                                    //处理属性问题
-                                                                    var FieldValues = ((JObject)feature["properties"])
-                                                                        .Properties()
-                                                                        .Select(field => $"{field.Value["value"]}")
-                                                                        .ToArray();
+                                                                    XElement ElementdescriptionX;
+                                                                    if (haveFields)
+                                                                    {
+                                                                        //处理属性问题
+                                                                        var FieldValues = ((JObject)feature["properties"])
+                                                                            .Properties()
+                                                                            .Select(field => $"{field.Value["value"]}")
+                                                                            .ToArray();
 
-                                                                    ElementdescriptionX = new XElement("property");
-                                                                    for (var item = 0; item < Fields.Length; item++)
-                                                                        ElementdescriptionX.Add(
-                                                                            new XElement(
-                                                                                Regex.Replace($"{Fields[item]["name"]}", @"[:""（）\(\)]+", "_",
-                                                                                    RegexOptions.IgnoreCase | RegexOptions.Singleline |
-                                                                                    RegexOptions.Multiline)
-                                                                                ,
-                                                                                FieldValues[item]
-                                                                            )
-                                                                        );
-                                                                }
-                                                                else
-                                                                    ElementdescriptionX = null;
-
-                                                                //处理坐标问题
-                                                                var coordinates = (JArray)((JObject)feature["geometry"])["coordinates"];
-                                                                //内点
-                                                                var centroid = (JArray)feature["centroid"];
-                                                                //边框 (double west, double south, double east, double north)
-                                                                var FeatureBbox = (JArray)feature["bbox"];
-                                                                var FeatureBoundaryX = new XElement(
-                                                                    "boundary",
-                                                                    new XAttribute(
-                                                                        "centroid", $"{centroid[0]} {centroid[1]}"
-                                                                    ),
-                                                                    new XElement(
-                                                                        "north", $"{FeatureBbox[3]}"
-                                                                    ),
-                                                                    new XElement(
-                                                                        "south", $"{FeatureBbox[1]}"
-                                                                    ),
-                                                                    new XElement(
-                                                                        "west", $"{FeatureBbox[0]}"
-                                                                    ),
-                                                                    new XElement(
-                                                                        "east", $"{FeatureBbox[2]}"
-                                                                    )
-                                                                );
-                                                                var FeatureTimeStamp = feature["timeStamp"]?.Value<string>();  //DateTime.Now.ToString("s");
-
-                                                                XElement FeatureX = null;
-                                                                switch (featureType)
-                                                                {
-                                                                    case "Point":
-                                                                        //var subType = $"{feature["subType"]}"; //subType == "0" || subType == "5" ? style["text"] : ""
-                                                                        FeatureX = new XElement
-                                                                        (
-                                                                            "member",
-                                                                            new XAttribute("type", "Point"),
-                                                                            new XAttribute("typeCode", "1"),
-                                                                            new XAttribute("id", featureId),
-                                                                            new XAttribute("timeStamp", FeatureTimeStamp),
-                                                                            ElementdescriptionX,
-                                                                            new XElement(
-                                                                                "geometry",
-                                                                                $"POINT({coordinates[0]} {coordinates[1]})"
-                                                                            ),
-                                                                            FeatureBoundaryX
-                                                                        //,
-                                                                        //new XElement(
-                                                                        //    "style",
-                                                                        //    style.Properties()
-                                                                        //        .Select(field =>
-                                                                        //            new XElement(field.Name,
-                                                                        //                field.Value.ToString()))
-                                                                        //)
-                                                                        );
-
-                                                                        break;
-                                                                    case "LineString":
-                                                                        FeatureX = new XElement
-                                                                        (
-                                                                            "member",
-                                                                            new XAttribute("type", "Line"),
-                                                                            new XAttribute("typeCode", "2"),
-                                                                            new XAttribute("id", featureId),
-                                                                            new XAttribute("timeStamp", FeatureTimeStamp),
-                                                                            ElementdescriptionX,
-                                                                            new XElement(
-                                                                                "geometry",
-                                                                                "LINESTRING(" +
-                                                                                string.Join(
-                                                                                    ",",
-                                                                                    (
-                                                                                        from coor in coordinates
-                                                                                        select $"{coor[0]} {coor[1]}"
-                                                                                    ).ToArray()
-                                                                                ) +
-                                                                                ")"
-                                                                            )
-                                                                        //,
-                                                                        //new XElement(
-                                                                        //    "style",
-                                                                        //    style.Properties()
-                                                                        //        .Select(field =>
-                                                                        //            new XElement(field.Name,
-                                                                        //                field.Value.ToString()))
-                                                                        //)
-                                                                        );
-
-                                                                        break;
-                                                                    case "Polygon":
-                                                                        var polygon = new Polygon
-                                                                        {
-                                                                            OuterBoundary = new OuterBoundary
-                                                                            {
-                                                                                LinearRing = new LinearRing
-                                                                                {
-                                                                                    Coordinates = new CoordinateCollection((from coor in coordinates[0]
-                                                                                                                            select new Vector(double.Parse($"{coor[1]}"),
-                                                                                                                                double.Parse($"{coor[0]}"))).ToArray())
-                                                                                }
-                                                                            }
-                                                                        };
-                                                                        for (var j = 1; j < coordinates.Count; j++)
-                                                                        {
-                                                                            var lonlat = coordinates[j];
-                                                                            polygon.AddInnerBoundary(new InnerBoundary
-                                                                            {
-                                                                                LinearRing = new LinearRing
-                                                                                {
-                                                                                    Coordinates = new CoordinateCollection
-                                                                                        ((from coor in lonlat
-                                                                                          select new Vector(
-                                                                                          double.Parse($"{coor[1]}"),
-                                                                                          double.Parse($"{coor[0]}")))
-                                                                                            .ToArray())
-                                                                                }
-                                                                            }
+                                                                        ElementdescriptionX = new XElement("property");
+                                                                        for (var item = 0; item < Fields.Length; item++)
+                                                                            ElementdescriptionX.Add(
+                                                                                new XElement(
+                                                                                    Regex.Replace($"{Fields[item]["name"]}", @"[:""（）\(\)]+", "_",
+                                                                                        RegexOptions.IgnoreCase | RegexOptions.Singleline |
+                                                                                        RegexOptions.Multiline)
+                                                                                    ,
+                                                                                    FieldValues[item]
+                                                                                )
                                                                             );
-                                                                        }
+                                                                    }
+                                                                    else
+                                                                        ElementdescriptionX = null;
 
-                                                                        var polygonSerializer = new Serializer();
-                                                                        polygonSerializer.SerializeRaw(polygon);
+                                                                    //处理坐标问题
+                                                                    var coordinates = (JArray)((JObject)feature["geometry"])["coordinates"];
+                                                                    //内点
+                                                                    var centroid = (JArray)feature["centroid"];
+                                                                    //边框 (double west, double south, double east, double north)
+                                                                    var FeatureBbox = (JArray)feature["bbox"];
+                                                                    var FeatureBoundaryX = new XElement(
+                                                                        "boundary",
+                                                                        new XAttribute(
+                                                                            "centroid", $"{centroid[0]} {centroid[1]}"
+                                                                        ),
+                                                                        new XElement(
+                                                                            "north", $"{FeatureBbox[3]}"
+                                                                        ),
+                                                                        new XElement(
+                                                                            "south", $"{FeatureBbox[1]}"
+                                                                        ),
+                                                                        new XElement(
+                                                                            "west", $"{FeatureBbox[0]}"
+                                                                        ),
+                                                                        new XElement(
+                                                                            "east", $"{FeatureBbox[2]}"
+                                                                        )
+                                                                    );
+                                                                    var FeatureTimeStamp = feature["timeStamp"]?.Value<string>();  //DateTime.Now.ToString("s");
 
-                                                                        var PolygonX = GeositeXml.GeositeXml.Removexmlns(XElement.Parse(polygonSerializer.Xml));
-
-                                                                        var outerBoundaryIs = PolygonX.Element("outerBoundaryIs");
-                                                                        var LinearRing = outerBoundaryIs?.Element("LinearRing");
-                                                                        if (LinearRing != null)
-                                                                        {
+                                                                    XElement FeatureX = null;
+                                                                    switch (featureType)
+                                                                    {
+                                                                        case "Point":
+                                                                            //var subType = $"{feature["subType"]}"; //subType == "0" || subType == "5" ? style["text"] : ""
                                                                             FeatureX = new XElement
                                                                             (
                                                                                 "member",
-                                                                                new XAttribute("type", "Polygon"),
-                                                                                new XAttribute("typeCode", "3"),
+                                                                                new XAttribute("type", "Point"),
+                                                                                new XAttribute("typeCode", "1"),
                                                                                 new XAttribute("id", featureId),
                                                                                 new XAttribute("timeStamp", FeatureTimeStamp),
                                                                                 ElementdescriptionX,
                                                                                 new XElement(
                                                                                     "geometry",
-                                                                                    GeositeXML.OGCformat.KmlToWkt(2, PolygonX)
+                                                                                    $"POINT({coordinates[0]} {coordinates[1]})"
                                                                                 ),
                                                                                 FeatureBoundaryX
                                                                             //,
                                                                             //new XElement(
                                                                             //    "style",
                                                                             //    style.Properties()
-                                                                            //        .Select(field => new XElement(field.Name, field.Value.ToString()))
+                                                                            //        .Select(field =>
+                                                                            //            new XElement(field.Name,
+                                                                            //                field.Value.ToString()))
                                                                             //)
                                                                             );
-                                                                        }
 
-                                                                        break;
-                                                                }
-                                                                if (FeatureX != null)
-                                                                {
-                                                                    //依据枝干正向分类谱系创建叶子记录
-                                                                    var createLeaf = oneForest.Leaf(
-                                                                        route: createRoute.Route,
-                                                                        leafX: FeatureX,
-                                                                        timestamp:
-                                                                        $"{DateTime.Parse(FeatureX.Attribute("timeStamp").Value): yyyyMMdd,HHmmss}",
-                                                                        topology: doTopology
-                                                                    );
+                                                                            break;
+                                                                        case "LineString":
+                                                                            FeatureX = new XElement
+                                                                            (
+                                                                                "member",
+                                                                                new XAttribute("type", "Line"),
+                                                                                new XAttribute("typeCode", "2"),
+                                                                                new XAttribute("id", featureId),
+                                                                                new XAttribute("timeStamp", FeatureTimeStamp),
+                                                                                ElementdescriptionX,
+                                                                                new XElement(
+                                                                                    "geometry",
+                                                                                    "LINESTRING(" +
+                                                                                    string.Join(
+                                                                                        ",",
+                                                                                        (
+                                                                                            from coor in coordinates
+                                                                                            select $"{coor[0]} {coor[1]}"
+                                                                                        ).ToArray()
+                                                                                    ) +
+                                                                                    ")"
+                                                                                )
+                                                                            //,
+                                                                            //new XElement(
+                                                                            //    "style",
+                                                                            //    style.Properties()
+                                                                            //        .Select(field =>
+                                                                            //            new XElement(field.Name,
+                                                                            //                field.Value.ToString()))
+                                                                            //)
+                                                                            );
 
-                                                                    var scale10 =
-                                                                        (int)Math.Ceiling(10.0 * (++leafPointer) /
-                                                                            RecordCount);
-
-                                                                    if (scale10 > oldscale10)
-                                                                    {
-                                                                        oldscale10 = scale10;
-                                                                        flag10 += scale1;
-                                                                        if (flag10 < 10)
-                                                                            freeText.fire(path,
-                                                                                progress: scale10 * 10);
-                                                                        else
-                                                                        {
-                                                                            //目的是凑满10个刻度
-                                                                            var rest = 10 - (flag10 - scale1);
-                                                                            if (rest > 0)
-                                                                                freeText.fire(path,
-                                                                                    progress: 10 * 10);
-                                                                        }
-                                                                    }
-                                                                    if (!createLeaf.Success)
-                                                                    {
-                                                                        this.Invoke(
-                                                                            new Action(
-                                                                                () =>
+                                                                            break;
+                                                                        case "Polygon":
+                                                                            var polygon = new Polygon
+                                                                            {
+                                                                                OuterBoundary = new OuterBoundary
                                                                                 {
-                                                                                    statusCell.Value = "!";
-                                                                                    statusCell.ToolTipText = createLeaf.Message;
+                                                                                    LinearRing = new LinearRing
+                                                                                    {
+                                                                                        Coordinates = new CoordinateCollection((from coor in coordinates[0]
+                                                                                                                                select new Vector(double.Parse($"{coor[1]}"),
+                                                                                                                                    double.Parse($"{coor[0]}"))).ToArray())
+                                                                                    }
                                                                                 }
-                                                                            )
+                                                                            };
+                                                                            for (var j = 1; j < coordinates.Count; j++)
+                                                                            {
+                                                                                var lonlat = coordinates[j];
+                                                                                polygon.AddInnerBoundary(new InnerBoundary
+                                                                                {
+                                                                                    LinearRing = new LinearRing
+                                                                                    {
+                                                                                        Coordinates = new CoordinateCollection
+                                                                                            ((from coor in lonlat
+                                                                                              select new Vector(
+                                                                                              double.Parse($"{coor[1]}"),
+                                                                                              double.Parse($"{coor[0]}")))
+                                                                                                .ToArray())
+                                                                                    }
+                                                                                }
+                                                                                );
+                                                                            }
+
+                                                                            var polygonSerializer = new Serializer();
+                                                                            polygonSerializer.SerializeRaw(polygon);
+
+                                                                            var PolygonX = GeositeXml.GeositeXml.Removexmlns(XElement.Parse(polygonSerializer.Xml));
+
+                                                                            var outerBoundaryIs = PolygonX.Element("outerBoundaryIs");
+                                                                            var LinearRing = outerBoundaryIs?.Element("LinearRing");
+                                                                            if (LinearRing != null)
+                                                                            {
+                                                                                FeatureX = new XElement
+                                                                                (
+                                                                                    "member",
+                                                                                    new XAttribute("type", "Polygon"),
+                                                                                    new XAttribute("typeCode", "3"),
+                                                                                    new XAttribute("id", featureId),
+                                                                                    new XAttribute("timeStamp", FeatureTimeStamp),
+                                                                                    ElementdescriptionX,
+                                                                                    new XElement(
+                                                                                        "geometry",
+                                                                                        GeositeXML.OGCformat.KmlToWkt(2, PolygonX)
+                                                                                    ),
+                                                                                    FeatureBoundaryX
+                                                                                //,
+                                                                                //new XElement(
+                                                                                //    "style",
+                                                                                //    style.Properties()
+                                                                                //        .Select(field => new XElement(field.Name, field.Value.ToString()))
+                                                                                //)
+                                                                                );
+                                                                            }
+
+                                                                            break;
+                                                                    }
+                                                                    if (FeatureX != null)
+                                                                    {
+                                                                        //依据枝干正向分类谱系创建叶子记录
+                                                                        var createLeaf = oneForest.Leaf(
+                                                                            route: createRoute.Route,
+                                                                            leafX: FeatureX,
+                                                                            timestamp:
+                                                                            $"{DateTime.Parse(FeatureX.Attribute("timeStamp").Value): yyyyMMdd,HHmmss}",
+                                                                            topology: doTopology
                                                                         );
 
-                                                                        isOK = false;
-                                                                        break;
+                                                                        var scale10 =
+                                                                            (int)Math.Ceiling(10.0 * (++leafPointer) /
+                                                                                RecordCount);
+
+                                                                        if (scale10 > oldscale10)
+                                                                        {
+                                                                            oldscale10 = scale10;
+                                                                            flag10 += scale1;
+                                                                            if (flag10 < 10)
+                                                                                freeText.fire(path,
+                                                                                    progress: scale10 * 10);
+                                                                            else
+                                                                            {
+                                                                                //目的是凑满10个刻度
+                                                                                var rest = 10 - (flag10 - scale1);
+                                                                                if (rest > 0)
+                                                                                    freeText.fire(path,
+                                                                                        progress: 10 * 10);
+                                                                            }
+                                                                        }
+
+                                                                        if (createLeaf.Success)
+                                                                        {
+                                                                            if (!treeType.Contains(createLeaf.Type))
+                                                                                treeType.Add(createLeaf.Type);
+
+                                                                            valid++;
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            this.Invoke(
+                                                                                new Action(
+                                                                                    () =>
+                                                                                    {
+                                                                                        statusCell.Value = "!";
+                                                                                        statusCell.ToolTipText =
+                                                                                            createLeaf.Message;
+                                                                                    }
+                                                                                )
+                                                                            );
+
+                                                                            isOK = false;
+                                                                            //break; //即使出现异常，也继续遍历
+                                                                        }
                                                                     }
-
-                                                                    if (!treeType.Contains(createLeaf.Type))
-                                                                        treeType.Add(createLeaf.Type);
-
-                                                                    valid++;
+                                                                }
+                                                                catch (Exception localError)
+                                                                {
+                                                                    isOK = false;
+                                                                    this.Invoke(
+                                                                        new Action(
+                                                                            () =>
+                                                                            {
+                                                                                statusCell.Value = "!";
+                                                                                statusCell.ToolTipText = localError.Message;
+                                                                            }
+                                                                        )
+                                                                    );
                                                                 }
                                                             }
                                                         }
@@ -3767,6 +3839,7 @@ namespace Geosite
                                                 {
                                                     // 为提升进度视觉体验，特将进度值限定在0--10之间
                                                     var leafPointer = 0;
+                                                    var valid = 0;
                                                     var oldscale10 = -1;
                                                     var flagMany = 10.0 / leafCount;
                                                     var scale1 = (int)Math.Ceiling(flagMany);
@@ -3795,62 +3868,67 @@ namespace Geosite
                                                             );
 
                                                             isOK = false;
-                                                            break;
+                                                            //break; //即使出现异常，也继续遍历？
                                                         }
-
-                                                        //依据枝干正向分类谱系创建叶子记录
-                                                        var createLeaf = oneForest.Leaf(
-                                                            route: createRoute.Route,
-                                                            leafX: leafX,
-                                                            timestamp:
-                                                            $"{DateTime.Parse(leafX.Attribute("timeStamp").Value): yyyyMMdd,HHmmss}",
-                                                            topology: doTopology
-                                                        );
-
-                                                        var scale10 = (int)Math.Ceiling(10.0 * (++leafPointer) / leafCount);
-
-                                                        if (scale10 > oldscale10)
+                                                        else
                                                         {
-                                                            oldscale10 = scale10;
-                                                            flag10 += scale1;
-                                                            if (flag10 < 10)
-                                                                xml.fire(path,
-                                                                    progress: scale10 * 10);
-                                                            else
+                                                            var scale10 = (int)Math.Ceiling(10.0 * (++leafPointer) / leafCount);
+
+                                                            if (scale10 > oldscale10)
                                                             {
-                                                                //目的是凑满10个刻度
-                                                                var rest = 10 - (flag10 - scale1);
-                                                                if (rest > 0)
+                                                                oldscale10 = scale10;
+                                                                flag10 += scale1;
+                                                                if (flag10 < 10)
                                                                     xml.fire(path,
-                                                                        progress: 10 * 10);
+                                                                        progress: scale10 * 10);
+                                                                else
+                                                                {
+                                                                    //目的是凑满10个刻度
+                                                                    var rest = 10 - (flag10 - scale1);
+                                                                    if (rest > 0)
+                                                                        xml.fire(path,
+                                                                            progress: 10 * 10);
+                                                                }
                                                             }
-                                                        }
 
-                                                        if (!createLeaf.Success)
-                                                        {
-                                                            this.Invoke(
-                                                                new Action(
-                                                                    () =>
-                                                                    {
-                                                                        statusCell.Value = "!";
-                                                                        statusCell.ToolTipText = createLeaf.Message;
-                                                                    }
-                                                                )
+                                                            //依据枝干正向分类谱系创建叶子记录
+                                                            var createLeaf = oneForest.Leaf(
+                                                                route: createRoute.Route,
+                                                                leafX: leafX,
+                                                                timestamp:
+                                                                $"{DateTime.Parse(leafX.Attribute("timeStamp").Value): yyyyMMdd,HHmmss}",
+                                                                topology: doTopology
                                                             );
 
-                                                            isOK = false;
-                                                            break;
-                                                        }
+                                                            if (createLeaf.Success)
+                                                            {
+                                                                valid++;
+                                                                if (!treeType.Contains(createLeaf.Type))
+                                                                    treeType.Add(createLeaf.Type);
+                                                            }
+                                                            else
+                                                            {
+                                                                this.Invoke(
+                                                                    new Action(
+                                                                        () =>
+                                                                        {
+                                                                            statusCell.Value = "!";
+                                                                            statusCell.ToolTipText = createLeaf.Message;
+                                                                        }
+                                                                    )
+                                                                );
 
-                                                        if (!treeType.Contains(createLeaf.Type))
-                                                            treeType.Add(createLeaf.Type);
+                                                                isOK = false;
+                                                                //break; //即使出现异常，也继续遍历？
+                                                            }
+                                                        }
                                                     }
 
                                                     xml.fire(
-                                                        $" [{leafCount} feature{(leafCount > 1 ? "s" : "")}]");
+                                                        $" [{valid} feature{(valid > 1 ? "s" : "")}]");
                                                 }
 
-                                                //只要发现任何一个，就中止后续遍历
+                                                //只要发现【"member", "Member", "MEMBER"】任何一个，就中止后续遍历
                                                 break;
                                             }
 
@@ -3977,6 +4055,7 @@ namespace Geosite
                                                 {
                                                     // 为提升进度视觉体验，特将进度值限定在0--10之间
                                                     var leafPointer = 0;
+                                                    var valid = 0;
                                                     var oldscale10 = -1;
                                                     var flagMany = 10.0 / leafCount;
                                                     var scale1 = (int)Math.Ceiling(flagMany);
@@ -4005,59 +4084,64 @@ namespace Geosite
                                                             );
 
                                                             isOK = false;
-                                                            break;
+                                                            //break;
                                                         }
-
-                                                        //依据枝干正向分类谱系创建叶子记录
-                                                        var createLeaf = oneForest.Leaf(
-                                                            route: createRoute.Route,
-                                                            leafX: leafX,
-                                                            timestamp:
-                                                            $"{DateTime.Parse(leafX.Attribute("timeStamp").Value): yyyyMMdd,HHmmss}",
-                                                            topology: doTopology
-                                                        );
-
-                                                        var scale10 = (int)Math.Ceiling(10.0 * (++leafPointer) / leafCount);
-
-                                                        if (scale10 > oldscale10)
+                                                        else
                                                         {
-                                                            oldscale10 = scale10;
-                                                            flag10 += scale1;
-                                                            if (flag10 < 10)
-                                                                kml.fire(path,
-                                                                    progress: scale10 * 10);
-                                                            else
-                                                            {
-                                                                //目的是凑满10个刻度
-                                                                var rest = 10 - (flag10 - scale1);
-                                                                if (rest > 0)
-                                                                    kml.fire(path,
-                                                                        progress: 10 * 10);
-                                                            }
-                                                        }
-
-                                                        if (!createLeaf.Success)
-                                                        {
-                                                            this.Invoke(
-                                                                new Action(
-                                                                    () =>
-                                                                    {
-                                                                        statusCell.Value = "!";
-                                                                        statusCell.ToolTipText = createLeaf.Message;
-                                                                    }
-                                                                )
+                                                            //依据枝干正向分类谱系创建叶子记录
+                                                            var createLeaf = oneForest.Leaf(
+                                                                route: createRoute.Route,
+                                                                leafX: leafX,
+                                                                timestamp:
+                                                                $"{DateTime.Parse(leafX.Attribute("timeStamp").Value): yyyyMMdd,HHmmss}",
+                                                                topology: doTopology
                                                             );
 
-                                                            isOK = false;
-                                                            break;
-                                                        }
+                                                            var scale10 = (int)Math.Ceiling(10.0 * (++leafPointer) / leafCount);
 
-                                                        if (!treeType.Contains(createLeaf.Type))
-                                                            treeType.Add(createLeaf.Type);
+                                                            if (scale10 > oldscale10)
+                                                            {
+                                                                oldscale10 = scale10;
+                                                                flag10 += scale1;
+                                                                if (flag10 < 10)
+                                                                    kml.fire(path,
+                                                                        progress: scale10 * 10);
+                                                                else
+                                                                {
+                                                                    //目的是凑满10个刻度
+                                                                    var rest = 10 - (flag10 - scale1);
+                                                                    if (rest > 0)
+                                                                        kml.fire(path,
+                                                                            progress: 10 * 10);
+                                                                }
+                                                            }
+
+                                                            if (createLeaf.Success)
+                                                            {
+                                                                valid++;
+                                                                if (!treeType.Contains(createLeaf.Type))
+                                                                    treeType.Add(createLeaf.Type);
+                                                            }
+                                                            else
+                                                            {
+                                                                this.Invoke(
+                                                                    new Action(
+                                                                        () =>
+                                                                        {
+                                                                            statusCell.Value = "!";
+                                                                            statusCell.ToolTipText = createLeaf.Message;
+                                                                        }
+                                                                    )
+                                                                );
+
+                                                                isOK = false;
+                                                                //break;
+                                                            }
+                                                        }
                                                     }
 
                                                     kml.fire(
-                                                        $" [{leafCount} feature{(leafCount > 1 ? "s" : "")}]");
+                                                        $" [{valid} feature{(valid > 1 ? "s" : "")}]");
                                                 }
 
                                                 //只要发现任何一个，就中止后续遍历
@@ -4198,6 +4282,7 @@ namespace Geosite
                                                     {
                                                         // 为提升进度视觉体验，特将进度值限定在0--10之间
                                                         var leafPointer = 0;
+                                                        var valid = 0;
                                                         var oldscale10 = -1;
                                                         var flagMany = 10.0 / leafCount;
                                                         var scale1 = (int)Math.Ceiling(flagMany);
@@ -4226,61 +4311,66 @@ namespace Geosite
                                                                 );
 
                                                                 isOK = false;
-                                                                break;
+                                                                //break;
                                                             }
-
-                                                            //依据枝干正向分类谱系创建叶子记录
-                                                            var createLeaf = oneForest.Leaf(
-                                                                route: createRoute.Route,
-                                                                leafX: leafX,
-                                                                timestamp:
-                                                                $"{DateTime.Parse(leafX.Attribute("timeStamp").Value): yyyyMMdd,HHmmss}",
-                                                                topology: doTopology
-                                                            );
-
-                                                            var scale10 =
-                                                                (int)Math.Ceiling(10.0 * (++leafPointer) /
-                                                                    leafCount);
-
-                                                            if (scale10 > oldscale10)
+                                                            else
                                                             {
-                                                                oldscale10 = scale10;
-                                                                flag10 += scale1;
-                                                                if (flag10 < 10)
-                                                                    GeoJsonObject.fire(path,
-                                                                        progress: scale10 * 10);
-                                                                else
-                                                                {
-                                                                    //目的是凑满10个刻度
-                                                                    var rest = 10 - (flag10 - scale1);
-                                                                    if (rest > 0)
-                                                                        GeoJsonObject.fire(path,
-                                                                            progress: 10 * 10);
-                                                                }
-                                                            }
-
-                                                            if (!createLeaf.Success)
-                                                            {
-                                                                this.Invoke(
-                                                                    new Action(
-                                                                        () =>
-                                                                        {
-                                                                            statusCell.Value = "!";
-                                                                            statusCell.ToolTipText = createLeaf.Message;
-                                                                        }
-                                                                    )
+                                                                //依据枝干正向分类谱系创建叶子记录
+                                                                var createLeaf = oneForest.Leaf(
+                                                                    route: createRoute.Route,
+                                                                    leafX: leafX,
+                                                                    timestamp:
+                                                                    $"{DateTime.Parse(leafX.Attribute("timeStamp").Value): yyyyMMdd,HHmmss}",
+                                                                    topology: doTopology
                                                                 );
 
-                                                                isOK = false;
-                                                                break;
-                                                            }
+                                                                var scale10 =
+                                                                    (int)Math.Ceiling(10.0 * (++leafPointer) /
+                                                                        leafCount);
 
-                                                            if (!treeType.Contains(createLeaf.Type))
-                                                                treeType.Add(createLeaf.Type);
+                                                                if (scale10 > oldscale10)
+                                                                {
+                                                                    oldscale10 = scale10;
+                                                                    flag10 += scale1;
+                                                                    if (flag10 < 10)
+                                                                        GeoJsonObject.fire(path,
+                                                                            progress: scale10 * 10);
+                                                                    else
+                                                                    {
+                                                                        //目的是凑满10个刻度
+                                                                        var rest = 10 - (flag10 - scale1);
+                                                                        if (rest > 0)
+                                                                            GeoJsonObject.fire(path,
+                                                                                progress: 10 * 10);
+                                                                    }
+                                                                }
+
+                                                                if (createLeaf.Success)
+                                                                {
+                                                                    valid++;
+                                                                    if (!treeType.Contains(createLeaf.Type))
+                                                                        treeType.Add(createLeaf.Type);
+                                                                }
+                                                                else
+                                                                {
+                                                                    this.Invoke(
+                                                                        new Action(
+                                                                            () =>
+                                                                            {
+                                                                                statusCell.Value = "!";
+                                                                                statusCell.ToolTipText = createLeaf.Message;
+                                                                            }
+                                                                        )
+                                                                    );
+
+                                                                    isOK = false;
+                                                                    //break;
+                                                                }
+                                                            }
                                                         }
 
                                                         GeoJsonObject.fire(
-                                                            $" [{leafCount} feature{(leafCount > 1 ? "s" : "")}]");
+                                                            $" [{valid} feature{(valid > 1 ? "s" : "")}]");
                                                     }
 
                                                     //只要发现任何一个，就中止后续遍历
@@ -4384,7 +4474,7 @@ namespace Geosite
                 );
             }
 
-            return "Done."; //此结果信息将出现在状态行
+            return statusInfo; //此结果信息将出现在状态行
         }
 
         private void VectorWorkProgress(object sender, ProgressChangedEventArgs e)
@@ -4393,8 +4483,7 @@ namespace Geosite
             var ProgressPercentage = e.ProgressPercentage;
             var pv = statusProgress.Value = ProgressPercentage is >= 0 and <= 100 ? ProgressPercentage : 0;
             statusText.Text = UserState;
-            //实时刷新界面进度杆会明显降低执行速度！
-            //下面采取每10个要素刷新一次 
+            //实时刷新界面进度杆会明显降低执行速度！下面采取每10个要素刷新一次 
             if (pv % 10 == 0)
                 statusBar.Refresh();
         }

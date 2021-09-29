@@ -2144,7 +2144,7 @@
             // 
             // pictureBox11
             // 
-            this.pictureBox11.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox11.BackgroundImage")));
+            this.pictureBox11.BackgroundImage = global::Geosite.Properties.Resources.OGC_net_logo;
             this.pictureBox11.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.pictureBox11.Location = new System.Drawing.Point(6, 0);
             this.pictureBox11.Name = "pictureBox11";
