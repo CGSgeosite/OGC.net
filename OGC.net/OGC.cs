@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -52,6 +51,10 @@ namespace Geosite
 
         private void OGCform_Load(object sender, EventArgs e)
         {
+            //-----test----
+            
+            //-------------
+
             this.Opacity = 0;
 
             //窗口标题-----
@@ -289,9 +292,6 @@ namespace Geosite
             rasterWorker.RunWorkerCompleted += RasterWorkCompleted;
             rasterWorker.ProgressChanged += RasterWorkProgress;
         }
-
-        //字符串哈希编码函数
-        private readonly Func<string, long> hashEncoder = ((Expression<Func<string, long>>)(strings => strings.Aggregate<char, long>(5381, (current, letter) => (current << 5) + current + letter))).Compile();
 
         /*
             _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
@@ -970,7 +970,7 @@ namespace Geosite
                 var userX = GeositeServerUsers.GetClusterUser(
                    ServerUrl,
                    ServerUser,
-                   $"{hashEncoder(ServerPassword)}" //将密码以哈希密文形式传输
+                   $"{GeositeConfuser.Cryptography.hashEncoder(ServerPassword)}" //将密码以哈希密文形式传输
                );
                 /*  返回样例：
                     <User>
@@ -2264,7 +2264,7 @@ namespace Geosite
                 return "Pause...";
             }
 
-            var doTopology = topologyCheckBox.Checked; //针对矢量数据，是否执行【拓扑】？
+            var doTopology = topologyCheckBox.Checked; //针对矢量数据，是否执行【拓扑】？ 
             var forest = ClusterUser.forest;
             var oneForest = new GeositeXmlPush();
 
@@ -2523,7 +2523,7 @@ namespace Geosite
                                                                 else
                                                                     ElementdescriptionX = null;
 
-                                                                //处理坐标问题
+                                                                //几何坐标
                                                                 var coordinates = (JArray)((JObject)feature["geometry"])["coordinates"];
                                                                 //内点
                                                                 var centroid = (JArray)feature["centroid"];
@@ -2600,6 +2600,7 @@ namespace Geosite
                                                                                 ) +
                                                                                 ")"
                                                                             ),
+                                                                            FeatureBoundaryX,
                                                                             new XElement(
                                                                                 "style",
                                                                                 style.Properties()
@@ -2611,65 +2612,50 @@ namespace Geosite
 
                                                                         break;
                                                                     case "Polygon":
-                                                                        var polygon = new Polygon
-                                                                        {
-                                                                            OuterBoundary = new OuterBoundary
-                                                                            {
-                                                                                LinearRing = new LinearRing
-                                                                                {
-                                                                                    Coordinates = new CoordinateCollection((from coor in coordinates[0]
-                                                                                                                            select new Vector(double.Parse($"{coor[1]}"),
-                                                                                                                                double.Parse($"{coor[0]}"))).ToArray())
-                                                                                }
-                                                                            }
-                                                                        };
-                                                                        for (var j = 1; j < coordinates.Count; j++)
-                                                                        {
-                                                                            var lonlat = coordinates[j];
-                                                                            polygon.AddInnerBoundary(new InnerBoundary
-                                                                            {
-                                                                                LinearRing = new LinearRing
-                                                                                {
-                                                                                    Coordinates = new CoordinateCollection
-                                                                                        ((from coor in lonlat
-                                                                                          select new Vector(
-                                                                                          double.Parse($"{coor[1]}"),
-                                                                                          double.Parse($"{coor[0]}")))
-                                                                                            .ToArray())
-                                                                                }
-                                                                            }
-                                                                            );
-                                                                        }
-
-                                                                        var polygonSerializer = new Serializer();
-                                                                        polygonSerializer.SerializeRaw(polygon);
-
-                                                                        var PolygonX = GeositeXml.GeositeXml.Removexmlns(XElement.Parse(polygonSerializer.Xml));
-
-                                                                        var outerBoundaryIs = PolygonX.Element("outerBoundaryIs");
-                                                                        var LinearRing = outerBoundaryIs?.Element("LinearRing");
-                                                                        if (LinearRing != null)
-                                                                        {
-                                                                            FeatureX = new XElement
-                                                                            (
-                                                                                "member",
-                                                                                new XAttribute("type", "Polygon"),
-                                                                                new XAttribute("typeCode", "3"),
-                                                                                new XAttribute("id", featureId),
-                                                                                new XAttribute("timeStamp", FeatureTimeStamp),
-                                                                                ElementdescriptionX,
-                                                                                new XElement(
-                                                                                    "geometry",
-                                                                                    GeositeXML.OGCformat.KmlToWkt(2, PolygonX)
-                                                                                ),
-                                                                                FeatureBoundaryX,
-                                                                                new XElement(
-                                                                                    "style",
-                                                                                    style.Properties()
-                                                                                        .Select(field => new XElement(field.Name, field.Value.ToString()))
-                                                                                )
-                                                                            );
-                                                                        }
+                                                                        FeatureX = new XElement
+                                                                        (
+                                                                            "member",
+                                                                            new XAttribute("type", "Polygon"),
+                                                                            new XAttribute("typeCode", "3"),
+                                                                            new XAttribute("id", featureId),
+                                                                            new XAttribute("timeStamp",
+                                                                                FeatureTimeStamp),
+                                                                            ElementdescriptionX,
+                                                                            new XElement(
+                                                                                "geometry", 
+                                                                                //WKT：
+                                                                                //单面 POLYGON((x y z ...,x y z ...,x y z ...)) 
+                                                                                //母子面 POLYGON((x y z ...,x y z ...,x y z ...),(x y z ...,x y z ...,x y z ...),(x y z ...,x y z ...,x y z ...),...)
+                                                                                //多面已处理为单面或母子面 MULTIPOLYGON(((x y z ...,x y z ...,x y z ...),(x y z ...,x y z ...,x y z ...)), ((x y z ...,x y z ...,x y z ...)))
+                                                                                "POLYGON(" +
+                                                                                string.Join
+                                                                                (
+                                                                                    ",",
+                                                                                    (
+                                                                                        from JArray coordinate
+                                                                                            in coordinates
+                                                                                        select "(" + string.Join(",",
+                                                                                            (
+                                                                                                from xy in coordinate
+                                                                                                select
+                                                                                                    $"{xy[0]} {xy[1]}"
+                                                                                            )
+                                                                                            .ToArray()
+                                                                                        ) + ")"
+                                                                                    )
+                                                                                    .ToList()
+                                                                                ) +
+                                                                                ")"
+                                                                            ),
+                                                                            FeatureBoundaryX,
+                                                                            new XElement(
+                                                                                "style",
+                                                                                style.Properties()
+                                                                                    .Select(field =>
+                                                                                        new XElement(field.Name,
+                                                                                            field.Value.ToString()))
+                                                                            )
+                                                                        );
 
                                                                         break;
                                                                 }
@@ -3052,6 +3038,8 @@ namespace Geosite
                                                                         ElementdescriptionX,
                                                                         new XElement(
                                                                             "geometry",
+                                                                            //单点 POINT(x y z ...)
+                                                                            //多点 MULTIPOINT(x y z ...,x y z ...,x y z ...) 
                                                                             $"POINT({coordinates[0]} {coordinates[1]})"
                                                                         ),
                                                                         FeatureBoundaryX,
@@ -3070,6 +3058,8 @@ namespace Geosite
                                                                         ElementdescriptionX,
                                                                         new XElement(
                                                                             "geometry",
+                                                                            //单线 LINESTRING(x y z ...,x y z ...,x y z ...)
+                                                                            //多线 MULTILINESTRING((x y z ...,x y z ...,x y z ...),(x y z ...,x y z ...,x y z ...))
                                                                             "LINESTRING(" +
                                                                             string.Join(
                                                                                 ",",
@@ -3086,72 +3076,42 @@ namespace Geosite
 
                                                                     break;
                                                                 case "Polygon":
-                                                                    var polygon = new Polygon
-                                                                    {
-                                                                        OuterBoundary = new OuterBoundary
-                                                                        {
-                                                                            LinearRing = new LinearRing
-                                                                            {
-                                                                                Coordinates =
-                                                                                    new CoordinateCollection(
-                                                                                        (from coor in coordinates[0]
-                                                                                         select new Vector(
-                                                                                         double.Parse(
-                                                                                             $"{coor[1]}"),
-                                                                                         double.Parse(
-                                                                                             $"{coor[0]}")))
-                                                                                        .ToArray())
-                                                                            }
-                                                                        }
-                                                                    };
-                                                                    for (var j = 1; j < coordinates.Count; j++)
-                                                                    {
-                                                                        var lonlat = coordinates[j];
-                                                                        polygon.AddInnerBoundary(new InnerBoundary
-                                                                        {
-                                                                            LinearRing = new LinearRing
-                                                                            {
-                                                                                Coordinates = new CoordinateCollection
-                                                                                ((from coor in lonlat
-                                                                                  select new Vector(
-                                                                                  double.Parse($"{coor[1]}"),
-                                                                                  double.Parse($"{coor[0]}")))
-                                                                                    .ToArray())
-                                                                            }
-                                                                        });
-                                                                    }
-
-                                                                    var polygonSerializer = new Serializer();
-                                                                    polygonSerializer.SerializeRaw(polygon);
-
-                                                                    var PolygonX =
-                                                                        GeositeXml.GeositeXml.Removexmlns(
-                                                                            XElement.Parse(polygonSerializer.Xml));
-
-                                                                    var outerBoundaryIs =
-                                                                        PolygonX.Element("outerBoundaryIs");
-                                                                    var LinearRing =
-                                                                        outerBoundaryIs?.Element("LinearRing");
-                                                                    if (LinearRing != null)
-                                                                    {
-                                                                        FeatureX = new XElement
-                                                                        (
-                                                                            "member",
-                                                                            new XAttribute("type", "Polygon"),
-                                                                            new XAttribute("typeCode", "3"),
-                                                                            new XAttribute("id", featureId),
-                                                                            new XAttribute("timeStamp",
-                                                                                FeatureTimeStamp),
-                                                                            ElementdescriptionX,
-                                                                            new XElement(
-                                                                                "geometry",
-                                                                                GeositeXML.OGCformat.KmlToWkt(2,
-                                                                                    PolygonX)
-                                                                            ),
-                                                                            FeatureBoundaryX,
-                                                                            styleX
-                                                                        );
-                                                                    }
+                                                                    FeatureX = new XElement
+                                                                    (
+                                                                        "member",
+                                                                        new XAttribute("type", "Polygon"),
+                                                                        new XAttribute("typeCode", "3"),
+                                                                        new XAttribute("id", featureId),
+                                                                        new XAttribute("timeStamp",
+                                                                            FeatureTimeStamp),
+                                                                        ElementdescriptionX,
+                                                                        new XElement(
+                                                                            "geometry",
+                                                                            //单面 POLYGON((x y z ...,x y z ...,x y z ...)) 
+                                                                            //母子面 POLYGON((x y z ...,x y z ...,x y z ...),(x y z ...,x y z ...,x y z ...),(x y z ...,x y z ...,x y z ...),...)
+                                                                            //多面已处理为单面或母子面  MULTIPOLYGON(((x y z ...,x y z ...,x y z ...),(x y z ...,x y z ...,x y z ...)), ((x y z ...,x y z ...,x y z ...)))
+                                                                            "POLYGON(" +
+                                                                            string.Join
+                                                                            (
+                                                                                ",",
+                                                                                (
+                                                                                    from JArray coordinate
+                                                                                        in coordinates
+                                                                                    select "(" + string.Join(",",
+                                                                                        (
+                                                                                            from xy in coordinate
+                                                                                            select $"{xy[0]} {xy[1]}"
+                                                                                        )
+                                                                                        .ToArray()
+                                                                                    ) + ")"
+                                                                                )
+                                                                                .ToList()
+                                                                            ) +
+                                                                            ")"
+                                                                        ),
+                                                                        FeatureBoundaryX,
+                                                                        styleX
+                                                                    );
 
                                                                     break;
                                                             }
@@ -3549,7 +3509,8 @@ namespace Geosite
                                                                                 new XAttribute("type", "Line"),
                                                                                 new XAttribute("typeCode", "2"),
                                                                                 new XAttribute("id", featureId),
-                                                                                new XAttribute("timeStamp", FeatureTimeStamp),
+                                                                                new XAttribute("timeStamp",
+                                                                                    FeatureTimeStamp),
                                                                                 ElementdescriptionX,
                                                                                 new XElement(
                                                                                     "geometry",
@@ -3558,83 +3519,66 @@ namespace Geosite
                                                                                         ",",
                                                                                         (
                                                                                             from coor in coordinates
-                                                                                            select $"{coor[0]} {coor[1]}"
+                                                                                            select
+                                                                                                $"{coor[0]} {coor[1]}"
                                                                                         ).ToArray()
                                                                                     ) +
                                                                                     ")"
-                                                                                )
-                                                                            //,
-                                                                            //new XElement(
-                                                                            //    "style",
-                                                                            //    style.Properties()
-                                                                            //        .Select(field =>
-                                                                            //            new XElement(field.Name,
-                                                                            //                field.Value.ToString()))
-                                                                            //)
+                                                                                ),
+                                                                                FeatureBoundaryX
+                                                                                //,
+                                                                                //new XElement(
+                                                                                //    "style",
+                                                                                //    style.Properties()
+                                                                                //        .Select(field =>
+                                                                                //            new XElement(field.Name,
+                                                                                //                field.Value.ToString()))
+                                                                                //)
                                                                             );
 
                                                                             break;
                                                                         case "Polygon":
-                                                                            var polygon = new Polygon
-                                                                            {
-                                                                                OuterBoundary = new OuterBoundary
-                                                                                {
-                                                                                    LinearRing = new LinearRing
-                                                                                    {
-                                                                                        Coordinates = new CoordinateCollection((from coor in coordinates[0]
-                                                                                                                                select new Vector(double.Parse($"{coor[1]}"),
-                                                                                                                                    double.Parse($"{coor[0]}"))).ToArray())
-                                                                                    }
-                                                                                }
-                                                                            };
-                                                                            for (var j = 1; j < coordinates.Count; j++)
-                                                                            {
-                                                                                var lonlat = coordinates[j];
-                                                                                polygon.AddInnerBoundary(new InnerBoundary
-                                                                                {
-                                                                                    LinearRing = new LinearRing
-                                                                                    {
-                                                                                        Coordinates = new CoordinateCollection
-                                                                                            ((from coor in lonlat
-                                                                                              select new Vector(
-                                                                                              double.Parse($"{coor[1]}"),
-                                                                                              double.Parse($"{coor[0]}")))
-                                                                                                .ToArray())
-                                                                                    }
-                                                                                }
-                                                                                );
-                                                                            }
-
-                                                                            var polygonSerializer = new Serializer();
-                                                                            polygonSerializer.SerializeRaw(polygon);
-
-                                                                            var PolygonX = GeositeXml.GeositeXml.Removexmlns(XElement.Parse(polygonSerializer.Xml));
-
-                                                                            var outerBoundaryIs = PolygonX.Element("outerBoundaryIs");
-                                                                            var LinearRing = outerBoundaryIs?.Element("LinearRing");
-                                                                            if (LinearRing != null)
-                                                                            {
-                                                                                FeatureX = new XElement
-                                                                                (
-                                                                                    "member",
-                                                                                    new XAttribute("type", "Polygon"),
-                                                                                    new XAttribute("typeCode", "3"),
-                                                                                    new XAttribute("id", featureId),
-                                                                                    new XAttribute("timeStamp", FeatureTimeStamp),
-                                                                                    ElementdescriptionX,
-                                                                                    new XElement(
-                                                                                        "geometry",
-                                                                                        GeositeXML.OGCformat.KmlToWkt(2, PolygonX)
-                                                                                    ),
-                                                                                    FeatureBoundaryX
+                                                                            FeatureX = new XElement
+                                                                            (
+                                                                                "member",
+                                                                                new XAttribute("type", "Polygon"),
+                                                                                new XAttribute("typeCode", "3"),
+                                                                                new XAttribute("id", featureId),
+                                                                                new XAttribute("timeStamp",
+                                                                                    FeatureTimeStamp),
+                                                                                ElementdescriptionX,
+                                                                                new XElement(
+                                                                                    "geometry",
+                                                                                    "POLYGON(" +
+                                                                                    string.Join
+                                                                                    (
+                                                                                        ",",
+                                                                                        (
+                                                                                            from JArray coordinate
+                                                                                                in coordinates
+                                                                                            select "(" + string.Join(
+                                                                                                ",",
+                                                                                                (
+                                                                                                    from xy in
+                                                                                                        coordinate
+                                                                                                    select
+                                                                                                        $"{xy[0]} {xy[1]}"
+                                                                                                )
+                                                                                                .ToArray()
+                                                                                            ) + ")"
+                                                                                        )
+                                                                                        .ToList()
+                                                                                    ) +
+                                                                                    ")"
+                                                                                ),
+                                                                                FeatureBoundaryX
                                                                                 //,
                                                                                 //new XElement(
                                                                                 //    "style",
                                                                                 //    style.Properties()
                                                                                 //        .Select(field => new XElement(field.Name, field.Value.ToString()))
                                                                                 //)
-                                                                                );
-                                                                            }
+                                                                            );
 
                                                                             break;
                                                                     }
