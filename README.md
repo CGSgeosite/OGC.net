@@ -8,8 +8,8 @@ OGC.net is written in 100% C# language and can be recompiled through Visual Stud
 
 For more information about the GeositeServer system, visit https://hub.docker.com/r/geosite/geositeserver
 
-![OGC net1](https://user-images.githubusercontent.com/18747589/133953861-0327f5bf-fa73-49c5-8587-72914c5b6533.jpg)
-![OGC net2](https://user-images.githubusercontent.com/18747589/133953863-97a0186d-41c7-4fb4-91c3-cf0e9804dc92.jpg)
+![OGCgui](https://user-images.githubusercontent.com/18747589/136141465-a60a2918-8b4a-432a-aa56-cfe7f9d6444d.png)
+![OGCdatabase](https://user-images.githubusercontent.com/18747589/136141490-9f7e4d98-507e-490e-b8a5-5945499ae336.png)
 ![OGC net3](https://user-images.githubusercontent.com/18747589/133953864-e796053c-880e-44c3-a121-5ffd14f572e9.png)
 ![OGC net4](https://user-images.githubusercontent.com/18747589/133953865-7832b9e2-adae-49e9-aa66-ea5a3bd66e4d.png)
 ![OGC net5](https://user-images.githubusercontent.com/18747589/133953867-b58033d1-e8db-481f-b42c-e98dd0d55035.png)
