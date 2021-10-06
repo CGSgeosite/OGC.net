@@ -7099,6 +7099,9 @@
         B+/m3bybd/Nu3s27eTfv5t28m3fzbt6tvG5/+9v/AwlUMnaz8vg0AAAAAElFTkSuQmCC
 </value>
   </data>
+  <metadata name="ogcCard.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
   <metadata name="fileCard.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
@@ -7759,12 +7762,12 @@ public (bool Success, string Message, int TypeCode)? leaf_wmts();
 
 8、瓦片类型枚举
 public enum TileType{
-  Standard,//0
-  TMS,//1
-  MapCruncher,//2
-  ARCGIS, //3
-  DeepZoom,   //4
-  Raster  //5
+  Standard,		//0
+  TMS,			//1
+  MapCruncher,	//2
+  ARCGIS, 		//3
+  DeepZoom,   	//4
+  Raster  		//5
 }
 
 9、瓦片推送类
@@ -7853,6 +7856,136 @@ public static double? Perimeter();
 /// &lt;param name="crs"&gt;坐标系代号：1954、1980、1984、2000、其他值；默认值：2000。其他值=不进行投影，直接计算笛卡尔坐标系面积&lt;/param&gt;
 /// &lt;returns&gt;米制面积，，若计算失败，返回null&lt;/returns&gt;
 public static double? Area();
+
+11、OGC格式转换类
+public static class OGCformat;
+
+/// &lt;summary&gt;
+/// 由符合OGC-WKT格式的坐标串生成OGC-WKT几何文本
+/// &lt;/summary&gt;
+/// &lt;param name="geometryCode"&gt;几何类型代码：0=点（默认值）；1=线；2=面；暂不支持：3=集合；4=三维地表；5=三角剖分&lt;/param&gt;
+/// &lt;param name="geometry"&gt;几何坐标字符串，默认值为空白&lt;/param&gt;
+/// &lt;param name="simplify"&gt;简化输出内容吗？&lt;/param&gt;
+/// &lt;returns&gt;符合OGC约定的WKT格式文本，若转换失败，返回null。针对面元，将自动封闭&lt;/returns&gt;
+public static string TextToWkt(int geometryCode = 0, string geometry = null, bool simplify = false);
+
+/// &lt;summary&gt;
+/// 由符合OGC-WKT格式的坐标串生成OGC-WKB十六进制几何文本
+/// &lt;/summary&gt;
+/// &lt;param name="geometryCode"&gt;几何类型代码：0=点（默认值）；1=线；2=面；暂不支持：3=集合；4=三维地表；5=三角剖分&lt;/param&gt;
+/// &lt;param name="geometry"&gt;几何坐标字符串，默认值为空白&lt;/param&gt;
+/// &lt;param name="srid"&gt;几何投影参照系OGC类型代码，默认值：4326=十进制经纬度格式；若指定0，意指未定义参照系&lt;/param&gt;
+/// &lt;returns&gt;符合OGC约定的OGC-WKB十六进制几何文本，若转换失败，返回null。针对面元，将自动封闭&lt;/returns&gt;
+public static string TextToWkb(int geometryCode = 0, string geometry = null, string srid = "4326")
+
+/// &lt;summary&gt;
+/// 由kml几何要素节生成OGC-WKB十六进制几何文本
+/// &lt;/summary&gt;
+/// &lt;param name="geometryCode"&gt;几何类型代码：0=点（默认值）；1=线；2=面；3=集合；暂不支持：4=三维地表；5=三角剖分&lt;/param&gt;
+/// &lt;param name="geometry"&gt;kml几何要素节&lt;/param&gt;
+/// &lt;param name="srid"&gt;几何投影参照系OGC类型代码，默认值：4326=十进制经纬度格式；若指定0，意指未定义参照系&lt;/param&gt;
+/// &lt;returns&gt;符合OGC约定的OGC-WKB十六进制几何文本，若转换失败，返回null。针对面元，将自动封闭&lt;/returns&gt;
+public static string KmlToWkb(int geometryCode = 0, XElement geometry = null, string srid = "4326")
+
+/// &lt;summary&gt;
+/// 将OGC-WKB十六进制几何文本转换为WKT
+/// &lt;/summary&gt;
+/// &lt;param name="wkb"&gt;OGC-WKB十六进制几何文本&lt;/param&gt;
+/// &lt;returns&gt;二元组，成员为：wkt和srid&lt;/returns&gt;
+public static (string wkt,int srid) WkbToWkt(string wkb)
+
+/// &lt;summary&gt;
+/// 将WKT或者GeoJson转为为KML格式
+/// &lt;/summary&gt;
+/// &lt;param name="geometryCode"&gt;几何类型代码：0=点（默认值）；1=线；2=面；暂不支持：3=集合；4=三维地表；5=三角剖分&lt;/param&gt;
+/// &lt;param name="geometry"&gt;wkt或者geojson&lt;/param&gt;
+/// &lt;returns&gt;XElement类型的KML格式对象&lt;/returns&gt;
+public static XElement TextToKml(int geometryCode = 0, string geometry = null)
+
+/// &lt;summary&gt;
+/// 由OGC-WKT几何文本生成XElement类型的KML格式对象
+/// &lt;/summary&gt;
+/// &lt;param name="geometryCode"&gt;几何类型代码：0=点（默认值）；1=线；2=面；3=集合；暂不支持：4=三维地表；5=三角剖分&lt;/param&gt;
+/// &lt;param name="geometry"&gt;符合OGC约定的WKT格式文本&lt;/param&gt;
+/// &lt;returns&gt;XElement类型的KML格式对象&lt;/returns&gt;
+public static XElement WktToKml(int geometryCode = 0, string geometry = null)
+
+/// &lt;summary&gt;
+/// 由OGC-WKT几何文本生成XElement类型的GML格式对象
+/// &lt;/summary&gt;
+/// &lt;param name="geometryCode"&gt;几何类型代码：0=点（默认值）；1=线；2=面；3=集合；暂不支持：4=三维地表；5=三角剖分&lt;/param&gt;
+/// &lt;param name="geometry"&gt;符合OGC约定的WKT格式文本&lt;/param&gt;
+/// &lt;returns&gt;XElement类型的GML格式对象&lt;/returns&gt;
+public static XElement WktToGml(int geometryCode = 0, string geometry = null)
+
+/// &lt;summary&gt;
+/// 由OGC-WKT几何文本生成GeoJson文本
+/// &lt;/summary&gt;
+/// &lt;param name="geometryCode"&gt;几何类型代码：0=点（默认值）；1=线；2=面；暂不支持：3=集合；4=三维地表；5=三角剖分&lt;/param&gt;
+/// &lt;param name="geometry"&gt;符合OGC约定的WKT格式文本&lt;/param&gt;
+/// &lt;param name="simplify"&gt;简化输出内容吗？&lt;/param&gt;
+/// &lt;returns&gt;GeoJson坐标文本&lt;/returns&gt;
+public static string WktToGeoJson(int geometryCode = 0, string geometry = null, bool simplify = false)
+
+/// &lt;summary&gt;
+/// 由GeoJson文本（或坐标文本）生成XElement类型kml格式对象
+/// &lt;/summary&gt;
+/// &lt;param name="geometryCode"&gt;几何类型代码：0=点（默认值）；1=线；2=面；暂不支持：3=集合；4=三维地表；5=三角剖分&lt;/param&gt;
+/// &lt;param name="geometry"&gt;符合GeoJson约定的坐标文本&lt;/param&gt;
+/// &lt;returns&gt;XElement类型的kml格式对象&lt;/returns&gt;
+public static XElement GeoJsonToKml(int geometryCode = 0, string geometry = null)
+
+/// &lt;summary&gt;
+/// 由GeoJson文本（或坐标文本）生成OGC-WKT文本
+/// &lt;/summary&gt;
+/// &lt;param name="geometryCode"&gt;几何类型代码：0=点（默认值）；1=线；2=面；暂不支持：3=集合；4=三维地表；5=三角剖分&lt;/param&gt;
+/// &lt;param name="geometry"&gt;符合GeoJson约定的坐标文本&lt;/param&gt;
+/// &lt;param name="simplify"&gt;简化输出内容吗？&lt;/param&gt;
+/// &lt;returns&gt;符合OGC约定的WKT格式文本&lt;/returns&gt;
+public static string GeoJsonToWkt(int geometryCode = 0, string geometry = null, bool simplify = false)
+
+/// &lt;summary&gt;
+/// 由kml几何要素节生成OGC-WKT几何文本
+/// &lt;/summary&gt;
+/// &lt;param name="geometryCode"&gt;几何类型代码：0=点（默认值）；1=线；2=面；3=集合；暂不支持：4=三维地表；5=三角剖分&lt;/param&gt;
+/// &lt;param name="geometry"&gt;kml几何要素节&lt;/param&gt;
+/// &lt;param name="simplify"&gt;简化输出内容吗？&lt;/param&gt;
+/// &lt;returns&gt;符合OGC约定的WKT格式文本，若转换失败，返回null。针对面元，将自动封闭&lt;/returns&gt;
+public static string KmlToWkt(int geometryCode = 0, XElement geometry = null, bool simplify = false)
+
+/// &lt;summary&gt;
+/// 由XElement类型的kml格式对象生成GeoJson坐标文本
+/// &lt;/summary&gt;
+/// &lt;param name="geometryCode"&gt;几何类型代码：0=点（默认值）；1=线；2=面；3=集合；暂不支持：4=三维地表；5=三角剖分&lt;/param&gt;
+/// &lt;param name="geometry"&gt;kml对象中的几何要素节&lt;/param&gt;
+/// &lt;param name="simplify"&gt;简化输出内容吗？&lt;/param&gt;
+/// &lt;returns&gt;GeoJson坐标文本，若转换失败，返回null&lt;/returns&gt;
+public static string KmlToGeoJson(int geometryCode = 0, XElement geometry = null, bool simplify = false)
+
+/// &lt;summary&gt;
+/// 由Kml几何对象生成Gml（V3）几何对象
+/// &lt;/summary&gt;
+/// &lt;param name="geometryCode"&gt;几何类型代码：0=点（默认值）；1=线；2=面；暂不支持：3=集合；4=三维地表；5=三角剖分&lt;/param&gt;
+/// &lt;param name="geometry"&gt;Kml几何对象&lt;/param&gt;
+/// &lt;returns&gt;Gml（V3）几何对象&lt;/returns&gt;
+public static XElement KmlToGml(int geometryCode = 0, XElement geometry = null)
+
+/// &lt;summary&gt;
+/// 由Gml（V2/3）几何对象生成Kml几何对象
+/// &lt;/summary&gt;
+/// &lt;param name="geometryCode"&gt;几何类型代码：0=点（默认值）；1=线；2=面；暂不支持：3=集合；4=三维地表；5=三角剖分&lt;/param&gt;
+/// &lt;param name="geometry"&gt;Gml（V2/3）几何对象，要求根节点的命名空间必须对gml前缀进行命名&lt;/param&gt;
+/// &lt;returns&gt;Kml几何对象&lt;/returns&gt;
+public static XElement GmlToKml(int geometryCode = 0, XElement geometry = null)
+
+/// &lt;summary&gt;
+/// 由Gml（V2/3）几何对象生成GeoJson坐标文本
+/// &lt;/summary&gt;
+/// &lt;param name="geometryCode"&gt;几何类型代码：0=点（默认值）；1=线；2=面；暂不支持：3=集合；4=三维地表；5=三角剖分&lt;/param&gt;
+/// &lt;param name="geometry"&gt;Gml（V2/3）几何对象，要求根节点的命名空间必须对gml前缀进行命名&lt;/param&gt;
+/// &lt;param name="simplify"&gt;简化输出内容吗？&lt;/param&gt;
+/// &lt;returns&gt;GeoJson坐标文本&lt;/returns&gt;
+public static string GmlToGeoJson(int geometryCode = 0, XElement geometry = null, bool simplify = false)
 
 // --------------------------------------------------------
 // Copyright © Geosite Development Team of CGS ®

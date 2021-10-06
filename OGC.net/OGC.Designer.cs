@@ -348,6 +348,7 @@
             // 
             // GeositeServerUrl
             // 
+            this.GeositeServerUrl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.GeositeServerUrl.Location = new System.Drawing.Point(25, 4);
             this.GeositeServerUrl.Name = "GeositeServerUrl";
             this.GeositeServerUrl.Size = new System.Drawing.Size(187, 21);
@@ -357,6 +358,7 @@
             // 
             // wmtsSouth
             // 
+            this.wmtsSouth.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.wmtsSouth.Location = new System.Drawing.Point(310, 58);
             this.wmtsSouth.Name = "wmtsSouth";
             this.wmtsSouth.Size = new System.Drawing.Size(61, 21);
@@ -368,6 +370,7 @@
             // 
             // wmtsWest
             // 
+            this.wmtsWest.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.wmtsWest.Location = new System.Drawing.Point(245, 45);
             this.wmtsWest.Name = "wmtsWest";
             this.wmtsWest.Size = new System.Drawing.Size(61, 21);
@@ -379,6 +382,7 @@
             // 
             // wmtsEast
             // 
+            this.wmtsEast.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.wmtsEast.Location = new System.Drawing.Point(375, 45);
             this.wmtsEast.Name = "wmtsEast";
             this.wmtsEast.Size = new System.Drawing.Size(61, 21);
@@ -390,6 +394,7 @@
             // 
             // wmtsNorth
             // 
+            this.wmtsNorth.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.wmtsNorth.Location = new System.Drawing.Point(310, 30);
             this.wmtsNorth.Name = "wmtsNorth";
             this.wmtsNorth.Size = new System.Drawing.Size(61, 21);
@@ -425,6 +430,7 @@
             // wmtsSize
             // 
             this.wmtsSize.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.wmtsSize.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.wmtsSize.Enabled = false;
             this.wmtsSize.Location = new System.Drawing.Point(33, 58);
             this.wmtsSize.Name = "wmtsSize";
@@ -553,6 +559,7 @@
             // 
             // GeositeServerUser
             // 
+            this.GeositeServerUser.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.GeositeServerUser.Location = new System.Drawing.Point(25, 32);
             this.GeositeServerUser.Name = "GeositeServerUser";
             this.GeositeServerUser.Size = new System.Drawing.Size(105, 21);
@@ -562,6 +569,7 @@
             // 
             // GeositeServerPassword
             // 
+            this.GeositeServerPassword.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.GeositeServerPassword.Location = new System.Drawing.Point(25, 62);
             this.GeositeServerPassword.Name = "GeositeServerPassword";
             this.GeositeServerPassword.Size = new System.Drawing.Size(105, 21);
@@ -1382,6 +1390,7 @@
             // 
             // subdomainsBox
             // 
+            this.subdomainsBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.subdomainsBox.Location = new System.Drawing.Point(33, 32);
             this.subdomainsBox.Name = "subdomainsBox";
             this.subdomainsBox.Size = new System.Drawing.Size(52, 21);
@@ -2057,6 +2066,7 @@
             // GeositeServerPort
             // 
             this.GeositeServerPort.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.GeositeServerPort.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.GeositeServerPort.Enabled = false;
             this.GeositeServerPort.Location = new System.Drawing.Point(25, 123);
             this.GeositeServerPort.Name = "GeositeServerPort";
@@ -2067,6 +2077,7 @@
             // GeositeServerName
             // 
             this.GeositeServerName.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.GeositeServerName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.GeositeServerName.Enabled = false;
             this.GeositeServerName.Location = new System.Drawing.Point(25, 95);
             this.GeositeServerName.Name = "GeositeServerName";

@@ -93,6 +93,7 @@
             // 
             // treePathBox
             // 
+            this.treePathBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.treePathBox.Location = new System.Drawing.Point(6, 130);
             this.treePathBox.Name = "treePathBox";
             this.treePathBox.Size = new System.Drawing.Size(379, 21);
