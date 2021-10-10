@@ -33,6 +33,7 @@
         rank属性：要素权限，可供后续处理软件识别利用 -->
 		<member remarks="实体要素标签（默认：member，亦可为：featureMember）" type="Point" id="要素标识码" rank="访问级别号(0：可编辑; 1：可查看属性; 2：可浏览提示）" timeStamp="时间戳" frequency="0">
 			<name>实体要素名称（可选项）</name>
+      <!-- 几何坐标节，此标签可具有多个 -->
 			<geometry remarks="几何坐标(geometry/geometryProperty)标签（支持wkt、json或gml标签）">
 				单点（wkt）：
 				(十进制经度 十进制纬度 [高程]) 或者 POINT(十进制经度 十进制纬度 [高程])
@@ -90,6 +91,7 @@
 		</member>
 		<member type="Line" id="要素标识码" rank="访问级别号(0：可编辑; 1：可查看属性; 2：可浏览提示）" timeStamp="时间戳" frequency="0">
 			<name>实体要素名称（可选项）</name>
+      <!-- 几何坐标节，此标签可具有多个 -->
 			<geometry>
 				单线（wkt）：
 				(十进制经度 十进制纬度 [高程],十进制经度 十进制纬度 [高程],...) 或者 LINESTRING(十进制经度 十进制纬度 [高程],十进制经度 十进制纬度 [高程],...)
@@ -154,6 +156,7 @@
 		</member>
 		<member type="Polygon" id="要素标识码" rank="访问级别号(0：可编辑; 1：可查看属性; 2：可浏览提示）" timeStamp="时间戳" frequency="0">
 			<name>实体要素名称（可选项）</name>
+      <!-- 几何坐标节，此标签可具有多个 -->
 			<geometry>
 				单面（wkt）：
 				((起点经度 起点纬度,经度 纬度,经度 纬度,...,起点经度 起点纬度)) 或者 POLYGON((起点经度 起点纬度,经度 纬度,经度 纬度,...,起点经度 起点纬度))
