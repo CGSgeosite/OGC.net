@@ -1735,7 +1735,7 @@
             // 
             // pictureBox8
             // 
-            this.pictureBox8.BackgroundImage = global::Geosite.Properties.Resources.mapcruncher;
+            this.pictureBox8.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox8.BackgroundImage")));
             this.pictureBox8.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.pictureBox8.Location = new System.Drawing.Point(8, 7);
             this.pictureBox8.Name = "pictureBox8";
@@ -2155,7 +2155,7 @@
             // 
             // pictureBox11
             // 
-            this.pictureBox11.BackgroundImage = global::Geosite.Properties.Resources.OGC_net_logo;
+            this.pictureBox11.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox11.BackgroundImage")));
             this.pictureBox11.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.pictureBox11.Location = new System.Drawing.Point(6, 0);
             this.pictureBox11.Name = "pictureBox11";

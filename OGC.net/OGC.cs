@@ -7,8 +7,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml.Linq;
-using geosite;
-using Geosite.FreeText;
 using Geosite.FreeText.CSV;
 using Geosite.FreeText.TXT;
 using Geosite.GeositeServer;
@@ -729,6 +727,8 @@ namespace Geosite
 
         private void FileWorkProgress(object sender, ProgressChangedEventArgs e)
         {
+            //e.code 状态码（0/null=预处理阶段；1=正在处理阶段；200=收尾阶段；400=异常信息）
+            //e.ProgressPercentage 进度值（介于0~100之间，仅当code=1时有效）
             var UserState = (string)e.UserState;
             var ProgressPercentage = e.ProgressPercentage;
             var pv = statusProgress.Value = ProgressPercentage is >= 0 and <= 100 ? ProgressPercentage : 0;
@@ -4485,6 +4485,8 @@ namespace Geosite
 
         private void VectorWorkProgress(object sender, ProgressChangedEventArgs e)
         {
+            //e.code 状态码（0/null=预处理阶段；1=正在处理阶段；200=收尾阶段；400=异常信息）
+            //e.ProgressPercentage 进度值（介于0~100之间，仅当code=1时有效）
             var UserState = (string)e.UserState;
             var ProgressPercentage = e.ProgressPercentage;
             var pv = statusProgress.Value = ProgressPercentage is >= 0 and <= 100 ? ProgressPercentage : 0;
@@ -6184,6 +6186,8 @@ namespace Geosite
 
         private void RasterWorkProgress(object sender, ProgressChangedEventArgs e)
         {
+            //e.code 状态码（0/null=预处理阶段；1=正在处理阶段；200=收尾阶段；400=异常信息）
+            //e.ProgressPercentage 进度值（介于0~100之间，仅当code=1时有效）
             var UserState = (string)e.UserState;
             var ProgressPercentage = e.ProgressPercentage;
             var pv = statusProgress.Value = ProgressPercentage is >= 0 and <= 100 ? ProgressPercentage : 0;
