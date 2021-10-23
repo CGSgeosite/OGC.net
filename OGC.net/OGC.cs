@@ -2448,7 +2448,7 @@ namespace Geosite
                                             if (getTreeLayers.Description != null)
                                             {
                                                 var property = new XElement("property");
-                                                foreach (var X in getTreeLayers.Description)
+                                                foreach (var X in getTreeLayers.Description.Elements())
                                                     property.Add(new XElement($"{X.Name}", X.Value));
                                                 FeatureCollectionX.Add(property);
                                             }
@@ -2901,7 +2901,7 @@ namespace Geosite
                                         if (getTreeLayers.Description != null)
                                         {
                                             var property = new XElement("property");
-                                            foreach (var X in getTreeLayers.Description)
+                                            foreach (var X in getTreeLayers.Description.Elements())
                                                 property.Add(new XElement($"{X.Name}", X.Value));
                                             FeatureCollectionX.Add(property);
                                         }
@@ -3373,7 +3373,7 @@ namespace Geosite
                                                 if (getTreeLayers.Description != null)
                                                 {
                                                     var property = new XElement("property");
-                                                    foreach (var X in getTreeLayers.Description)
+                                                    foreach (var X in getTreeLayers.Description.Elements())
                                                         property.Add(new XElement($"{X.Name}", X.Value));
                                                     FeatureCollectionX.Add(property);
                                                 }
@@ -5999,7 +5999,7 @@ namespace Geosite
                         new XElement("name", name) //文档树名称采用UI界面提供的专题名
                     );
                     if (treeDescription != null)
-                        treeXML.Add(new XElement("property", treeDescription.Select(x => x)));
+                        treeXML.Add(new XElement("property", treeDescription.Elements().Select(x => x)));
 
                     XElement layersX = null;
                     routeName = Regex.Split(treePathString, "[/]",

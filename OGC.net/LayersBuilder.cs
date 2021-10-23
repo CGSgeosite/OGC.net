@@ -11,7 +11,7 @@ namespace Geosite
     {
         public string TreePathString;
 
-        public List<XElement> Description;
+        public XElement Description;
 
         public bool OK;
 
@@ -82,26 +82,53 @@ namespace Geosite
                 }
             }
 
-            var XElementList = new List<XElement>();
             if (!string.IsNullOrWhiteSpace(downloadBox.Text))
-                XElementList.Add(new XElement("download", downloadBox.Text.Trim()));
-            if (!string.IsNullOrWhiteSpace(legendBox.Text))
-                XElementList.Add(new XElement("legend", legendBox.Text.Trim()));
-            if (!string.IsNullOrWhiteSpace(thumbnailBox.Text))
-                XElementList.Add(new XElement("thumbnail", thumbnailBox.Text.Trim()));
-            if (!string.IsNullOrWhiteSpace(authorBox.Text))
-                XElementList.Add(new XElement("author", authorBox.Text.Trim()));
-            if (!string.IsNullOrWhiteSpace(contactBox.Text))
-                XElementList.Add(new XElement("contact", contactBox.Text.Trim()));
-            if (!string.IsNullOrWhiteSpace(keywordBox.Text))
-                XElementList.Add(new XElement("keyword", keywordBox.Text.Trim()));
-            if (!string.IsNullOrWhiteSpace(abstractBox.Text))
-                XElementList.Add(new XElement("abstract", abstractBox.Text.Trim()));
-            if (!string.IsNullOrWhiteSpace(remarksBox.Text))
-                XElementList.Add(new XElement("remarks", remarksBox.Text.Trim()));
+            {
+                Description ??= new XElement("property");
+                Description.Add(new XElement("download", downloadBox.Text.Trim()));
+            }
 
-            if (XElementList.Count > 0)
-                Description = XElementList;
+            if (!string.IsNullOrWhiteSpace(legendBox.Text))
+            {
+                Description ??= new XElement("property");
+                Description.Add(new XElement("legend", legendBox.Text.Trim()));
+            }
+
+            if (!string.IsNullOrWhiteSpace(thumbnailBox.Text))
+            {
+                Description ??= new XElement("property");
+                Description.Add(new XElement("thumbnail", thumbnailBox.Text.Trim()));
+            }
+
+            if (!string.IsNullOrWhiteSpace(authorBox.Text))
+            {
+                Description ??= new XElement("property");
+                Description.Add(new XElement("author", authorBox.Text.Trim()));
+            }
+
+            if (!string.IsNullOrWhiteSpace(contactBox.Text))
+            {
+                Description ??= new XElement("property");
+                Description.Add(new XElement("contact", contactBox.Text.Trim()));
+            }
+
+            if (!string.IsNullOrWhiteSpace(keywordBox.Text))
+            {
+                Description ??= new XElement("property");
+                Description.Add(new XElement("keyword", keywordBox.Text.Trim()));
+            }
+
+            if (!string.IsNullOrWhiteSpace(abstractBox.Text))
+            {
+                Description ??= new XElement("property");
+                Description.Add(new XElement("abstract", abstractBox.Text.Trim()));
+            }
+
+            if (!string.IsNullOrWhiteSpace(remarksBox.Text))
+            {
+                Description ??= new XElement("property");
+                Description.Add(new XElement("remarks", remarksBox.Text.Trim()));
+            }
 
             if (canExit)
             {
