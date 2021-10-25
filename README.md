@@ -4,7 +4,7 @@
 OGC.net is a free tool for reading ShapeFile, MapGIS, TXT/CSV,  converting them into GML, GeoJSON, ShapeFile, KML and GeositeXML, and pushing vector/raster to PostgreSQL database.
 OGC.net provides a dynamic link library (Geosite.OGC.dll) for embedded development.
 
-OGC.net is written in 100% C# language and can be recompiled through Visual Studio 2019+ / .Net Framework 4.8.
+OGC.net is written in 100% C# language and can be recompiled through Visual Studio 2019+ / .Net Framework 4.8. Support WinForm and Console.
 
 For more information about the GeositeServer system, visit https://hub.docker.com/r/geosite/geositeserver
 
@@ -15,4 +15,3 @@ For more information about the GeositeServer system, visit https://hub.docker.co
 ![OGC net5](https://user-images.githubusercontent.com/18747589/133953867-b58033d1-e8db-481f-b42c-e98dd0d55035.png)
 ![vectoropen](https://user-images.githubusercontent.com/18747589/135033496-bdeb09e5-5094-4dc7-a7c8-0f22548f8c16.png)
 ![console](https://user-images.githubusercontent.com/18747589/138637650-19224231-0e18-48f7-a2b0-5d15b7d76286.png)
-
