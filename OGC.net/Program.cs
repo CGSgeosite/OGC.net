@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace Geosite
@@ -18,7 +21,9 @@ namespace Geosite
         [STAThread]
         static void Main(string[] args)
         {
-            if (args.Length == 0)
+            var argCount = args.Length;
+
+            if (argCount == 0)
             {
                 //Attach to Winform
                 Application.EnableVisualStyles();
@@ -36,7 +41,7 @@ namespace Geosite
                 var title =
                     $@" {applicationName} for {RuntimeInformation.OSDescription} / {RuntimeInformation.FrameworkDescription} / {RuntimeInformation.ProcessArchitecture} ";
                 var copyright =
-                    @" Copyright (c) 2019-2021 Geosite Development Team of CGS ";
+                    @" Copyright (C) 2019-2021 Geosite Development Team of CGS (R)";
 
                 var splitLine = new string('*', Math.Max(title.Length, copyright.Length));
 
@@ -48,82 +53,180 @@ namespace Geosite
 
                 try
                 {
-                    var argCount = args.Length;
                     var commandName = args[0].ToLower();
+                    var options = GetOptions();
+
+                    var helper = options.ContainsKey("?") || options.ContainsKey("h") || options.ContainsKey("help");
+
                     switch (commandName)
                     {
                         case "mpj":
                         case "mapgismpj":
                             {
-                                if (argCount < 2)
-                                    throw new Exception("Insufficient number of parameters");
+                                if (helper)
+                                {
+                                    MapgisMpjHelper();
+                                    break;
+                                }
+
+                                if (!options.TryGetValue("i", out var inputFile))
+                                    options.TryGetValue("input", out inputFile);
+                                if (inputFile == null)
+                                    throw new Exception("Input file not found.");
+
+                                if (!options.TryGetValue("o", out var outputFile))
+                                    options.TryGetValue("output", out outputFile);
+                                if (outputFile == null)
+                                    throw new Exception("Output file file not found.");
 
                                 var mapgisMpj = new MapGis.MapGisProject();
                                 mapgisMpj.onGeositeEvent += (_, e) =>
                                 {
                                     ShowProgress(message: e.message, code: e.code, progress: e.progress);
                                 };
-                                mapgisMpj.Open(file: args[1]);
-                                mapgisMpj.Export(SaveAs: args[2]);
+                                mapgisMpj.Open(file: inputFile);
+                                mapgisMpj.Export(SaveAs: outputFile);
                             }
                             break;
                         case "mapgis":
                             {
-                                if (argCount < 3)
-                                    throw new Exception("Insufficient number of parameters");
+                                if (helper)
+                                {
+                                    MapgisHelper();
+                                    break;
+                                }
+
+                                if (!options.TryGetValue("i", out var inputFile))
+                                    options.TryGetValue("input", out inputFile);
+                                if (inputFile == null)
+                                    throw new Exception("Input file not found.");
+
+                                if (!options.TryGetValue("o", out var outputFile))
+                                    options.TryGetValue("output", out outputFile);
+                                if (outputFile == null)
+                                    throw new Exception("Output file file not found.");
+
+                                if (!options.TryGetValue("f", out var format))
+                                    options.TryGetValue("format", out format);
+                                format ??= "geojson";
+
+                                if (!options.TryGetValue("t", out var treePath))
+                                    options.TryGetValue("treepath", out treePath);
+
+                                if (!options.TryGetValue("d", out var description))
+                                    options.TryGetValue("description", out description);
+
+                                options.TryGetValue("pcolor", out var pcolor);
 
                                 var mapgis = new MapGis.MapGisFile();
                                 mapgis.onGeositeEvent += (_, e) =>
                                 {
                                     ShowProgress(message: e.message, code: e.code, progress: e.progress);
                                 };
-                                mapgis.Open(file: args[1]);
+                                mapgis.Open(mapgisFile: inputFile, pcolorFile: pcolor);
                                 mapgis.Export(
-                                    SaveAs: args[2],
-                                    Format: argCount > 3 ? args[3] : "geojson",
-                                    TreePath: argCount > 4 ? args[4] : null,
-                                    ExtraDescription: argCount > 5 ? XElement.Parse(args[5]) : null
+                                    SaveAs: outputFile,
+                                    Format: format,
+                                    TreePath: string.IsNullOrWhiteSpace(treePath) ? null : treePath,
+                                    ExtraDescription: string.IsNullOrWhiteSpace(description)
+                                        ? null
+                                        : XElement.Parse(description)
                                 );
                             }
                             break;
                         case "shp":
                         case "shapefile":
                             {
-                                if (argCount < 3)
-                                    throw new Exception("Insufficient number of parameters");
+                                if (helper)
+                                {
+                                    ShapeFileHelper();
+                                    break;
+                                }
+
+                                if (!options.TryGetValue("i", out var inputFile))
+                                    options.TryGetValue("input", out inputFile);
+                                if (inputFile == null)
+                                    throw new Exception("Input file not found.");
+
+                                if (!options.TryGetValue("o", out var outputFile))
+                                    options.TryGetValue("output", out outputFile);
+                                if (outputFile == null)
+                                    throw new Exception("Output file file not found.");
+
+                                if (!options.TryGetValue("f", out var format))
+                                    options.TryGetValue("format", out format);
+                                format ??= "geojson";
+
+                                if (!options.TryGetValue("c", out var codePage))
+                                    options.TryGetValue("codepage", out codePage);
+                                codePage ??= "936"; //GB2312 / GBK
+
+                                if (!options.TryGetValue("t", out var treePath))
+                                    options.TryGetValue("treepath", out treePath);
+
+                                if (!options.TryGetValue("d", out var description))
+                                    options.TryGetValue("description", out description);
 
                                 var shapefile = new ShapeFile.ShapeFile();
                                 shapefile.onGeositeEvent += (_, e) =>
                                 {
                                     ShowProgress(message: e.message, code: e.code, progress: e.progress);
                                 };
-                                shapefile.Open(shapeFilePath: args[1], codePage: int.Parse(argCount > 4 ? args[4] : "936"));
+                                shapefile.Open(shapeFilePath: inputFile, codePage: int.Parse(codePage));
                                 shapefile.Export(
-                                    SaveAs: args[2],
-                                    Format: argCount > 3 ? args[3] : "geojson",
-                                    TreePath: argCount > 5 ? args[5] : null,
-                                    ExtraDescription: argCount > 6 ? XElement.Parse(args[6]) : null
+                                    SaveAs: outputFile,
+                                    Format: format,
+                                    TreePath: treePath,
+                                    ExtraDescription: string.IsNullOrWhiteSpace(description)
+                                        ? null
+                                        : XElement.Parse(description)
                                 );
                             }
                             break;
                         case "txt":
                         case "csv":
                             {
-                                if (argCount < 3)
-                                    throw new Exception("Insufficient number of parameters");
+                                if (helper)
+                                {
+                                    TextFileHelper();
+                                    break;
+                                }
+
+                                if (!options.TryGetValue("i", out var inputFile))
+                                    options.TryGetValue("input", out inputFile);
+                                if (inputFile == null)
+                                    throw new Exception("Input file not found.");
+
+                                if (!options.TryGetValue("o", out var outputFile))
+                                    options.TryGetValue("output", out outputFile);
+                                if (outputFile == null)
+                                    throw new Exception("Output file file not found.");
+
+                                if (!options.TryGetValue("f", out var format))
+                                    options.TryGetValue("format", out format);
+                                format ??= "geojson";
+
+                                if (!options.TryGetValue("t", out var treePath))
+                                    options.TryGetValue("treepath", out treePath);
+
+                                if (!options.TryGetValue("d", out var description))
+                                    options.TryGetValue("description", out description);
+
+                                if (!options.TryGetValue("c", out var coordinateFieldName))
+                                    options.TryGetValue("coordinate", out coordinateFieldName);
 
                                 var freeTextFields = commandName == ".txt"
-                                    ? FreeText.TXT.TXT.GetFieldNames(args[1])
-                                    : FreeText.CSV.CSV.GetFieldNames(args[1]);
+                                    ? FreeText.TXT.TXT.GetFieldNames(inputFile)
+                                    : FreeText.CSV.CSV.GetFieldNames(inputFile);
                                 if (freeTextFields.Length == 0)
-                                    throw new Exception("No valid fields found");
+                                    throw new Exception("No valid fields found.");
 
-                                var coordinateFieldName = freeTextFields.Any(f => f == "_position_") ? "_position_" :
-                                    argCount > 4 ? args[4] : null;
+                                coordinateFieldName = freeTextFields.Any(f => f == "_position_") ? "_position_" :
+                                    coordinateFieldName;
 
                                 if (coordinateFieldName != null)
                                 {
-                                    //多态性：将派生类对象赋予基类对象
+                                    //Polymorphism: assigning derived class objects to base class objects
                                     FreeText.FreeText freeText = commandName == ".txt"
                                         ? new FreeText.TXT.TXT(CoordinateFieldName: coordinateFieldName)
                                         : new FreeText.CSV.CSV(CoordinateFieldName: coordinateFieldName);
@@ -131,66 +234,46 @@ namespace Geosite
                                     {
                                         ShowProgress(message: e.message, code: e.code, progress: e.progress);
                                     };
-                                    freeText.Open(args[1]);
+                                    freeText.Open(inputFile);
                                     freeText.Export(
-                                        SaveAs: args[2],
-                                        Format: argCount > 3 ? args[3] : "geojson",
-                                        TreePath: argCount > 5 ? args[5] : null,
-                                        ExtraDescription: argCount > 6 ? XElement.Parse(args[6]) : null
+                                        SaveAs: outputFile,
+                                        Format: format,
+                                        TreePath: treePath,
+                                        ExtraDescription: string.IsNullOrWhiteSpace(description)
+                                            ? null
+                                            : XElement.Parse(description)
                                     );
                                 }
                                 else
-                                    throw new Exception("No valid coordinate fields found");
+                                    throw new Exception("No valid coordinate fields found.");
                             }
                             break;
                         default:
-                            throw new Exception();
+                            throw new Exception("");
                     }
                 }
                 catch (Exception error)
                 {
                     if (!string.IsNullOrEmpty(error.Message))
                     {
-                        Console.WriteLine(error.Message);
                         Console.WriteLine();
+                        Console.WriteLine($@"Exception: {error.Message}");
                     }
-
-                    Console.WriteLine($@"Usage: {applicationName} Command Parameters");
-                    Console.WriteLine($@"Run '{applicationName} -help' for more information on a command.");
-                    Console.WriteLine();
-                    Console.WriteLine(@"Command: mpj/mapgismpj");
-                    Console.WriteLine(@"    Parameters: SourceFile TargetFile");
-                    Console.WriteLine(@"        SourceFile: *.mpj");
-                    Console.WriteLine(@"        TargetFile: *.geojson");
-                    Console.WriteLine();
-                    Console.WriteLine(@"Command: mapgis");
-                    Console.WriteLine(@"    Parameters: SourceFile TargetFile Format TreePath ExtraDescription");
-                    Console.WriteLine(@"        SourceFile: *.wt, *.wl, *.wp");
-                    Console.WriteLine(@"        TargetFile: *.shp, *.geojson, *.gml, *.kml, *.xml");
-                    Console.WriteLine(@"        Format: shp/shapefile, geojson[default], gml, kml, xml");
-                    Console.WriteLine(@"        TreePath: null[default]");
-                    Console.WriteLine(@"        ExtraDescription: null[default]");
-                    Console.WriteLine();
-                    Console.WriteLine(@"Command: shp/shapefile");
-                    Console.WriteLine(@"    Parameters: SourceFile TargetFile Format CodePage TreePath ExtraDescription");
-                    Console.WriteLine(@"        SourceFile: *.shp");
-                    Console.WriteLine(@"        TargetFile: *.geojson, *.gml, *.kml, *.shp, *.xml");
-                    Console.WriteLine(@"        Format: geojson[default], gml, kml, shp, xml");
-                    Console.WriteLine(@"        CodePage: 936[default]");
-                    Console.WriteLine(@"        TreePath: null[default]");
-                    Console.WriteLine(@"        ExtraDescription: null[default]");
-                    Console.WriteLine();
-                    Console.WriteLine(@"Command: txt/csv");
-                    Console.WriteLine(@"    Parameters: SourceFile TargetFile Format CoordinateFieldName TreePath ExtraDescription");
-                    Console.WriteLine(@"        SourceFile: *.shp");
-                    Console.WriteLine(@"        TargetFile: *.geojson, *.gml, *.kml, *.shp, *.xml");
-                    Console.WriteLine(@"        Format: geojson[default], gml, kml, shp, xml");
-                    Console.WriteLine(@"        CodePage: 936[default]");
-                    Console.WriteLine(@"        TreePath: null[default]");
-                    Console.WriteLine(@"        ExtraDescription: null[default]");
-                    Console.WriteLine();
-                    Console.Write(@"Press any key to exit ...");
-                    Console.ReadKey();
+                    else
+                    {
+                        Console.WriteLine($@"Usage: {applicationName} [Command] [Options]");
+                        Console.WriteLine();
+                        Console.WriteLine(@"Command:");
+                        Console.WriteLine(@"    -?/h/help");
+                        Console.WriteLine(@"    mpj/mapgismpj");
+                        Console.WriteLine(@"    mapgis");
+                        Console.WriteLine(@"    shp/shapefile");
+                        Console.WriteLine(@"    txt/csv");
+                        Console.WriteLine(@"Options:");
+                        Console.WriteLine(@"    -[key] [value]");
+                        Console.WriteLine();
+                        Console.WriteLine($@"Run '{applicationName} [Command] -?/h/help' for more information on a command.");
+                    }
                 }
 
                 SendKeys.SendWait("{ENTER}");
@@ -201,25 +284,139 @@ namespace Geosite
                 ///// <param name="progress">progress（0～100，only for code = 1）</param>
                 void ShowProgress(string message = null!, int? code = null, int? progress = null)
                 {
-                    switch (code)
+                    var showProgressTask = Task.Run(
+                        () =>
+                        {
+                            try
+                            {
+                                switch (code)
+                                {
+                                    case 1: //processing
+                                        cursorPosition ??= (Console.CursorLeft, Console.CursorTop);
+                                        if (cursorPosition != null)
+                                        {
+                                            Console.SetCursorPosition(0, cursorPosition.Value.Top);
+                                            Console.Write(new string(' ', Console.WindowWidth));
+                                            Console.SetCursorPosition(0, cursorPosition.Value.Top);
+                                            Console.Write(@"{0} {1}%", message, progress);
+                                        }
+
+                                        break;
+                                    default: //Pre-processing / Post-processing
+                                        if (!string.IsNullOrWhiteSpace(message))
+                                        {
+                                            cursorPosition = (Console.CursorLeft, Console.CursorTop);
+                                            if (cursorPosition != null)
+                                            {
+                                                if (cursorPosition.Value.Left > 0)
+                                                    Console.WriteLine();
+                                                Console.WriteLine(message);
+                                            }
+                                        }
+
+                                        break;
+                                }
+                            }
+                            catch
+                            {
+                                //
+                            }
+                        }
+                    );
+                    showProgressTask.Wait();
+                }
+
+                Dictionary<string, string> GetOptions()
+                {
+                    //args[0] = command
+                    //args[>0] = kvps
+                    var result = new Dictionary<string, string>();
+                    string oldKey = null;
+                    for (var i = 1; i < argCount; i++)
                     {
-                        case 1: //processing
-                            cursorPosition ??= (Console.CursorLeft, Console.CursorTop);
-                            if (cursorPosition != null)
+                        var newKey = Regex.Match(args[i], @"^[-]+([\S]+)").Groups[1].Value;
+                        if (!string.IsNullOrWhiteSpace(newKey))
+                        {
+                            //key
+                            if (oldKey != null)
+                                result.Add(oldKey, null);
+                            oldKey = newKey.ToLower();
+                        }
+                        else
+                        {
+                            //value
+                            if (oldKey != null)
                             {
-                                Console.SetCursorPosition(cursorPosition.Value.Left, cursorPosition.Value.Top);
-                                Console.Write(@"{0} {1}%", message, progress);
+                                var value = args[i];
+                                if (result.ContainsKey(oldKey))
+                                    result[oldKey] = value;
+                                else
+                                    result.Add(oldKey, value);
+                                oldKey = null;
                             }
-                            break;
-                        default: //Pre-processing / Post-processing
-                            if (!string.IsNullOrWhiteSpace(message))
-                            {
-                                Console.WriteLine();
-                                cursorPosition = (Console.CursorLeft, Console.CursorTop);
-                                Console.WriteLine(message);
-                            }
-                            break;
+                            //else
+                            //{
+                            //    //ignore this value, because there are no keys
+                            //}
+                        }
                     }
+                    if (oldKey != null)
+                        result.Add(oldKey, null);
+
+                    return result;
+                }
+
+                void MapgisMpjHelper()
+                {
+                    Console.WriteLine(@"Command: mpj/mapgismpj [Options]");
+                    Console.WriteLine(@"    Options: -i/input InputFile -o/output OutputFile");
+                    Console.WriteLine(@"        InputFile: *.mpj");
+                    Console.WriteLine(@"        OutputFile: *.geojson");
+                    Console.WriteLine(@"Example:");
+                    Console.WriteLine($@"   {applicationName} mpj -i ./mapgis.mpj -o ./test.geojson");
+                }
+
+                void MapgisHelper()
+                {
+                    Console.WriteLine(@"Command: mapgis [Options]");
+                    Console.WriteLine(@"    Options: -i/input InputFile -o/output OutputFile -f/format Format -t/treepath TreePath -d/description Description -pcolor Pcolor");
+                    Console.WriteLine(@"        InputFile: *.wt, *.wl, *.wp");
+                    Console.WriteLine(@"        OutputFile: *.shp, *.geojson, *.gml, *.kml, *.xml");
+                    Console.WriteLine(@"        Format: shp/shapefile, geojson[default], gml, kml, xml");
+                    Console.WriteLine(@"        TreePath: null[default]");
+                    Console.WriteLine(@"        Description: null[default]");
+                    Console.WriteLine(@"        Pcolor: MapGIS Pcolor.lib");
+                    Console.WriteLine(@"Example:");
+                    Console.WriteLine($@"   {applicationName} mapgis -i ./point.wt -o ./test.shp -f shapefile");
+                }
+
+                void ShapeFileHelper()
+                {
+                    Console.WriteLine(@"Command: shp/shapefile [Options]");
+                    Console.WriteLine(@"    Options: -i/input InputFile -o/output OutputFile -f/format Format -t/treepath TreePath -d/description Description -c/codepage CodePage");
+                    Console.WriteLine(@"        SourceFile: *.shp");
+                    Console.WriteLine(@"        TargetFile: *.geojson, *.gml, *.kml, *.shp, *.xml");
+                    Console.WriteLine(@"        Format: geojson[default], gml, kml, shp, xml");
+                    Console.WriteLine(@"        TreePath: null[default]");
+                    Console.WriteLine(@"        Description: null[default]");
+                    Console.WriteLine(@"        CodePage: 936[default]");
+                    Console.WriteLine(@"Example:");
+                    Console.WriteLine($@"   {applicationName} shapefile -i ./theme.shp -o ./test.geojson -f geojson");
+                }
+
+                void TextFileHelper()
+                {
+                    Console.WriteLine(@"Command: txt/csv [Options]");
+                    Console.WriteLine(@"    Options: -i/input InputFile -o/output OutputFile -f/format Format -t/treepath TreePath -d/description Description -c/coordinate Coordinate");
+                    Console.WriteLine(@"        SourceFile: *.txt/csv");
+                    Console.WriteLine(@"        TargetFile: *.geojson, *.gml, *.kml, *.shp, *.xml");
+                    Console.WriteLine(@"        Format: geojson[default], gml, kml, shp, xml");
+                    Console.WriteLine(@"        TreePath: null[default]");
+                    Console.WriteLine(@"        Description: null[default]");
+                    Console.WriteLine(@"        Coordinate: _position_[default]");
+                    Console.WriteLine(@"Example:");
+                    Console.WriteLine($@"   {applicationName} txt -i ./line.txt -o ./test.shp -f shp");
+                    Console.WriteLine($@"   {applicationName} csv -i ./line.csv -o ./test.shp -f shp");
                 }
             }
         }

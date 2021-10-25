@@ -51,7 +51,7 @@ namespace Geosite
         private void OGCform_Load(object sender, EventArgs e)
         {
             //-----test----
-
+           
             //-------------
 
             this.Opacity = 0;
@@ -1037,7 +1037,7 @@ namespace Geosite
                 /*  返回样例：
                     <User>
                       <Servers>
-                        <Server>
+                        <Server> 
                           <Host></Host>
                           <Error></Error>
                           <Username></Username>
@@ -1739,7 +1739,7 @@ namespace Geosite
                                                                                                                                         new Action(
                                                                                                                                             () =>
                                                                                                                                             {
-                                                                                                                                                statusText.Text = @" Create the age sub table of leaf table（leaf_age）...";
+                                                                                                                                                statusText.Text = @"Create the age sub table of leaf table（leaf_age）...";
                                                                                                                                             }
                                                                                                                                         )
                                                                                                                                     );
@@ -2431,7 +2431,7 @@ namespace Geosite
                                         {
                                             if (mapgis.RecordCount == 0)
                                                 throw new Exception("No features found");
-                                            mapgis.fire("Preprocessing ...");
+                                            mapgis.fire("Preprocessing ...",0);
                                             var FileInfo = mapgis.GetCapabilities();
                                             var FileType = $"{FileInfo["fileType"]}";
 
@@ -2556,6 +2556,7 @@ namespace Geosite
                                                             var featureType = $"{feature["geometry"]["type"]}";
                                                             mapgis.fire(
                                                                 message: $"{featureType} [{pointer} / {RecordCount}]",
+                                                                1,
                                                                 progress: 100 * pointer / RecordCount
                                                             );
                                                             var featureId = $"{feature["id"]}";
@@ -2744,6 +2745,7 @@ namespace Geosite
                                                                         flag10 += scale1;
                                                                         if (flag10 < 10)
                                                                             mapgis.fire(path,
+                                                                                1,
                                                                                 progress: scale10 * 10);
                                                                         else
                                                                         {
@@ -2751,6 +2753,7 @@ namespace Geosite
                                                                             var rest = 10 - (flag10 - scale1);
                                                                             if (rest > 0)
                                                                                 mapgis.fire(path,
+                                                                                    1,
                                                                                     progress: 10 * 10);
                                                                         }
                                                                     }
@@ -2797,7 +2800,7 @@ namespace Geosite
                                                     }
 
                                                     mapgis.fire(
-                                                        $" [{valid} feature{(valid > 1 ? "s" : "")}]");
+                                                        $" [{valid} feature{(valid > 1 ? "s" : "")}]",200);
                                                 }
 
                                                 if (isOK)
@@ -2884,7 +2887,7 @@ namespace Geosite
                                         if (shapeFile.RecordCount == 0)
                                             return "No features found";
 
-                                        shapeFile.fire("Preprocessing ...");
+                                        shapeFile.fire("Preprocessing ...",0);
                                         var FileInfo = shapeFile.GetCapabilities();
                                         var FileType = $"{FileInfo["fileType"]}";
 
@@ -3012,6 +3015,7 @@ namespace Geosite
                                                         var featureType = $"{feature["geometry"]["type"]}";
                                                         shapeFile.fire(
                                                             message: $"{featureType} [{pointer} / {RecordCount}]",
+                                                            1,
                                                             progress: 100 * pointer / RecordCount
                                                         );
                                                         var featureId = $"{feature["id"]}";
@@ -3200,6 +3204,7 @@ namespace Geosite
                                                                     flag10 += scale1;
                                                                     if (flag10 < 10)
                                                                         shapeFile.fire(path,
+                                                                            1,
                                                                             progress: scale10 * 10);
                                                                     else
                                                                     {
@@ -3207,6 +3212,7 @@ namespace Geosite
                                                                         var rest = 10 - (flag10 - scale1);
                                                                         if (rest > 0)
                                                                             shapeFile.fire(path,
+                                                                                1,
                                                                                 progress: 10 * 10);
                                                                     }
                                                                 }
@@ -3254,7 +3260,7 @@ namespace Geosite
                                                 }
 
                                                 shapeFile.fire(
-                                                    $" [{valid} feature{(valid > 1 ? "s" : "")}]");
+                                                    $" [{valid} feature{(valid > 1 ? "s" : "")}]",200);
                                             }
 
                                             if (isOK)
@@ -3356,7 +3362,7 @@ namespace Geosite
                                             {
                                                 if (freeText.RecordCount == 0)
                                                     return "No features found";
-                                                freeText.fire("Preprocessing ...");
+                                                freeText.fire("Preprocessing ...",0);
                                                 var FileInfo = freeText.GetCapabilities();
                                                 var FileType = $"{FileInfo["fileType"]}";
 
@@ -3480,6 +3486,7 @@ namespace Geosite
                                                                 var featureType = $"{feature["geometry"]["type"]}";
                                                                 freeText.fire(
                                                                     message: $"{featureType} [{pointer} / {RecordCount}]",
+                                                                    1,
                                                                     progress: 100 * pointer / RecordCount
                                                                 );
                                                                 var featureId = $"{feature["id"]}";
@@ -3665,6 +3672,7 @@ namespace Geosite
                                                                             flag10 += scale1;
                                                                             if (flag10 < 10)
                                                                                 freeText.fire(path,
+                                                                                    1,
                                                                                     progress: scale10 * 10);
                                                                             else
                                                                             {
@@ -3672,6 +3680,7 @@ namespace Geosite
                                                                                 var rest = 10 - (flag10 - scale1);
                                                                                 if (rest > 0)
                                                                                     freeText.fire(path,
+                                                                                        1,
                                                                                         progress: 10 * 10);
                                                                             }
                                                                         }
@@ -3718,7 +3727,7 @@ namespace Geosite
                                                         }
 
                                                         freeText.fire(
-                                                            $" [{valid} feature{(valid > 1 ? "s" : "")}]");
+                                                            $" [{valid} feature{(valid > 1 ? "s" : "")}]",200);
                                                     }
 
                                                     if (isOK)
@@ -3886,6 +3895,7 @@ namespace Geosite
                                                                 flag10 += scale1;
                                                                 if (flag10 < 10)
                                                                     xml.fire(path,
+                                                                        1,
                                                                         progress: scale10 * 10);
                                                                 else
                                                                 {
@@ -3893,6 +3903,7 @@ namespace Geosite
                                                                     var rest = 10 - (flag10 - scale1);
                                                                     if (rest > 0)
                                                                         xml.fire(path,
+                                                                            1,
                                                                             progress: 10 * 10);
                                                                 }
                                                             }
@@ -3931,7 +3942,7 @@ namespace Geosite
                                                     }
 
                                                     xml.fire(
-                                                        $" [{valid} feature{(valid > 1 ? "s" : "")}]");
+                                                        $" [{valid} feature{(valid > 1 ? "s" : "")}]",200);
                                                 }
 
                                                 //只要发现【"member", "Member", "MEMBER"】任何一个，就中止后续遍历
@@ -4111,6 +4122,7 @@ namespace Geosite
                                                                 flag10 += scale1;
                                                                 if (flag10 < 10)
                                                                     kml.fire(path,
+                                                                        1,
                                                                         progress: scale10 * 10);
                                                                 else
                                                                 {
@@ -4118,6 +4130,7 @@ namespace Geosite
                                                                     var rest = 10 - (flag10 - scale1);
                                                                     if (rest > 0)
                                                                         kml.fire(path,
+                                                                            1,
                                                                             progress: 10 * 10);
                                                                 }
                                                             }
@@ -4147,7 +4160,7 @@ namespace Geosite
                                                     }
 
                                                     kml.fire(
-                                                        $" [{valid} feature{(valid > 1 ? "s" : "")}]");
+                                                        $" [{valid} feature{(valid > 1 ? "s" : "")}]",200);
                                                 }
 
                                                 //只要发现任何一个，就中止后续遍历
@@ -4340,6 +4353,7 @@ namespace Geosite
                                                                     flag10 += scale1;
                                                                     if (flag10 < 10)
                                                                         GeoJsonObject.fire(path,
+                                                                            1,
                                                                             progress: scale10 * 10);
                                                                     else
                                                                     {
@@ -4347,6 +4361,7 @@ namespace Geosite
                                                                         var rest = 10 - (flag10 - scale1);
                                                                         if (rest > 0)
                                                                             GeoJsonObject.fire(path,
+                                                                                1,
                                                                                 progress: 10 * 10);
                                                                     }
                                                                 }
@@ -4376,7 +4391,7 @@ namespace Geosite
                                                         }
 
                                                         GeoJsonObject.fire(
-                                                            $" [{valid} feature{(valid > 1 ? "s" : "")}]");
+                                                            $" [{valid} feature{(valid > 1 ? "s" : "")}]",200);
                                                     }
 
                                                     //只要发现任何一个，就中止后续遍历
