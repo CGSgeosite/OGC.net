@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml.Linq;
+using Geosite.Messager;
 
 namespace Geosite
 {
@@ -14,6 +15,8 @@ namespace Geosite
         public XElement Description;
 
         public bool OK;
+
+        public bool DonotPrompt;
 
         public LayersBuilder(string TreePathDefault = null)
         {
@@ -27,18 +30,7 @@ namespace Geosite
             {
                 treePathTab.SelectedIndex = 0;
                 //尽可能从文件夹或文件路径中提取分类树
-                if(Regex.IsMatch(TreePathDefault, @"(^([a-z]+):)([\s\S]*?)([\.][\s\S]*)?$", RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Multiline))
-                {
-                    TreePathDefault = string.Join("/", Regex.Split(Regex.Replace(
-                            TreePathDefault, //D:\zk\result\error\234.txt  D:\zk\result\error
-                            @"(^([a-z]+):)([\s\S]*?)([\.][\s\S]*)?$",
-                            "$3", // \zk\result\error\234  \zk\result\error
-                            RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Multiline
-                        ).Trim('\\','/'), // zk\result\error\234  zk\result\error
-                        @"[/\\]+", // zk/result/error/234  zk/result/error
-                        RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Multiline));
-                }
-                treePathBox.Text = TreePathDefault;
+                treePathBox.Text = ConsoleIO.FilePathToXPath(TreePathDefault);
                 treePathBox.Focus();
             }
         }
@@ -136,6 +128,11 @@ namespace Geosite
                 Close();
             } else 
                 OK = false;
+        }
+
+        private void donotPrompt_CheckedChanged(object sender, EventArgs e)
+        {
+            DonotPrompt = donotPrompt.Checked;
         }
     }
 }

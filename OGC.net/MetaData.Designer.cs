@@ -131,6 +131,7 @@ namespace Geosite
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MetaData";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "MetaData";
             this.TopMost = true;
             this.metaBox.ResumeLayout(false);

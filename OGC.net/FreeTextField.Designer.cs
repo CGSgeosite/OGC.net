@@ -84,6 +84,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FreeTextField";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Coordinate column";
             this.TopMost = true;
             this.ResumeLayout(false);

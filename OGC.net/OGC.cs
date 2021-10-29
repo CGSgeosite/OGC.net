@@ -18,15 +18,15 @@ using Geosite.Messager;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Microsoft.VisualBasic;
+// ReSharper disable All
 
 namespace Geosite
 {
-
     public partial class OGCform : Form
     {
-        private bool PostgreSqlConnection; //数据库是否处于连接状态？
-
         private readonly string getCopyright; //软件版权信息
+
+        private bool PostgreSqlConnection; //数据库是否处于连接状态？
 
         private (bool status, int forest, string name) ClusterUser; //集群用户信息，其中 name 将充当森林名称
 
@@ -35,6 +35,7 @@ namespace Geosite
         private string ClusterDateGridCell;
 
         private bool DonotPromptMetaData; //是否不再弹出元数据对话框？
+        private bool DonotPromptLayersBuilder; //是否不再弹出层级分类对话框？
 
         private LoadingBar Loading; //加载进度条
 
@@ -44,14 +45,19 @@ namespace Geosite
             InitializeBackgroundWorker();
 
             PostgreSqlConnection =
-            DonotPromptMetaData = false;
+                DonotPromptMetaData =
+                    DonotPromptLayersBuilder = false;
+
             getCopyright = Copyright.CopyrightAttribute;
         }
 
         private void OGCform_Load(object sender, EventArgs e)
         {
             //-----test----
-           
+
+
+
+
             //-------------
 
             this.Opacity = 0;
@@ -294,7 +300,7 @@ namespace Geosite
 
         /*
             _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
-                                    Loading 可视化加载器
+                                    Loading 异步可视化加载器
             _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 
             用法：
@@ -416,7 +422,7 @@ namespace Geosite
 
             fileWorker.RunWorkerAsync
             (
-                 (SourcePath: vectorSourceFile.Text, TargetPath: vectorTargetFile.Text)
+                 (SourcePath: vectorSourceFile.Text, TargetPath: vectorTargetFile.Text, SaveAsFormat: SaveAsFormat.Text)
             );
 
             //自动调用 FileWorkStart 函数
@@ -430,290 +436,632 @@ namespace Geosite
                 return "Pause...";
             }
 
-            var Argument = ((string SourcePath, string TargetPath)?)e.Argument;
+            var Argument = ((string SourcePath, string TargetPath, string SaveAsFormat)?)e.Argument;
             if (Argument != null)
             {
-                var Source_file = Argument.Value.SourcePath;
-                var Target_file = Argument.Value.TargetPath;
+                //files --- D:\test\mapgis\LINE.WL|D:\test\mapgis\POINT.WT|D:\test\mapgis\POLYGON.WP
+                var sourceFiles = Regex.Split(Argument.Value.SourcePath, @"[\s]*[|][\s]*");
+
+                var TargetPath = Argument.Value.TargetPath; //folder --- D:\tmp or file --- D:\tmp\wer.xml
+                var isDirectory = File.GetAttributes(TargetPath).HasFlag(FileAttributes.Directory);
+
+                var saveAsFormat = Argument.Value.SaveAsFormat;
+                /* Argument.Value.SaveAsFormat
+                    JSON(*.json)
+                    ESRI ShapeFile(*.shp)
+                    GeoJSON(*.geojson)
+                    GoogleEarth(*.kml)
+                    Gml(*.gml)
+                    GeositeXML(*.xml)             
+                    ""
+                 */
+                var targetType = isDirectory
+                    ? Regex.IsMatch(saveAsFormat, @"\(\*.json\)", RegexOptions.IgnoreCase)
+                        ? ".json"
+                        : Regex.IsMatch(saveAsFormat, @"\(\*.shp\)", RegexOptions.IgnoreCase)
+                            ? ".shp"
+                            : Regex.IsMatch(saveAsFormat, @"\(\*.geojson\)", RegexOptions.IgnoreCase)
+                                ? ".geojson"
+                                : Regex.IsMatch(saveAsFormat, @"\(\*.kml\)", RegexOptions.IgnoreCase)
+                                    ? ".kml"
+                                    : Regex.IsMatch(saveAsFormat, @"\(\*.gml\)", RegexOptions.IgnoreCase)
+                                        ? ".gml"
+                                        : ".xml"
+                    : Path.GetExtension(TargetPath).ToLower();
+
                 try
                 {
-                    var fileType = Path.GetExtension(Source_file)?.ToLower();
-                    switch (fileType)
+                    for (var i = 0; i < sourceFiles.Length; i++)
                     {
-                        case ".shp":
-                            {
-                                var codePage = ShapeFile.ShapeFile.GetDbfCodePage(
-                                    Path.Combine(
-                                        Path.GetDirectoryName(Source_file) ?? "",
-                                        Path.GetFileNameWithoutExtension(Source_file) + ".dbf")
-                                );
+                        var sourceFile = sourceFiles[i];
 
-                                using var shapeFile = new ShapeFile.ShapeFile();
-                                shapeFile.onGeositeEvent += delegate (object _, GeositeEventArgs Event)
+                        string targetFile;
+                        if (!isDirectory)
+                            targetFile = TargetPath;
+                        else
+                        {
+                            var postfix = 0;
+                            do
+                            {
+                                targetFile = Path.Combine(
+                                    TargetPath,
+                                    Path.GetFileNameWithoutExtension(sourceFile) + (postfix == 0 ? "" : $"({postfix})") + targetType);
+                                if (!File.Exists(targetFile))
+                                    break;
+                                postfix++;
+                            } while (true);
+                        }
+
+                        var fileType = Path.GetExtension(sourceFile)?.ToLower();
+                        switch (fileType)
+                        {
+                            case ".shp":
                                 {
-                                    FileBackgroundWorker.ReportProgress(Event.progress ?? -1, Event.message ?? string.Empty);
+                                    var codePage = ShapeFile.ShapeFile.GetDbfCodePage(
+                                        Path.Combine(
+                                            Path.GetDirectoryName(sourceFile) ?? "",
+                                            Path.GetFileNameWithoutExtension(sourceFile) + ".dbf")
+                                    );
+
+                                    using var shapeFile = new ShapeFile.ShapeFile();
+                                    var localI = i + 1;
+                                    shapeFile.onGeositeEvent += delegate (object _, GeositeEventArgs Event)
+                                {
+                                    object userStatus = !string.IsNullOrWhiteSpace(Event.message)
+                                        ? sourceFiles.Length > 1
+                                            ? $"[{localI}/{sourceFiles.Length}] {Event.message}"
+                                            : Event.message
+                                        : null;
+
+                                    FileBackgroundWorker.ReportProgress(Event.progress ?? -1,
+                                        userStatus ?? string.Empty);
                                 };
 
-                                shapeFile.Open(Source_file, codePage);
-                                switch (Path.GetExtension(Target_file)?.ToLower())
-                                {
-                                    case ".shp":
-                                        shapeFile.Export(Target_file, "shapefile");
-                                        break;
-                                    case ".xml":
-                                    case ".kml":
-                                    case ".gml":
-                                        var getTreeLayers = new LayersBuilder(new FileInfo(Source_file).FullName);
-                                        getTreeLayers.ShowDialog();
-                                        if (getTreeLayers.OK)
-                                            shapeFile.Export(
-                                                Target_file,
-                                                Path.GetExtension(Target_file).ToLower().Substring(1),
-                                                getTreeLayers.TreePathString,
-                                                getTreeLayers.Description
-                                            );
-                                        break;
-                                    case ".geojson":
-                                        shapeFile.Export(
-                                            Target_file
-                                        );
-                                        break;
-                                }
-                            }
-                            break;
-                        case ".mpj":
-                            var mapgisMPJ = new MapGis.MapGisProject();
-                            mapgisMPJ.onGeositeEvent += delegate (object _, GeositeEventArgs Event)
-                            {
-                                FileBackgroundWorker.ReportProgress(Event.progress ?? -1, Event.message ?? string.Empty);
-                            };
-                            mapgisMPJ.Open(Source_file);
-                            mapgisMPJ.Export(Target_file);
-                            break;
-                        case ".txt":
-                        case ".csv":
-                            try
-                            {
-                                var freeTextFields = fileType == ".txt"
-                                    ? TXT.GetFieldNames(Source_file)
-                                    : CSV.GetFieldNames(Source_file);
-                                if (freeTextFields.Length == 0)
-                                    throw new Exception("No valid fields found");
-
-                                string coordinateFieldName;
-                                if (freeTextFields.Any(f => f == "_position_"))
-                                    coordinateFieldName = "_position_";
-                                else
-                                {
-                                    var freeTextFieldsForm = new FreeTextField(freeTextFields);
-                                    freeTextFieldsForm.ShowDialog();
-                                    coordinateFieldName = freeTextFieldsForm.OK ? freeTextFieldsForm.CoordinateFieldName : null;
-                                }
-
-                                if (coordinateFieldName != null)
-                                {
-                                    //多态性：将派生类对象赋予基类对象
-                                    FreeText.FreeText freeText = fileType == ".txt"
-                                        ? new TXT(CoordinateFieldName: coordinateFieldName)
-                                        : new CSV(CoordinateFieldName: coordinateFieldName);
-                                    freeText.onGeositeEvent +=
-                                        delegate (object _, GeositeEventArgs Event)
-                                        {
-                                            FileBackgroundWorker.ReportProgress(
-                                                Event.progress ?? -1,
-                                                Event.message ?? string.Empty);
-                                        };
-                                    freeText.Open(Source_file);
-
-                                    switch (Path.GetExtension(Target_file)?.ToLower())
+                                    shapeFile.Open(sourceFile, codePage);
+                                    switch (targetType)
                                     {
                                         case ".shp":
-                                            freeText.Export(Target_file, "shapefile");
-                                            break;
-                                        case ".geojson":
-                                            freeText.Export(
-                                                Target_file
-                                            );
+                                            shapeFile.Export(targetFile, "shapefile");
                                             break;
                                         case ".xml":
                                         case ".kml":
                                         case ".gml":
-                                            var getTreeLayers = new LayersBuilder(new FileInfo(Source_file).FullName);
+                                            if (isDirectory)
+                                            {
+                                                shapeFile.Export(
+                                                    targetFile,
+                                                    Path.GetExtension(targetFile).ToLower().Substring(1),
+                                                    ConsoleIO.FilePathToXPath(sourceFile),
+                                                    null
+                                                );
+                                            }
+                                            else
+                                            {
+                                                string TreePathString = null;
+                                                XElement Description = null;
+                                                var canDo = true;
+                                                if (!DonotPromptLayersBuilder)
+                                                {
+                                                    var getTreeLayers = new LayersBuilder(new FileInfo(sourceFile).FullName);
+                                                    getTreeLayers.ShowDialog();
+                                                    if (getTreeLayers.OK)
+                                                    {
+                                                        TreePathString = getTreeLayers.TreePathString;
+                                                        Description = getTreeLayers.Description;
+                                                        DonotPromptLayersBuilder = getTreeLayers.DonotPrompt;
+                                                    }
+                                                    else
+                                                        canDo = false;
+                                                }
+                                                else
+                                                {
+                                                    TreePathString = ConsoleIO.FilePathToXPath(new FileInfo(sourceFile).FullName);
+                                                }
+                                                if (canDo)
+                                                {
+                                                    shapeFile.Export(
+                                                        targetFile,
+                                                        Path.GetExtension(targetFile).ToLower().Substring(1),
+                                                        TreePathString,
+                                                        Description
+                                                    );
+                                                }
+                                            }
+
+                                            break;
+                                        case ".geojson":
+                                            shapeFile.Export(
+                                                targetFile
+                                            );
+                                            break;
+                                    }
+                                }
+                                break;
+                            case ".mpj":
+                                {
+                                    var mapgisMPJ = new MapGis.MapGisProject();
+                                    var localI = i + 1;
+                                    mapgisMPJ.onGeositeEvent += delegate (object _, GeositeEventArgs Event)
+                                {
+                                    object userStatus = !string.IsNullOrWhiteSpace(Event.message)
+                                        ? sourceFiles.Length > 1
+                                            ? $"[{localI}/{sourceFiles.Length}] {Event.message}"
+                                            : Event.message
+                                        : null;
+
+                                    FileBackgroundWorker.ReportProgress(Event.progress ?? -1,
+                                        userStatus ?? string.Empty);
+                                };
+                                    mapgisMPJ.Open(sourceFile);
+                                    mapgisMPJ.Export(targetFile);
+                                }
+
+                                break;
+                            case ".txt":
+                            case ".csv":
+                                try
+                                {
+                                    var freeTextFields = fileType == ".txt"
+                                        ? TXT.GetFieldNames(sourceFile)
+                                        : CSV.GetFieldNames(sourceFile);
+                                    if (freeTextFields.Length == 0)
+                                        throw new Exception("No valid fields found");
+
+                                    string coordinateFieldName;
+                                    if (freeTextFields.Any(f => f == "_position_"))
+                                        coordinateFieldName = "_position_";
+                                    else
+                                    {
+                                        if (isDirectory)
+                                        {
+                                            coordinateFieldName = "_position_";
+                                        }
+                                        else
+                                        {
+                                            var freeTextFieldsForm = new FreeTextField(freeTextFields);
+                                            freeTextFieldsForm.ShowDialog();
+                                            coordinateFieldName = freeTextFieldsForm.OK ? freeTextFieldsForm.CoordinateFieldName : null;
+                                        }
+                                    }
+
+                                    if (coordinateFieldName != null)
+                                    {
+                                        //多态性：将派生类对象赋予基类对象
+                                        FreeText.FreeText freeText = fileType == ".txt"
+                                            ? new TXT(CoordinateFieldName: coordinateFieldName)
+                                            : new CSV(CoordinateFieldName: coordinateFieldName);
+                                        var localI = i + 1;
+                                        freeText.onGeositeEvent +=
+                                            delegate (object _, GeositeEventArgs Event)
+                                            {
+                                                object userStatus = !string.IsNullOrWhiteSpace(Event.message)
+                                                    ? sourceFiles.Length > 1
+                                                        ? $"[{localI}/{sourceFiles.Length}] {Event.message}"
+                                                        : Event.message
+                                                    : null;
+
+                                                FileBackgroundWorker.ReportProgress(Event.progress ?? -1,
+                                                    userStatus ?? string.Empty);
+                                            };
+                                        freeText.Open(sourceFile);
+
+                                        switch (Path.GetExtension(targetFile)?.ToLower())
+                                        {
+                                            case ".shp":
+                                                freeText.Export(targetFile, "shapefile");
+                                                break;
+                                            case ".geojson":
+                                                freeText.Export(
+                                                    targetFile
+                                                );
+                                                break;
+                                            case ".xml":
+                                            case ".kml":
+                                            case ".gml":
+                                                if (isDirectory)
+                                                {
+                                                    freeText.Export(
+                                                        targetFile,
+                                                        Path.GetExtension(targetFile).ToLower().Substring(1),
+                                                        ConsoleIO.FilePathToXPath(sourceFile),
+                                                        null
+                                                    );
+                                                }
+                                                else
+                                                {
+                                                    string TreePathString = null;
+                                                    XElement Description = null;
+                                                    var canDo = true;
+                                                    if (!DonotPromptLayersBuilder)
+                                                    {
+                                                        var getTreeLayers = new LayersBuilder(new FileInfo(sourceFile).FullName);
+                                                        getTreeLayers.ShowDialog();
+                                                        if (getTreeLayers.OK)
+                                                        {
+                                                            TreePathString = getTreeLayers.TreePathString;
+                                                            Description = getTreeLayers.Description;
+                                                            DonotPromptLayersBuilder = getTreeLayers.DonotPrompt;
+                                                        }
+                                                        else
+                                                            canDo = false;
+                                                    }
+                                                    else
+                                                    {
+                                                        TreePathString = ConsoleIO.FilePathToXPath(new FileInfo(sourceFile).FullName);
+                                                    }
+                                                    if (canDo)
+                                                    {
+                                                        freeText.Export(
+                                                            targetFile,
+                                                            Path.GetExtension(targetFile).ToLower().Substring(1),
+                                                            TreePathString,
+                                                            Description
+                                                        );
+                                                    }
+                                                }
+
+                                                break;
+                                        }
+                                    }
+                                }
+                                catch
+                                {
+                                    //
+                                }
+
+                                break;
+                            case ".kml":
+                                using (var kml = new GeositeXml.GeositeXml())
+                                {
+                                    var localI = i + 1;
+                                    kml.onGeositeEvent += delegate (object _, GeositeEventArgs Event)
+                                    {
+                                        object userStatus = !string.IsNullOrWhiteSpace(Event.message)
+                                            ? sourceFiles.Length > 1
+                                                ? $"[{localI}/{sourceFiles.Length}] {Event.message}"
+                                                : Event.message
+                                            : null;
+
+                                        FileBackgroundWorker.ReportProgress(Event.progress ?? -1,
+                                            userStatus ?? string.Empty);
+                                    };
+
+                                    if (isDirectory)
+                                    {
+                                        switch (Path.GetExtension(targetFile)?.ToLower())
+                                        {
+                                            case ".xml":
+                                                kml.KmlToGeositeXml(sourceFile, targetFile, null);
+                                                break;
+                                            case ".shp":
+                                                {
+                                                    var geositeXml = kml.KmlToGeositeXml(sourceFile, null, null);
+                                                    kml.GeositeXmlToShp(
+                                                        geositeXml.Root,
+                                                        targetFile
+                                                    );
+                                                }
+                                                break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        XElement Description = null;
+                                        var canDo = true;
+                                        if (!DonotPromptLayersBuilder)
+                                        {
+                                            var getTreeLayers = new LayersBuilder();
                                             getTreeLayers.ShowDialog();
                                             if (getTreeLayers.OK)
-                                                freeText.Export(
-                                                    Target_file,
-                                                    Path.GetExtension(Target_file).ToLower().Substring(1),
-                                                    getTreeLayers.TreePathString,
-                                                    getTreeLayers.Description
-                                                );
-                                            break;
+                                            {
+                                                Description = getTreeLayers.Description;
+                                                DonotPromptLayersBuilder = getTreeLayers.DonotPrompt;
+                                            }
+                                            else
+                                                canDo = false;
+                                        }
+
+                                        if (canDo)
+                                        {
+                                            switch (Path.GetExtension(targetFile)?.ToLower())
+                                            {
+                                                case ".xml":
+                                                    kml.KmlToGeositeXml(sourceFile, targetFile, Description);
+                                                    break;
+                                                case ".shp":
+                                                    {
+                                                        var geositeXml = kml.KmlToGeositeXml(sourceFile, null, Description);
+                                                        kml.GeositeXmlToShp(
+                                                            geositeXml.Root,
+                                                            targetFile
+                                                        );
+                                                    }
+                                                    break;
+                                            }
+                                        }
                                     }
                                 }
-                            }
-                            catch
-                            {
-                                //
-                            }
-
-                            break;
-                        case ".kml":
-                            using (var kml = new GeositeXml.GeositeXml())
-                            {
-                                kml.onGeositeEvent += delegate (object _, GeositeEventArgs Event)
+                                break;
+                            case ".xml":
+                                using (var xml = new GeositeXml.GeositeXml())
                                 {
-                                    FileBackgroundWorker.ReportProgress(Event.progress ?? -1, Event.message ?? string.Empty);
-                                };
-
-                                var getTreeLayers = new LayersBuilder();
-                                getTreeLayers.ShowDialog();
-                                if (getTreeLayers.OK)
-                                {
-                                    switch (Path.GetExtension(Target_file)?.ToLower())
+                                    var localI = i + 1;
+                                    xml.onGeositeEvent += delegate (object _, GeositeEventArgs Event)
                                     {
-                                        case ".xml":
-                                            kml.KmlToGeositeXml(Source_file, Target_file, getTreeLayers.OK ? getTreeLayers.Description : null);
-                                            break;
-                                        case ".shp":
+                                        object userStatus = !string.IsNullOrWhiteSpace(Event.message)
+                                            ? sourceFiles.Length > 1
+                                                ? $"[{localI}/{sourceFiles.Length}] {Event.message}"
+                                                : Event.message
+                                            : null;
+
+                                        FileBackgroundWorker.ReportProgress(Event.progress ?? -1,
+                                            userStatus ?? string.Empty);
+                                    };
+                                    if (isDirectory)
+                                    {
+                                        switch (Path.GetExtension(targetFile)?.ToLower())
+                                        {
+                                            case ".kml":
+                                                xml.GeositeXmlToKml(sourceFile, targetFile, null);
+                                                break;
+                                            case ".xml":
+                                                xml.GeositeXmlToGeositeXml(sourceFile, targetFile, null);
+                                                break;
+                                            case ".gml":
+                                                xml.GeositeXmlToGml(sourceFile, targetFile, null);
+                                                break;
+                                            case ".geojson":
+                                                xml.GeositeXmlToGeoJson(sourceFile, targetFile, null);
+                                                break;
+                                            case ".shp":
+                                                {
+                                                    var geositeXml = xml.GeositeXmlToGeositeXml(sourceFile, null, null);
+                                                    xml.GeositeXmlToShp(
+                                                        geositeXml.Root,
+                                                        targetFile
+                                                    );
+                                                }
+                                                break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        XElement Description = null;
+                                        var canDo = true;
+                                        if (!DonotPromptLayersBuilder)
+                                        {
+                                            var getTreeLayers = new LayersBuilder();
+                                            getTreeLayers.ShowDialog();
+                                            if (getTreeLayers.OK)
                                             {
-                                                var geositeXml = kml.KmlToGeositeXml(Source_file, null, getTreeLayers.OK ? getTreeLayers.Description : null);
-                                                kml.GeositeXmlToShp(
-                                                    geositeXml.Root,
-                                                    Target_file
+                                                Description = getTreeLayers.Description;
+                                                DonotPromptLayersBuilder = getTreeLayers.DonotPrompt;
+                                            }
+                                            else
+                                            {
+                                                canDo = false;
+                                            }
+                                        }
+
+                                        if (canDo)
+                                            switch (Path.GetExtension(targetFile)?.ToLower())
+                                            {
+                                                case ".kml":
+                                                    xml.GeositeXmlToKml(sourceFile, targetFile,
+                                                        Description);
+                                                    break;
+                                                case ".xml":
+                                                    xml.GeositeXmlToGeositeXml(sourceFile, targetFile,
+                                                        Description);
+                                                    break;
+                                                case ".gml":
+                                                    xml.GeositeXmlToGml(sourceFile, targetFile,
+                                                        Description);
+                                                    break;
+                                                case ".geojson":
+                                                    xml.GeositeXmlToGeoJson(sourceFile, targetFile,
+                                                        Description);
+                                                    break;
+                                                case ".shp":
+                                                    {
+                                                        var geositeXml = xml.GeositeXmlToGeositeXml(sourceFile, null,
+                                                            Description);
+                                                        xml.GeositeXmlToShp(
+                                                            geositeXml.Root,
+                                                            targetFile
+                                                        );
+                                                    }
+                                                    break;
+                                            }
+                                    }
+                                }
+
+                                break;
+                            case ".geojson":
+                                using (var GeoJsonObject = new GeositeXml.GeositeXml())
+                                {
+                                    var localI = i + 1;
+                                    GeoJsonObject.onGeositeEvent += delegate (object _, GeositeEventArgs Event)
+                                    {
+                                        object userStatus = !string.IsNullOrWhiteSpace(Event.message)
+                                            ? sourceFiles.Length > 1
+                                                ? $"[{localI}/{sourceFiles.Length}] {Event.message}"
+                                                : Event.message
+                                            : null;
+
+                                        FileBackgroundWorker.ReportProgress(Event.progress ?? -1,
+                                            userStatus ?? string.Empty);
+                                    };
+                                    if (isDirectory)
+                                    {
+                                        switch (Path.GetExtension(targetFile)?.ToLower())
+                                        {
+                                            case ".xml":
+                                                GeoJsonObject.GeoJsonToGeositeXml(
+                                                    sourceFile,
+                                                    targetFile,
+                                                    ConsoleIO.FilePathToXPath(sourceFile),
+                                                   null
+                                                );
+                                                break;
+                                            case ".shp":
+                                                {
+                                                    var geositeXmlStringBuilder = new StringBuilder();
+
+                                                    GeoJsonObject.GeoJsonToGeositeXml(
+                                                        sourceFile,
+                                                        geositeXmlStringBuilder,
+                                                        ConsoleIO.FilePathToXPath(sourceFile),
+                                                        null
+                                                    );
+
+                                                    var geositeXml = XElement.Parse(geositeXmlStringBuilder.ToString());
+                                                    GeoJsonObject.GeositeXmlToShp(
+                                                        geositeXml,
+                                                        targetFile
+                                                    );
+                                                }
+                                                break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        string TreePathString = null;
+                                        XElement Description = null;
+                                        var canDo = true;
+                                        if (!DonotPromptLayersBuilder)
+                                        {
+                                            var getTreeLayers = new LayersBuilder(new FileInfo(sourceFile).FullName);
+                                            getTreeLayers.ShowDialog();
+                                            if (getTreeLayers.OK)
+                                            {
+                                                TreePathString = getTreeLayers.TreePathString;
+                                                Description = getTreeLayers.Description;
+                                                DonotPromptLayersBuilder = getTreeLayers.DonotPrompt;
+                                            }
+                                            else
+                                                canDo = false;
+                                        }
+                                        else
+                                        {
+                                            TreePathString = ConsoleIO.FilePathToXPath(new FileInfo(sourceFile).FullName);
+                                        }
+                                        if (canDo)
+                                        {
+                                            switch (Path.GetExtension(targetFile)?.ToLower())
+                                            {
+                                                case ".xml":
+                                                    GeoJsonObject.GeoJsonToGeositeXml(
+                                                        sourceFile,
+                                                        targetFile,
+                                                        TreePathString,
+                                                        Description
+                                                    );
+                                                    break;
+                                                case ".shp":
+                                                    {
+                                                        var geositeXmlStringBuilder = new StringBuilder();
+
+                                                        GeoJsonObject.GeoJsonToGeositeXml(
+                                                            sourceFile,
+                                                            geositeXmlStringBuilder,
+                                                            TreePathString,
+                                                            Description
+                                                        );
+
+                                                        var geositeXml = XElement.Parse(geositeXmlStringBuilder.ToString());
+                                                        GeoJsonObject.GeositeXmlToShp(
+                                                            geositeXml,
+                                                            targetFile
+                                                        );
+                                                    }
+                                                    break;
+                                            }
+                                        }
+                                    }
+                                }
+
+                                break;
+                            //case ".wt":
+                            //case ".wl":
+                            //case ".wp":
+                            default:
+                                using (var mapgis = new MapGis.MapGisFile())
+                                {
+                                    var localI = i + 1;
+                                    mapgis.onGeositeEvent += delegate (object _, GeositeEventArgs Event)
+                                    {
+                                        object userStatus = !string.IsNullOrWhiteSpace(Event.message)
+                                            ? sourceFiles.Length > 1
+                                                ? $"[{localI}/{sourceFiles.Length}] {Event.message}"
+                                                : Event.message
+                                            : null;
+
+                                        FileBackgroundWorker.ReportProgress(Event.progress ?? -1,
+                                            userStatus ?? string.Empty);
+                                    };
+
+                                    mapgis.Open(sourceFile);
+
+                                    switch (Path.GetExtension(targetFile)?.ToLower())
+                                    {
+                                        case ".shp":
+                                            mapgis.Export(targetFile, "shapefile");
+                                            break;
+                                        case ".xml":
+                                        case ".kml":
+                                        case ".gml":
+                                            if (isDirectory)
+                                            {
+                                                mapgis.Export(
+                                                    targetFile,
+                                                    Path.GetExtension(targetFile).ToLower().Substring(1),
+                                                    ConsoleIO.FilePathToXPath(sourceFile),
+                                                    null
                                                 );
                                             }
-                                            break;
-                                    }
-                                }
-                            }
-                            break;
-                        case ".xml":
-                            using (var xml = new GeositeXml.GeositeXml())
-                            {
-                                xml.onGeositeEvent += delegate(object _, GeositeEventArgs Event)
-                                {
-                                    FileBackgroundWorker.ReportProgress(Event.progress ?? -1,
-                                        Event.message ?? string.Empty);
-                                };
-                                var getTreeLayers = new LayersBuilder();
-                                getTreeLayers.ShowDialog();
-                                if (getTreeLayers.OK)
-                                    switch (Path.GetExtension(Target_file)?.ToLower())
-                                    {
-                                        case ".kml":
-                                            xml.GeositeXmlToKml(Source_file, Target_file,
-                                                getTreeLayers.OK ? getTreeLayers.Description : null);
-                                            break;
-                                        case ".xml":
-                                            xml.GeositeXmlToGeositeXml(Source_file, Target_file,
-                                                getTreeLayers.OK ? getTreeLayers.Description : null);
-                                            break;
-                                        case ".gml":
-                                            xml.GeositeXmlToGml(Source_file, Target_file,
-                                                getTreeLayers.OK ? getTreeLayers.Description : null);
+                                            else
+                                            {
+                                                string TreePathString = null;
+                                                XElement Description = null;
+                                                var canDo = true;
+                                                if (!DonotPromptLayersBuilder)
+                                                {
+                                                    var getTreeLayers = new LayersBuilder(new FileInfo(sourceFile).FullName);
+                                                    getTreeLayers.ShowDialog();
+                                                    if (getTreeLayers.OK)
+                                                    {
+                                                        TreePathString = getTreeLayers.TreePathString;
+                                                        Description = getTreeLayers.Description;
+                                                        DonotPromptLayersBuilder = getTreeLayers.DonotPrompt;
+                                                    }
+                                                    else
+                                                        canDo = false;
+                                                }
+                                                else
+                                                {
+                                                    TreePathString = ConsoleIO.FilePathToXPath(new FileInfo(sourceFile).FullName);
+                                                }
+                                                if (canDo)
+                                                {
+                                                    mapgis.Export(
+                                                        targetFile,
+                                                        Path.GetExtension(targetFile).ToLower().Substring(1),
+                                                        TreePathString,
+                                                        Description
+                                                    );
+                                                }
+                                            }
                                             break;
                                         case ".geojson":
-                                            xml.GeositeXmlToGeoJson(Source_file, Target_file,
-                                                getTreeLayers.OK ? getTreeLayers.Description : null);
-                                            break;
-                                        case ".shp":
-                                            {
-                                                var geositeXml = xml.GeositeXmlToGeositeXml(Source_file, null,
-                                                    getTreeLayers.OK ? getTreeLayers.Description : null);
-                                                xml.GeositeXmlToShp(
-                                                    geositeXml.Root,
-                                                    Target_file
-                                                );
-                                            }
-                                            break;
-                                    }
-                            }
-
-                            break;
-                        case ".geojson":
-                            using (var GeoJsonObject = new GeositeXml.GeositeXml())
-                            {
-                                GeoJsonObject.onGeositeEvent += delegate(object _, GeositeEventArgs Event)
-                                {
-                                    FileBackgroundWorker.ReportProgress(Event.progress ?? -1,
-                                        Event.message ?? string.Empty);
-                                };
-                                var GeoJsonTreePathNForm = new LayersBuilder(new FileInfo(Source_file).FullName);
-                                GeoJsonTreePathNForm.ShowDialog();
-                                if (GeoJsonTreePathNForm.OK)
-                                {
-                                    switch (Path.GetExtension(Target_file)?.ToLower())
-                                    {
-                                        case ".xml":
-                                            GeoJsonObject.GeoJsonToGeositeXml(
-                                                Source_file,
-                                                Target_file,
-                                                GeoJsonTreePathNForm.TreePathString,
-                                                GeoJsonTreePathNForm.Description
-                                            );
-                                            break;
-                                        case ".shp":
-                                        {
-                                            var geositeXmlStringBuilder = new StringBuilder();
-
-                                            GeoJsonObject.GeoJsonToGeositeXml(
-                                                Source_file,
-                                                geositeXmlStringBuilder,
-                                                GeoJsonTreePathNForm.TreePathString,
-                                                GeoJsonTreePathNForm.Description
-                                            );
-
-                                            var geositeXml = XElement.Parse(geositeXmlStringBuilder.ToString());
-                                            GeoJsonObject.GeositeXmlToShp(
-                                                geositeXml,
-                                                Target_file
-                                            );
-                                        }
-                                            break;
-                                    }
-                                }
-                            }
-
-                            break;
-                        //case ".wt":
-                        //case ".wl":
-                        //case ".wp":
-                        default:
-                            using (var mapgis = new MapGis.MapGisFile())
-                            {
-                                mapgis.onGeositeEvent += delegate (object _, GeositeEventArgs Event)
-                                {
-                                    FileBackgroundWorker.ReportProgress(Event.progress ?? -1, Event.message ?? string.Empty);
-                                };
-
-                                mapgis.Open(Source_file);
-
-                                switch (Path.GetExtension(Target_file)?.ToLower())
-                                {
-                                    case ".shp":
-                                        mapgis.Export(Target_file, "shapefile");
-                                        break;
-                                    case ".xml":
-                                    case ".kml":
-                                    case ".gml":
-                                        var getTreeLayers = new LayersBuilder(new FileInfo(Source_file).FullName);
-                                        getTreeLayers.ShowDialog();
-                                        if (getTreeLayers.OK)
                                             mapgis.Export(
-                                                Target_file,
-                                                Path.GetExtension(Target_file).ToLower().Substring(1),
-                                                getTreeLayers.TreePathString,
-                                                getTreeLayers.Description
+                                                targetFile
                                             );
-                                        break;
-                                    case ".geojson":
-                                        mapgis.Export(
-                                            Target_file
-                                        );
-                                        break;
+                                            break;
+                                    }
                                 }
-                            }
-                            break;
+                                break;
+                        }
                     }
                 }
                 catch (Exception error)
@@ -721,7 +1069,6 @@ namespace Geosite
                     return error.Message;
                 }
             }
-
             return null;
         }
 
@@ -765,77 +1112,151 @@ namespace Geosite
 
             var openFileDialog = new OpenFileDialog
             {
-                Filter = @"MapGIS|*.mpj;*.wt;*.wl;*.wp|ShapeFile|*.shp|Excel Tab Delimited|*.txt|Excel Comma Delimited|*.csv|GoogleEarth(*.kml)|*.kml|GeositeXML|*.xml|GeoJson|*.geojson",
-                FilterIndex = filterIndex
-
+                Filter = @"MapGIS|*.wt;*.wl;*.wp|MapGIS|*.mpj|ShapeFile|*.shp|Excel Tab Delimited|*.txt|Excel Comma Delimited|*.csv|GoogleEarth(*.kml)|*.kml|GeositeXML|*.xml|GeoJson|*.geojson",
+                FilterIndex = filterIndex,
+                Multiselect = true
             };
-            if (Directory.Exists(oldPath))
-            {
+            if (Directory.Exists(oldPath)) 
                 openFileDialog.InitialDirectory = oldPath;
-            }
+            SaveAsFormat.Text = string.Empty;
+            SaveAsFormat.Items.Clear();
+            vectorTargetFile.Text = string.Empty;
+            SaveAsFormat.Enabled = false;
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 RegEdit.setkey(key, $"{openFileDialog.FilterIndex}");
                 RegEdit.setkey(path, Path.GetDirectoryName(openFileDialog.FileName));
-                vectorSourceFile.Text = openFileDialog.FileName;
+                vectorSourceFile.Text = string.Join("|", openFileDialog.FileNames);
+
+                var vectorSourceFiles = Regex.Split(vectorSourceFile.Text.Trim(), @"[\s]*[|][\s]*").Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
+                var vectorSourceFileCount = vectorSourceFiles.Length; // >= 0 
+                if (vectorSourceFileCount > 1)
+                {
+                    SaveAsFormat.Enabled = true;
+                    switch (openFileDialog.FilterIndex)
+                    {
+                        case 2: //MapGIS|*.mpj
+                            SaveAsFormat.Items.Add(@"JSON(*.json)");
+                            SaveAsFormat.SelectedIndex = 0;
+                            break;
+                        case 1: //MapGIS|*.wt;*.wl;*.wp
+                        case 3: //ShapeFile|*.shp
+                        case 4: //Excel Tab Delimited|*.txt
+                        case 5: //Excel Comma Delimited|*.csv
+                        case 7: //GeositeXML|*.xml
+                            SaveAsFormat.Items.Add(@"ESRI ShapeFile(*.shp)");
+                            SaveAsFormat.Items.Add(@"GeoJSON(*.geojson)");
+                            SaveAsFormat.Items.Add(@"GoogleEarth(*.kml)");
+                            SaveAsFormat.Items.Add(@"Gml(*.gml)");
+                            SaveAsFormat.Items.Add(@"GeositeXML(*.xml)");
+                            SaveAsFormat.SelectedIndex = 0;
+                            break;
+                        case 6: //GoogleEarth(*.kml)|*.kml
+                        case 8: //GeoJson|*.geojson
+                            SaveAsFormat.Items.Add(@"ESRI ShapeFile(*.shp)");
+                            SaveAsFormat.Items.Add(@"GeositeXML(*.xml)");
+                            SaveAsFormat.SelectedIndex = 0;
+                            break;
+                        default:
+                            vectorSourceFile.Text = string.Empty;
+                            break;
+                    }
+                }
+            }
+            else
+            {
+                vectorSourceFile.Text = string.Empty;
             }
 
             FileCheck();
         }
 
+        private void vectorSourceFile_TextChanged(object sender, EventArgs e)
+        {
+            vectorTargetFile.Text = string.Empty;
+            SaveAsFormat.Text = string.Empty;
+            SaveAsFormat.Text = string.Empty;
+            SaveAsFormat.Items.Clear();
+            SaveAsFormat.Enabled = false;
+        }
+
         private void vectorSaveFile_Click(object sender, EventArgs e)
         {
-            var Source_file_ext = Path.GetExtension(vectorSourceFile.Text)?.ToLower();
-            if (Source_file_ext == "")
+            var vectorSourceFiles = Regex.Split(vectorSourceFile.Text.Trim(), @"[\s]*[|][\s]*").Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
+            var vectorSourceFileCount = vectorSourceFiles.Length; // >= 0
+            if (vectorSourceFileCount > 0)
             {
-                MessageBox.Show(@"Please select a file first", @"Tip", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                return;
+                var vectorSourceFileText = vectorSourceFiles[0];
+                if (string.IsNullOrWhiteSpace(vectorSourceFileText))
+                {
+                    MessageBox.Show(@"Please select file[s] first", @"Tip", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    return;
+                }
+
+                var key = vectorSaveFile.Name; 
+                var path = key + "_path";
+                var oldPath = RegEdit.getkey(path);
+
+                if (vectorSourceFileCount == 1)
+                {
+                    var sourceFileExt = Path.GetExtension(vectorSourceFileText).ToLower();
+
+                    int.TryParse(RegEdit.getkey(key), out var filterIndex);
+
+                    var saveFileDialog = new SaveFileDialog
+                    {
+                        Filter = sourceFileExt == ".geojson"
+                            ? @"GeositeXML(*.xml)|*.xml|ESRI ShapeFile(*.shp)|*.shp"
+                            : sourceFileExt == ".kml"
+                                ? @"GeositeXML(*.xml)|*.xml|ESRI ShapeFile(*.shp)|*.shp"
+                                : sourceFileExt == ".xml"
+                                    ? @"ESRI ShapeFile(*.shp)|*.shp|GeoJSON(*.geojson)|*.geojson|GoogleEarth(*.kml)|*.kml|Gml(*.gml)|*.gml|GeositeXML(*.xml)|*.xml"
+                                    : sourceFileExt == ".mpj"
+                                        ? @"JSON(*.json)|*.json"
+                                        : @"GeositeXML(*.xml)|*.xml|GeoJSON(*.geojson)|*.geojson|ESRI ShapeFile(*.shp)|*.shp|GoogleEarth(*.kml)|*.kml|Gml(*.gml)|*.gml",
+                        FilterIndex = filterIndex
+                    };
+                    if (Directory.Exists(oldPath))
+                        saveFileDialog.InitialDirectory = oldPath;
+                    if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        RegEdit.setkey(key, $"{saveFileDialog.FilterIndex}");
+                        RegEdit.setkey(path, Path.GetDirectoryName(saveFileDialog.FileName));
+                        vectorTargetFile.Text = saveFileDialog.FileName;
+                    }
+                    else
+                    {
+                        vectorTargetFile.Text = string.Empty;
+                    }
+                }
+                else
+                {
+                    var openFolderDialog = new FolderBrowserDialog()
+                    {
+                        Description = @"Please select a destination folder",
+                        ShowNewFolderButton = true
+                        //, RootFolder = Environment.SpecialFolder.MyComputer
+                    };
+                    if (Directory.Exists(oldPath))
+                        openFolderDialog.SelectedPath = oldPath;
+                    if (openFolderDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        RegEdit.setkey(path, openFolderDialog.SelectedPath);
+                        vectorTargetFile.Text = openFolderDialog.SelectedPath;
+                    }
+                }
+
+                FileCheck();
             }
-
-            var key = vectorSaveFile.Name;
-            int.TryParse(RegEdit.getkey(key), out var filterIndex);
-
-            var path = key + "_path";
-            var oldPath = RegEdit.getkey(path);
-
-            var saveFileDialog = new SaveFileDialog
-            {
-                Filter = Source_file_ext == ".geojson"
-                    ? @"GeositeXML(*.xml)|*.xml|ESRI ShapeFile(*.shp)|*.shp"
-                    : Source_file_ext == ".kml"
-                        ? @"GeositeXML(*.xml)|*.xml|ESRI ShapeFile(*.shp)|*.shp"
-                        : Source_file_ext == ".xml"
-                            ? @"ESRI ShapeFile(*.shp)|*.shp|GeoJSON(*.geojson)|*.geojson|GoogleEarth(*.kml)|*.kml|Gml(*.gml)|*.gml|GeositeXML(*.xml)|*.xml"
-                            : Source_file_ext == ".mpj"
-                                ? @"JSON(*.json)|*.json"
-                                : @"GeositeXML(*.xml)|*.xml|GeoJSON(*.geojson)|*.geojson|ESRI ShapeFile(*.shp)|*.shp|GoogleEarth(*.kml)|*.kml|Gml(*.gml)|*.gml",
-                FilterIndex = filterIndex
-
-            };
-            if (Directory.Exists(oldPath))
-            {
-                saveFileDialog.InitialDirectory = oldPath;
-            }
-            if (saveFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                RegEdit.setkey(key, $"{saveFileDialog.FilterIndex}");
-                RegEdit.setkey(path, Path.GetDirectoryName(saveFileDialog.FileName));
-                vectorTargetFile.Text = saveFileDialog.FileName;
-            }
-
-            FileCheck();
         }
 
         private void FileCheck()
         {
             statusText.Text = getCopyright;
-
-            var Source_file = vectorSourceFile.Text;
-            var Target_file = vectorTargetFile.Text;
-
-            FileRun.Enabled = !string.IsNullOrWhiteSpace(Source_file) &&
-                          !string.IsNullOrWhiteSpace(Target_file) &&
-                          File.Exists(Source_file);
+            FileRun.Enabled = !string.IsNullOrWhiteSpace(vectorSourceFile.Text) &&
+                              !string.IsNullOrWhiteSpace(vectorTargetFile.Text);
+            if (FileRun.Enabled)
+                FileRun.Focus();
         }
 
         private void mapgisIcon_Click(object sender, EventArgs e)
@@ -843,21 +1264,55 @@ namespace Geosite
             var key = mapgisIcon.Name;
             var path = key + "_path";
             var oldPath = RegEdit.getkey(path);
+            if (!int.TryParse(RegEdit.getkey(key), out var filterIndex))
+                filterIndex = 0;
 
             var openFileDialog = new OpenFileDialog
             {
-                Filter = @"MapGIS|*.wt;*.wl;*.wp;*.mpj",
-                FilterIndex = 0
+                Filter = @"MapGIS|*.wt;*.wl;*.wp|MapGIS|*.mpj",
+                FilterIndex = filterIndex,
+                Multiselect = true
 
             };
             if (Directory.Exists(oldPath))
-            {
                 openFileDialog.InitialDirectory = oldPath;
-            }
+            SaveAsFormat.Text = string.Empty;
+            SaveAsFormat.Items.Clear();
+            SaveAsFormat.Enabled = false;
+            vectorTargetFile.Text = string.Empty;
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
+                RegEdit.setkey(key, $"{openFileDialog.FilterIndex}");
                 RegEdit.setkey(path, Path.GetDirectoryName(openFileDialog.FileName));
-                vectorSourceFile.Text = openFileDialog.FileName;
+                vectorSourceFile.Text = string.Join("|", openFileDialog.FileNames);
+                var vectorSourceFiles = Regex.Split(vectorSourceFile.Text.Trim(), @"[\s]*[|][\s]*").Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
+                var vectorSourceFileCount = vectorSourceFiles.Length; // >= 0
+                if (vectorSourceFileCount > 1)
+                {
+                    SaveAsFormat.Enabled = true;
+                    switch (openFileDialog.FilterIndex)
+                    {
+                        case 2: //MapGIS|*.mpj
+                            SaveAsFormat.Items.Add(@"JSON(*.json)");
+                            SaveAsFormat.SelectedIndex = 0;
+                            break;
+                        case 1: //MapGIS|*.wt;*.wl;*.wp
+                            SaveAsFormat.Items.Add(@"ESRI ShapeFile(*.shp)");
+                            SaveAsFormat.Items.Add(@"GeoJSON(*.geojson)");
+                            SaveAsFormat.Items.Add(@"GoogleEarth(*.kml)");
+                            SaveAsFormat.Items.Add(@"Gml(*.gml)");
+                            SaveAsFormat.Items.Add(@"GeositeXML(*.xml)");
+                            SaveAsFormat.SelectedIndex = 0;
+                            break;
+                        default:
+                            vectorSourceFile.Text = string.Empty;
+                            break;
+                    }
+                }
+            }
+            else
+            {
+                vectorSourceFile.Text = string.Empty;
             }
 
             FileCheck();
@@ -872,17 +1327,46 @@ namespace Geosite
             var openFileDialog = new OpenFileDialog
             {
                 Filter = @"ShapeFile|*.shp",
-                FilterIndex = 0
+                FilterIndex = 0,
+                Multiselect = true
 
             };
             if (Directory.Exists(oldPath))
             {
                 openFileDialog.InitialDirectory = oldPath;
             }
+            vectorTargetFile.Text = string.Empty;
+            SaveAsFormat.Text = string.Empty;
+            SaveAsFormat.Items.Clear();
+            SaveAsFormat.Enabled = false;
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 RegEdit.setkey(path, Path.GetDirectoryName(openFileDialog.FileName));
-                vectorSourceFile.Text = openFileDialog.FileName;
+                vectorSourceFile.Text = string.Join("|", openFileDialog.FileNames);
+                var vectorSourceFiles = Regex.Split(vectorSourceFile.Text.Trim(), @"[\s]*[|][\s]*").Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
+                var vectorSourceFileCount = vectorSourceFiles.Length; // >= 0
+                if (vectorSourceFileCount > 1)
+                {
+                    SaveAsFormat.Enabled = true;
+                    switch (openFileDialog.FilterIndex)
+                    {
+                        case 1: //ShapeFile|*.shp
+                            SaveAsFormat.Items.Add(@"ESRI ShapeFile(*.shp)");
+                            SaveAsFormat.Items.Add(@"GeoJSON(*.geojson)");
+                            SaveAsFormat.Items.Add(@"GoogleEarth(*.kml)");
+                            SaveAsFormat.Items.Add(@"Gml(*.gml)");
+                            SaveAsFormat.Items.Add(@"GeositeXML(*.xml)");
+                            SaveAsFormat.SelectedIndex = 0;
+                            break;
+                        default:
+                            vectorSourceFile.Text = string.Empty;
+                            break;
+                    }
+                }
+            }
+            else
+            {
+                vectorSourceFile.Text = string.Empty;
             }
 
             FileCheck();
@@ -897,17 +1381,46 @@ namespace Geosite
             var openFileDialog = new OpenFileDialog
             {
                 Filter = @"Textual format|*.txt;*.csv",
-                FilterIndex = 0
+                FilterIndex = 0,
+                Multiselect = true
 
             };
             if (Directory.Exists(oldPath))
             {
                 openFileDialog.InitialDirectory = oldPath;
             }
+            vectorTargetFile.Text = string.Empty;
+            SaveAsFormat.Text = string.Empty;
+            SaveAsFormat.Items.Clear();
+            SaveAsFormat.Enabled = false;
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 RegEdit.setkey(path, Path.GetDirectoryName(openFileDialog.FileName));
-                vectorSourceFile.Text = openFileDialog.FileName;
+                vectorSourceFile.Text = string.Join("|", openFileDialog.FileNames);
+                var vectorSourceFiles = Regex.Split(vectorSourceFile.Text.Trim(), @"[\s]*[|][\s]*").Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
+                var vectorSourceFileCount = vectorSourceFiles.Length; // >= 0
+                if (vectorSourceFileCount > 1)
+                {
+                    SaveAsFormat.Enabled = true;
+                    switch (openFileDialog.FilterIndex)
+                    {
+                        case 1: //Excel Tab Delimited|*.txt Excel Comma Delimited|*.csv
+                            SaveAsFormat.Items.Add(@"ESRI ShapeFile(*.shp)");
+                            SaveAsFormat.Items.Add(@"GeoJSON(*.geojson)");
+                            SaveAsFormat.Items.Add(@"GoogleEarth(*.kml)");
+                            SaveAsFormat.Items.Add(@"Gml(*.gml)");
+                            SaveAsFormat.Items.Add(@"GeositeXML(*.xml)");
+                            SaveAsFormat.SelectedIndex = 0;
+                            break;
+                        default:
+                            vectorSourceFile.Text = string.Empty;
+                            break;
+                    }
+                }
+            }
+            else
+            {
+                vectorSourceFile.Text = string.Empty;
             }
 
             FileCheck();
@@ -922,17 +1435,43 @@ namespace Geosite
             var openFileDialog = new OpenFileDialog
             {
                 Filter = @"GeoJson|*.geojson",
-                FilterIndex = 0
+                FilterIndex = 0,
+                Multiselect = true
 
             };
             if (Directory.Exists(oldPath))
             {
                 openFileDialog.InitialDirectory = oldPath;
             }
+            vectorTargetFile.Text = string.Empty;
+            SaveAsFormat.Text = string.Empty;
+            SaveAsFormat.Items.Clear();
+            SaveAsFormat.Enabled = false;
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 RegEdit.setkey(path, Path.GetDirectoryName(openFileDialog.FileName));
-                vectorSourceFile.Text = openFileDialog.FileName;
+                vectorSourceFile.Text = string.Join("|", openFileDialog.FileNames);
+                var vectorSourceFiles = Regex.Split(vectorSourceFile.Text.Trim(), @"[\s]*[|][\s]*").Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
+                var vectorSourceFileCount = vectorSourceFiles.Length; // >= 0
+                if (vectorSourceFileCount > 1)
+                {
+                    SaveAsFormat.Enabled = true;
+                    switch (openFileDialog.FilterIndex)
+                    {
+                        case 1: //GeoJson|*.geojson
+                            SaveAsFormat.Items.Add(@"ESRI ShapeFile(*.shp)");
+                            SaveAsFormat.Items.Add(@"GeositeXML(*.xml)");
+                            SaveAsFormat.SelectedIndex = 0;
+                            break;
+                        default:
+                            vectorSourceFile.Text = string.Empty;
+                            break;
+                    }
+                }
+            }
+            else
+            {
+                vectorSourceFile.Text = string.Empty;
             }
 
             FileCheck();
@@ -947,15 +1486,44 @@ namespace Geosite
             var openFileDialog = new OpenFileDialog
             {
                 Filter = @"GeositeXML|*.xml",
-                FilterIndex = 0
+                FilterIndex = 0,
+                Multiselect = true
 
             };
             if (Directory.Exists(oldPath))
                 openFileDialog.InitialDirectory = oldPath;
+            vectorTargetFile.Text = string.Empty;
+            SaveAsFormat.Text = string.Empty;
+            SaveAsFormat.Items.Clear();
+            SaveAsFormat.Enabled = false;
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 RegEdit.setkey(path, Path.GetDirectoryName(openFileDialog.FileName));
-                vectorSourceFile.Text = openFileDialog.FileName;
+                vectorSourceFile.Text = string.Join("|", openFileDialog.FileNames);
+                var vectorSourceFiles = Regex.Split(vectorSourceFile.Text.Trim(), @"[\s]*[|][\s]*").Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
+                var vectorSourceFileCount = vectorSourceFiles.Length; // >= 0
+                if (vectorSourceFileCount > 1)
+                {
+                    SaveAsFormat.Enabled = true;
+                    switch (openFileDialog.FilterIndex)
+                    {
+                        case 1: //GeositeXML|*.xml
+                            SaveAsFormat.Items.Add(@"ESRI ShapeFile(*.shp)");
+                            SaveAsFormat.Items.Add(@"GeoJSON(*.geojson)");
+                            SaveAsFormat.Items.Add(@"GoogleEarth(*.kml)");
+                            SaveAsFormat.Items.Add(@"Gml(*.gml)");
+                            SaveAsFormat.Items.Add(@"GeositeXML(*.xml)");
+                            SaveAsFormat.SelectedIndex = 0;
+                            break;
+                        default:
+                            vectorSourceFile.Text = string.Empty;
+                            break;
+                    }
+                }
+            }
+            else
+            {
+                vectorSourceFile.Text = string.Empty;
             }
 
             FileCheck();
@@ -970,15 +1538,41 @@ namespace Geosite
             var openFileDialog = new OpenFileDialog
             {
                 Filter = @"GoogleEarth(*.kml)|*.kml",
-                FilterIndex = 0
+                FilterIndex = 0,
+                Multiselect = true
 
             };
             if (Directory.Exists(oldPath))
                 openFileDialog.InitialDirectory = oldPath;
+            vectorTargetFile.Text = string.Empty;
+            SaveAsFormat.Text = string.Empty;
+            SaveAsFormat.Items.Clear();
+            SaveAsFormat.Enabled = false;
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 RegEdit.setkey(path, Path.GetDirectoryName(openFileDialog.FileName));
-                vectorSourceFile.Text = openFileDialog.FileName;
+                vectorSourceFile.Text = string.Join("|", openFileDialog.FileNames);
+                var vectorSourceFiles = Regex.Split(vectorSourceFile.Text.Trim(), @"[\s]*[|][\s]*").Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
+                var vectorSourceFileCount = vectorSourceFiles.Length; // >= 0
+                if (vectorSourceFileCount > 1)
+                {
+                    SaveAsFormat.Enabled = true;
+                    switch (openFileDialog.FilterIndex)
+                    {
+                        case 1: //GoogleEarth(*.kml)|*.kml
+                            SaveAsFormat.Items.Add(@"ESRI ShapeFile(*.shp)");
+                            SaveAsFormat.Items.Add(@"GeositeXML(*.xml)");
+                            SaveAsFormat.SelectedIndex = 0;
+                            break;
+                        default:
+                            vectorSourceFile.Text = string.Empty;
+                            break;
+                    }
+                }
+            }
+            else
+            {
+                vectorSourceFile.Text = string.Empty;
             }
 
             FileCheck();
@@ -1928,9 +2522,9 @@ namespace Geosite
 
                                     dataGridPanel.Enabled =
                                     PostgreSqlConnection = true;
-                                    PostgresRun.Enabled = dataCards.SelectedIndex == 0
-                                        ? !string.IsNullOrWhiteSpace(themeNameBox.Text) &&
-                                          tilesource.SelectedIndex is >= 0 and <= 2
+                                    PostgresRun.Enabled = 
+                                        dataCards.SelectedIndex == 0
+                                        ? !string.IsNullOrWhiteSpace(themeNameBox.Text) && tilesource.SelectedIndex is >= 0 and <= 2
                                         : vectorFilePool.Rows.Count > 0;
                                 }
                                 else
@@ -2413,9 +3007,27 @@ namespace Geosite
                             {
                                 try
                                 {
-                                    var getTreeLayers = new LayersBuilder(new FileInfo(path).FullName);
-                                    getTreeLayers.ShowDialog();
-                                    if (getTreeLayers.OK)
+                                    string TreePathString = null;
+                                    XElement Description = null;
+                                    var canDo = true;
+                                    if (!DonotPromptLayersBuilder)
+                                    {
+                                        var getTreeLayers = new LayersBuilder(new FileInfo(path).FullName);
+                                        getTreeLayers.ShowDialog();
+                                        if (getTreeLayers.OK)
+                                        {
+                                            TreePathString = getTreeLayers.TreePathString;
+                                            Description = getTreeLayers.Description;
+                                            DonotPromptLayersBuilder = getTreeLayers.DonotPrompt;
+                                        }
+                                        else
+                                            canDo = false;
+                                    }
+                                    else
+                                    {
+                                        TreePathString = ConsoleIO.FilePathToXPath(new FileInfo(path).FullName);
+                                    }
+                                    if (canDo)
                                     {
                                         using var mapgis = new MapGis.MapGisFile();
                                         mapgis.onGeositeEvent += delegate (object _, GeositeEventArgs Event)
@@ -2431,7 +3043,7 @@ namespace Geosite
                                         {
                                             if (mapgis.RecordCount == 0)
                                                 throw new Exception("No features found");
-                                            mapgis.fire("Preprocessing ...",0);
+                                            mapgis.fire("Preprocessing ...", 0);
                                             var FileInfo = mapgis.GetCapabilities();
                                             var FileType = $"{FileInfo["fileType"]}";
 
@@ -2445,10 +3057,10 @@ namespace Geosite
                                                 new XAttribute("timeStamp", $"{FileInfo["timeStamp"]}"),
                                                 new XElement("name", theme)
                                                 );
-                                            if (getTreeLayers.Description != null)
+                                            if (Description != null)
                                             {
                                                 var property = new XElement("property");
-                                                foreach (var X in getTreeLayers.Description.Elements())
+                                                foreach (var X in Description.Elements())
                                                     property.Add(new XElement($"{X.Name}", X.Value));
                                                 FeatureCollectionX.Add(property);
                                             }
@@ -2476,7 +3088,7 @@ namespace Geosite
                                             {
                                                 var pointer = 0;
                                                 var valid = 0;
-                                                var TreePath = getTreeLayers.TreePathString;
+                                                var TreePath = TreePathString;
                                                 if (string.IsNullOrWhiteSpace(TreePath))
                                                     TreePath = "Untitled";
                                                 var treeNameArray = Regex.Split(TreePath, @"[\/\\\|]+");
@@ -2800,7 +3412,7 @@ namespace Geosite
                                                     }
 
                                                     mapgis.fire(
-                                                        $" [{valid} feature{(valid > 1 ? "s" : "")}]",200);
+                                                        $" [{valid} feature{(valid > 1 ? "s" : "")}]", 200);
                                                 }
 
                                                 if (isOK)
@@ -2866,13 +3478,31 @@ namespace Geosite
                             {
                                 try
                                 {
-                                    var getTreeLayers = new LayersBuilder(new FileInfo(path).FullName);
-                                    getTreeLayers.ShowDialog();
-                                    if (getTreeLayers.OK)
+                                    string TreePathString = null;
+                                    XElement Description = null;
+                                    var canDo = true;
+                                    if (!DonotPromptLayersBuilder)
+                                    {
+                                        var getTreeLayers = new LayersBuilder(new FileInfo(path).FullName);
+                                        getTreeLayers.ShowDialog();
+                                        if (getTreeLayers.OK)
+                                        {
+                                            TreePathString = getTreeLayers.TreePathString;
+                                            Description = getTreeLayers.Description;
+                                            DonotPromptLayersBuilder = getTreeLayers.DonotPrompt;
+                                        }
+                                        else
+                                            canDo = false;
+                                    }
+                                    else
+                                    {
+                                        TreePathString = ConsoleIO.FilePathToXPath(new FileInfo(path).FullName);
+                                    }
+                                    if (canDo)
                                     {
                                         var codePage = ShapeFile.ShapeFile.GetDbfCodePage(Path.Combine(
-                                            Path.GetDirectoryName(path) ?? "",
-                                            Path.GetFileNameWithoutExtension(path) + ".dbf"));
+                                                                                    Path.GetDirectoryName(path) ?? "",
+                                                                                    Path.GetFileNameWithoutExtension(path) + ".dbf"));
 
                                         using var shapeFile = new ShapeFile.ShapeFile();
                                         shapeFile.onGeositeEvent += delegate (object _, GeositeEventArgs Event)
@@ -2887,7 +3517,7 @@ namespace Geosite
                                         if (shapeFile.RecordCount == 0)
                                             return "No features found";
 
-                                        shapeFile.fire("Preprocessing ...",0);
+                                        shapeFile.fire("Preprocessing ...", 0);
                                         var FileInfo = shapeFile.GetCapabilities();
                                         var FileType = $"{FileInfo["fileType"]}";
 
@@ -2901,10 +3531,10 @@ namespace Geosite
                                             new XAttribute("timeStamp", $"{FileInfo["timeStamp"]}"),
                                             new XElement("name", theme)
                                         );
-                                        if (getTreeLayers.Description != null)
+                                        if (Description != null)
                                         {
                                             var property = new XElement("property");
-                                            foreach (var X in getTreeLayers.Description.Elements())
+                                            foreach (var X in Description.Elements())
                                                 property.Add(new XElement($"{X.Name}", X.Value));
                                             FeatureCollectionX.Add(property);
                                         }
@@ -2922,7 +3552,7 @@ namespace Geosite
                                         );
                                         var pointer = 0;
                                         var valid = 0;
-                                        var TreePath = getTreeLayers.TreePathString;
+                                        var TreePath = TreePathString;
                                         if (string.IsNullOrWhiteSpace(TreePath))
                                             TreePath = "Untitled";
                                         var treeNameArray = Regex.Split(TreePath, @"[\/\\\|]+");
@@ -3260,7 +3890,7 @@ namespace Geosite
                                                 }
 
                                                 shapeFile.fire(
-                                                    $" [{valid} feature{(valid > 1 ? "s" : "")}]",200);
+                                                    $" [{valid} feature{(valid > 1 ? "s" : "")}]", 200);
                                             }
 
                                             if (isOK)
@@ -3343,9 +3973,27 @@ namespace Geosite
 
                                     if (coordinateFieldName != null)
                                     {
-                                        var getTreeLayers = new LayersBuilder(new FileInfo(path).FullName);
-                                        getTreeLayers.ShowDialog();
-                                        if (getTreeLayers.OK)
+                                        string TreePathString = null;
+                                        XElement Description = null;
+                                        var canDo = true;
+                                        if (!DonotPromptLayersBuilder)
+                                        {
+                                            var getTreeLayers = new LayersBuilder(new FileInfo(path).FullName);
+                                            getTreeLayers.ShowDialog();
+                                            if (getTreeLayers.OK)
+                                            {
+                                                TreePathString = getTreeLayers.TreePathString;
+                                                Description = getTreeLayers.Description;
+                                                DonotPromptLayersBuilder = getTreeLayers.DonotPrompt;
+                                            }
+                                            else
+                                                canDo = false;
+                                        }
+                                        else
+                                        {
+                                            TreePathString = ConsoleIO.FilePathToXPath(new FileInfo(path).FullName);
+                                        }
+                                        if (canDo)
                                         {
                                             //多态性：将派生类对象赋予基类对象
                                             FreeText.FreeText freeText = fileType == ".txt"
@@ -3362,7 +4010,7 @@ namespace Geosite
                                             {
                                                 if (freeText.RecordCount == 0)
                                                     return "No features found";
-                                                freeText.fire("Preprocessing ...",0);
+                                                freeText.fire("Preprocessing ...", 0);
                                                 var FileInfo = freeText.GetCapabilities();
                                                 var FileType = $"{FileInfo["fileType"]}";
 
@@ -3376,10 +4024,10 @@ namespace Geosite
                                                     new XAttribute("timeStamp", $"{FileInfo["timeStamp"]}"),
                                                     new XElement("name", theme)
                                                     );
-                                                if (getTreeLayers.Description != null)
+                                                if (Description != null)
                                                 {
                                                     var property = new XElement("property");
-                                                    foreach (var X in getTreeLayers.Description.Elements())
+                                                    foreach (var X in Description.Elements())
                                                         property.Add(new XElement($"{X.Name}", X.Value));
                                                     FeatureCollectionX.Add(property);
                                                 }
@@ -3395,7 +4043,7 @@ namespace Geosite
                                                     );
                                                 var pointer = 0;
                                                 var valid = 0;
-                                                var TreePath = getTreeLayers.TreePathString;
+                                                var TreePath = TreePathString;
                                                 if (string.IsNullOrWhiteSpace(TreePath))
                                                     TreePath = "Untitled";
                                                 var treeNameArray = Regex.Split(TreePath, @"[\/\\\|]+");
@@ -3727,7 +4375,7 @@ namespace Geosite
                                                         }
 
                                                         freeText.fire(
-                                                            $" [{valid} feature{(valid > 1 ? "s" : "")}]",200);
+                                                            $" [{valid} feature{(valid > 1 ? "s" : "")}]", 200);
                                                     }
 
                                                     if (isOK)
@@ -3793,18 +4441,31 @@ namespace Geosite
                             {
                                 try
                                 {
-                                    using var xml = new GeositeXml.GeositeXml();
-                                    xml.onGeositeEvent += delegate (object _, GeositeEventArgs Event)
+                                    XElement Description = null;
+                                    var canDo = true;
+                                    if (!DonotPromptLayersBuilder)
                                     {
-                                        VectorBackgroundWorker.ReportProgress(Event.progress ?? -1,
-                                            Event.message ?? string.Empty);
-                                    };
-                                    var getTreeLayers = new LayersBuilder(new FileInfo(path).FullName);
-                                    getTreeLayers.ShowDialog();
-                                    if (getTreeLayers.OK)
+                                        var getTreeLayers = new LayersBuilder(new FileInfo(path).FullName);
+                                        getTreeLayers.ShowDialog();
+                                        if (getTreeLayers.OK)
+                                        {
+                                            Description = getTreeLayers.Description;
+                                            DonotPromptLayersBuilder = getTreeLayers.DonotPrompt;
+                                        }
+                                        else
+                                            canDo = false;
+                                    }
+
+                                    if (canDo)
                                     {
-                                        var FeatureCollectionX = xml.GeositeXmlToGeositeXml(xml.GetTree(path), null,
-                                            getTreeLayers.OK ? getTreeLayers.Description : null).Root;
+                                        using var xml = new GeositeXml.GeositeXml();
+                                        xml.onGeositeEvent += delegate (object _, GeositeEventArgs Event)
+                                        {
+                                            VectorBackgroundWorker.ReportProgress(Event.progress ?? -1,
+                                                Event.message ?? string.Empty);
+                                        };
+
+                                        var FeatureCollectionX = xml.GeositeXmlToGeositeXml(xml.GetTree(path), null, Description).Root;
                                         FeatureCollectionX.Element("name").Value = theme;
                                         var treeTimeStamp =
                                             $"{forest},{sequence},{DateTime.Parse(FeatureCollectionX.Attribute("timeStamp").Value): yyyyMMdd,HHmmss}";
@@ -3942,7 +4603,7 @@ namespace Geosite
                                                     }
 
                                                     xml.fire(
-                                                        $" [{valid} feature{(valid > 1 ? "s" : "")}]",200);
+                                                        $" [{valid} feature{(valid > 1 ? "s" : "")}]", 200);
                                                 }
 
                                                 //只要发现【"member", "Member", "MEMBER"】任何一个，就中止后续遍历
@@ -4010,19 +4671,30 @@ namespace Geosite
                             {
                                 try
                                 {
-                                    using var kml = new GeositeXml.GeositeXml();
-                                    kml.onGeositeEvent += delegate (object _, GeositeEventArgs Event)
+                                    XElement Description = null;
+                                    var canDo = true;
+                                    if (!DonotPromptLayersBuilder)
                                     {
-                                        VectorBackgroundWorker.ReportProgress(Event.progress ?? -1,
-                                            Event.message ?? string.Empty);
-                                    };
+                                        var getTreeLayers = new LayersBuilder(new FileInfo(path).FullName);
+                                        getTreeLayers.ShowDialog();
+                                        if (getTreeLayers.OK)
+                                        {
+                                            Description = getTreeLayers.Description;
+                                            DonotPromptLayersBuilder = getTreeLayers.DonotPrompt;
+                                        }
+                                        else
+                                            canDo = false;
+                                    }
 
-                                    var getTreeLayers = new LayersBuilder(new FileInfo(path).FullName);
-                                    getTreeLayers.ShowDialog();
-                                    if (getTreeLayers.OK)
+                                    if (canDo)
                                     {
-                                        var FeatureCollectionX = kml.KmlToGeositeXml(kml.GetTree(path), null,
-                                            getTreeLayers.OK ? getTreeLayers.Description : null).Root;
+                                        using var kml = new GeositeXml.GeositeXml();
+                                        kml.onGeositeEvent += delegate (object _, GeositeEventArgs Event)
+                                        {
+                                            VectorBackgroundWorker.ReportProgress(Event.progress ?? -1,
+                                                Event.message ?? string.Empty);
+                                        };
+                                        var FeatureCollectionX = kml.KmlToGeositeXml(kml.GetTree(path), null, Description).Root;
                                         FeatureCollectionX.Element("name").Value = theme;
                                         var treeTimeStamp =
                                             $"{forest},{sequence},{DateTime.Parse(FeatureCollectionX.Attribute("timeStamp").Value): yyyyMMdd,HHmmss}";
@@ -4160,7 +4832,7 @@ namespace Geosite
                                                     }
 
                                                     kml.fire(
-                                                        $" [{valid} feature{(valid > 1 ? "s" : "")}]",200);
+                                                        $" [{valid} feature{(valid > 1 ? "s" : "")}]", 200);
                                                 }
 
                                                 //只要发现任何一个，就中止后续遍历
@@ -4229,23 +4901,41 @@ namespace Geosite
                             {
                                 try
                                 {
-                                    using var GeoJsonObject = new GeositeXml.GeositeXml();
-                                    GeoJsonObject.onGeositeEvent += delegate (object _, GeositeEventArgs Event)
+                                    string TreePathString = null;
+                                    XElement Description = null;
+                                    var canDo = true;
+                                    if (!DonotPromptLayersBuilder)
                                     {
-                                        VectorBackgroundWorker.ReportProgress(Event.progress ?? -1,
-                                            Event.message ?? string.Empty);
-                                    };
-                                    var getTreeLayers = new LayersBuilder(new FileInfo(path).FullName);
-                                    getTreeLayers.ShowDialog();
-                                    if (getTreeLayers.OK)
+                                        var getTreeLayers = new LayersBuilder(new FileInfo(path).FullName);
+                                        getTreeLayers.ShowDialog();
+                                        if (getTreeLayers.OK)
+                                        {
+                                            TreePathString = getTreeLayers.TreePathString;
+                                            Description = getTreeLayers.Description;
+                                            DonotPromptLayersBuilder = getTreeLayers.DonotPrompt;
+                                        }
+                                        else
+                                            canDo = false;
+                                    }
+                                    else
                                     {
+                                        TreePathString = ConsoleIO.FilePathToXPath(new FileInfo(path).FullName);
+                                    }
+                                    if (canDo)
+                                    {
+                                        using var GeoJsonObject = new GeositeXml.GeositeXml();
+                                        GeoJsonObject.onGeositeEvent += delegate (object _, GeositeEventArgs Event)
+                                        {
+                                            VectorBackgroundWorker.ReportProgress(Event.progress ?? -1,
+                                                Event.message ?? string.Empty);
+                                        };
                                         var getGeositeXML = new StringBuilder();
                                         GeoJsonObject
                                             .GeoJsonToGeositeXml(
                                                 path,
                                                 getGeositeXML,
-                                                getTreeLayers.TreePathString,
-                                                getTreeLayers.Description
+                                                TreePathString,
+                                                Description
                                             );
 
                                         if (getGeositeXML.Length > 0)
@@ -4391,7 +5081,7 @@ namespace Geosite
                                                         }
 
                                                         GeoJsonObject.fire(
-                                                            $" [{valid} feature{(valid > 1 ? "s" : "")}]",200);
+                                                            $" [{valid} feature{(valid > 1 ? "s" : "")}]", 200);
                                                     }
 
                                                     //只要发现任何一个，就中止后续遍历
@@ -4611,9 +5301,10 @@ namespace Geosite
 
             var openFileDialog = new OpenFileDialog()
             {
-                Title = @"Please select a raster file",
+                Title = @"Please select raster file[s]",
                 Filter = @"Raster|*.tif;*.tiff;*.hgt;*.img;*.jp2;*.j2k;*.vrt;*.sid;*.ecw",
-                FilterIndex = filterIndex
+                FilterIndex = filterIndex,
+                Multiselect = true
             };
 
             if (Directory.Exists(oldPath))
@@ -4623,7 +5314,15 @@ namespace Geosite
             {
                 RegEdit.setkey(key, $"{openFileDialog.FilterIndex}");
                 RegEdit.setkey(path, Path.GetDirectoryName(openFileDialog.FileName));
-                ModelOpenTextBox.Text = openFileDialog.FileName;
+                ModelOpenTextBox.Text = string.Join("|", openFileDialog.FileNames);
+                var rasterSourceFiles = Regex.Split(ModelOpenTextBox.Text.Trim(), @"[\s]*[|][\s]*").Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
+                if (rasterSourceFiles.Length > 0)
+                {
+                    themeNameBox.Text = string.Join(
+                        "|",
+                        rasterSourceFiles.Select(Path.GetFileNameWithoutExtension).ToArray()
+                    );
+                }
             }
         }
 
@@ -4636,7 +5335,9 @@ namespace Geosite
 
         private void ModelSave_Click(object sender, EventArgs e)
         {
-            if (File.Exists(ModelOpenTextBox.Text))
+            var rasterSourceFiles = Regex.Split(ModelOpenTextBox.Text.Trim(), @"[\s]*[|][\s]*").Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
+            var rasterSourceFileCount = rasterSourceFiles.Length; // >= 0 
+            if (rasterSourceFileCount > 0)
             {
                 var key = ModelSave.Name;
                 if (!int.TryParse(RegEdit.getkey(key), out var filterIndex))
@@ -4645,33 +5346,91 @@ namespace Geosite
                 var path = key + "_path";
                 var oldPath = RegEdit.getkey(path);
 
-                var saveFileDialog = new SaveFileDialog
+                string saveAs = null;
+                if (rasterSourceFileCount == 1)
                 {
-                    Filter = @"Image(*.tif)|*.tif",
-                    FilterIndex = filterIndex
-                };
-                if (Directory.Exists(oldPath))
-                {
-                    saveFileDialog.InitialDirectory = oldPath;
+                    var saveFileDialog = new SaveFileDialog
+                    {
+                        Filter = @"Image(*.tif)|*.tif",
+                        FilterIndex = filterIndex
+                    };
+                    if (Directory.Exists(oldPath))
+                        saveFileDialog.InitialDirectory = oldPath;
+
+                    if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        RegEdit.setkey(key, $"{saveFileDialog.FilterIndex}");
+                        RegEdit.setkey(path, Path.GetDirectoryName(saveFileDialog.FileName));
+                        saveAs = saveFileDialog.FileName;
+                    }
                 }
-                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                else
                 {
-                    RegEdit.setkey(key, $"{saveFileDialog.FilterIndex}");
-                    RegEdit.setkey(path, Path.GetDirectoryName(saveFileDialog.FileName));
+                    var openFolderDialog = new FolderBrowserDialog()
+                    {
+                        Description = @"Please select a destination folder",
+                        ShowNewFolderButton = true
+                        //, RootFolder = Environment.SpecialFolder.MyComputer
+                    };
+                    if (Directory.Exists(oldPath))
+                        openFolderDialog.SelectedPath = oldPath;
+                    if (openFolderDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        RegEdit.setkey(path, openFolderDialog.SelectedPath);
+                        saveAs = openFolderDialog.SelectedPath;
+                    }
+                }
+
+                if (saveAs != null)
+                {
+                    var isDirectory = File.GetAttributes(saveAs).HasFlag(FileAttributes.Directory);
 
                     statusText.Text = @"Saving ...";
-
-                    var task = new Func<(bool Success, string Message)>(
-                        () => GeositeTilePush.SaveAsGeoTiff(ModelOpenTextBox.Text, saveFileDialog.FileName));
-
-                    task.BeginInvoke(
-                        (asyncResult) =>
+                    Application.DoEvents();
+                    var pointer = 0;
+                    foreach (var rasterSourceFile in rasterSourceFiles)
+                    {
+                        if (File.Exists(rasterSourceFile))
                         {
-                            var result = task.EndInvoke(asyncResult);
-                            statusText.Text = result.Success ? @"Save OK." : result.Message;
-                        },
-                        null
-                    );
+                            var task = new Func<(bool Success, string Message)>(
+                                () =>
+                                {
+                                    string targetFile;
+                                    if (!isDirectory)
+                                        targetFile = saveAs;
+                                    else
+                                    {
+                                        var postfix = 0;
+                                        do
+                                        {
+                                            targetFile = Path.Combine(
+                                                saveAs,
+                                                Path.GetFileNameWithoutExtension(rasterSourceFile) + (postfix == 0 ? "" : $"({postfix})") + ".tif");
+                                            if (!File.Exists(targetFile))
+                                                break;
+                                            postfix++;
+                                        } while (true);
+                                    }
+
+                                    return GeositeTilePush.SaveAsGeoTiff(
+                                        sourceFile: rasterSourceFile,
+                                        targetFile: targetFile
+                                    );
+                                }
+                            );
+
+                            task.BeginInvoke(
+                                (asyncResult) =>
+                                {
+                                    var result = task.EndInvoke(asyncResult);
+                                    statusText.Text =
+                                        $@"[{++pointer} / {rasterSourceFileCount}] {(result.Success ? @"saved." : result.Message)}";
+                                    Application.DoEvents();
+                                },
+                                null
+                            );
+                        }
+                    }
                 }
             }
         }
@@ -4734,7 +5493,6 @@ namespace Geosite
 
             try
             {
-                themeNameBox.Text = new XElement(themeNameBox.Text.Trim()).Name.LocalName;
                 PostgresRun.Enabled = dataCards.SelectedIndex == 0
                     ? PostgreSqlConnection && !string.IsNullOrWhiteSpace(themeNameBox.Text) && (tilesource.SelectedIndex is >= 0 and <= 2)
                     : PostgreSqlConnection && vectorFilePool.Rows.Count > 0;
@@ -4764,23 +5522,22 @@ namespace Geosite
                 filterIndex = 0;
 
             var path = key + "_path";
-            var oldPath = RegEdit.getkey(path);
+            var oldPath = RegEdit.getkey(path); 
 
             var openFileDialog = new OpenFileDialog()
             {
-                Title = @"Please select a image file",
+                Title = @"Please select image file[s]",
                 Filter = @"Image|*.bmp;*.gif;*.jpg;*.jpeg;*.png;*.tif;*.tiff",
-                FilterIndex = filterIndex
+                FilterIndex = filterIndex,
+                Multiselect = true
             };
-            if (Directory.Exists(oldPath))
-            {
+            if (Directory.Exists(oldPath)) 
                 openFileDialog.InitialDirectory = oldPath;
-            }
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 RegEdit.setkey(key, $"{openFileDialog.FilterIndex}");
                 RegEdit.setkey(path, Path.GetDirectoryName(openFileDialog.FileName));
-                DeepZoomOpenTextBox.Text = openFileDialog.FileName;
+                DeepZoomOpenTextBox.Text = string.Join("|", openFileDialog.FileNames);
             }
         }
 
@@ -4798,9 +5555,7 @@ namespace Geosite
                 //, RootFolder = Environment.SpecialFolder.MyComputer
             };
             if (Directory.Exists(oldPath))
-            {
                 openFolderDialog.SelectedPath = oldPath;
-            }
             var result = openFolderDialog.ShowDialog();
             if (result == DialogResult.OK)
             {
@@ -4811,144 +5566,157 @@ namespace Geosite
 
         private void DeepZoomRun_Click(object sender, EventArgs e)
         {
-            if (DeepZoomOpenTextBox.Text.Length > 0 && DeepZoomSaveTextBox.Text.Length > 0)
-            {
-                if (File.Exists(DeepZoomOpenTextBox.Text))
-                {
-                    if (Directory.Exists(DeepZoomSaveTextBox.Text))
-                    {
-                        var newfile = Path.Combine(
-                            DeepZoomSaveTextBox.Text, //目标文件夹
-                            Path.GetFileNameWithoutExtension(DeepZoomOpenTextBox.Text) //目标文件名，暂取原始图像文件基本名称
-                        );
+            var deepZoomFiles = Regex.Split(DeepZoomOpenTextBox.Text.Trim(), @"[\s]*[|][\s]*").Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
+            var deepZoomFileCount = deepZoomFiles.Length; // >= 0 
 
-                        var xmlfile = Path.ChangeExtension(newfile, "xml");
-                        var tilespath = Path.ChangeExtension(newfile, null) + "_files";
-                        var candowork = false;
-                        if (File.Exists(xmlfile) || Directory.Exists(tilespath))
+            if (deepZoomFileCount > 0 && DeepZoomSaveTextBox.Text.Length > 0)
+            {
+                if (Directory.Exists(DeepZoomSaveTextBox.Text))
+                {
+                    for (var i = 0; i < deepZoomFileCount; i++)
+                    {
+                        var deepZoomFile = deepZoomFiles[i];
+                        if (File.Exists(deepZoomFile))
                         {
-                            if (MessageBox.Show(
-                                @"The target file already exists, do you want to replace it?",
-                                @"Tips",
-                                MessageBoxButtons.YesNo,
-                                MessageBoxIcon.Question
-                            ) == DialogResult.Yes)
+                            var newfile = Path.Combine(
+                                DeepZoomSaveTextBox.Text, //目标文件夹
+                                Path.GetFileNameWithoutExtension(deepZoomFile) //目标文件名，暂取原始图像文件基本名称
+                            );
+
+                            var xmlfile = Path.ChangeExtension(newfile, "xml");
+                            var tilespath = Path.ChangeExtension(newfile, null) + "_files";
+                            var candowork = false;
+                            if (File.Exists(xmlfile) || Directory.Exists(tilespath))
                             {
+                                //if (MessageBox.Show(
+                                //    @"The target file already exists, do you want to replace it?",
+                                //    @"Tips",
+                                //    MessageBoxButtons.YesNo,
+                                //    MessageBoxIcon.Question
+                                //) == DialogResult.Yes)
+                                //{
+                                //    if (File.Exists(xmlfile))
+                                //        File.Delete(xmlfile);
+                                //    if (Directory.Exists(tilespath))
+                                //        Directory.Delete(tilespath, true);
+                                //    candowork = true;
+                                //}
+
                                 if (File.Exists(xmlfile))
                                     File.Delete(xmlfile);
                                 if (Directory.Exists(tilespath))
                                     Directory.Delete(tilespath, true);
                                 candowork = true;
                             }
-                        }
-                        else
-                            candowork = true;
+                            else
+                                candowork = true;
 
-                        if (candowork)
-                        {
-                            var DeepZoomObject = new ImageCreator();
-                            //DeepZoomObj对象的默认值如下：
-                            //DeepZoomObj.TileSize = 256;
-                            //DeepZoomObj.TileFormat =Microsoft.DeepZoomTools.ImageFormat.Jpg; //Jpg Png Wdp AutoSelect
-                            //DeepZoomObj.ImageQuality = 0.95;
-                            //DeepZoomObj.TileOverlap = 0;
-                            if (DeepZoomLevels.Text.Trim() != "-1")
+                            if (candowork)
                             {
-                                if (int.TryParse(DeepZoomLevels.Text.Trim(), out var level))
-                                    DeepZoomObject.MaxLevel = level; // 0 --- 30
+                                var DeepZoomObject = new ImageCreator();
+                                //DeepZoomObj对象的默认值如下：
+                                //DeepZoomObj.TileSize = 256;
+                                //DeepZoomObj.TileFormat =Microsoft.DeepZoomTools.ImageFormat.Jpg; //Jpg Png Wdp AutoSelect
+                                //DeepZoomObj.ImageQuality = 0.95;
+                                //DeepZoomObj.TileOverlap = 0;
+                                if (DeepZoomLevels.Text.Trim() != "-1")
+                                {
+                                    if (int.TryParse(DeepZoomLevels.Text.Trim(), out var level))
+                                        DeepZoomObject.MaxLevel = level; // 0 --- 30
+                                }
+
+                                //----------- 事件侦听 ---------------
+
+                                //DeepZoomObject.InputNeeded += delegate (object Sender, StreamEventArgs Event)
+                                //{
+                                //    //第一步：若输入为文件流时，可通过【Event】参数指定文件流；若输入为文件时，此事件不可侦听！否则抛出异常
+                                //};
+
+                                //DeepZoomObject.InputCompleted += delegate (object Sender, StreamEventArgs Event)
+                                //{
+                                //    //第二步：到达这里，说明所需的各项参数输入完成并成功初始化【DeepZoomObject】对象
+                                //};
+
+                                DeepZoomObject.InputImageInfo += delegate
+                                //(object Sender, ImageInfoEventArgs Event)
+                                {
+                                    //第三步
+                                    this.Invoke(
+                                        new Action(
+                                            () =>
+                                            {
+                                                Loading.run();
+                                                statusText.Text = @"Slicing ...";
+                                                DeepZoomRun.Enabled = false;
+                                            }
+                                        )
+                                    );
+
+                                };
+
+                                DeepZoomObject.CreateDirectory += delegate (object _, DirectoryEventArgs Event)
+                                {
+                                    //第四步 ......
+                                    this.Invoke(
+                                        new Action(
+                                            () =>
+                                            {
+                                                statusText.Text = $@"Creating - {Event.DirectoryName}";
+                                            }
+                                        )
+                                    );
+
+                                };
+
+                                //DeepZoomObject.OutputCompleted += delegate (object Sender, StreamEventArgs Event)
+                                //{
+                                //    //第五步
+                                //};
+
+                                DeepZoomObject.OutputInfo += delegate
+                                //(object Sender, OutputInfoEventArgs Event)
+                                {
+                                    //第六步
+                                    this.Invoke(
+                                        new Action(
+                                            () =>
+                                            {
+                                                Loading.run(false);
+                                                DeepZoomRun.Enabled = true;
+                                                statusText.Text = @"Finished";
+                                            }
+                                        )
+                                    );
+
+                                };
+
+                                //DeepZoomObj.OutputNeeded += delegate (object Sender, StreamEventArgs Event)
+                                //{
+                                //    //第七步：若输出为文件流时，可通过【Event】参数指定文件流；若输出为文件时，此事件不可侦听！否则抛出异常
+                                //};
+
+                                //将【Create】函数的执行结果（XElement类型）转换为文本（Json）格式，输出给界面控件
+                                //themeMetadata.Text =
+                                //    DeepZoomObject.XElementToJson(
+                                //DeepZoomObject.Create( 
+                                //        //Create函数自动启动上述事件
+                                //       deepZoomFile,
+                                //        newfile
+                                //    )
+                                //);
+
+                                /*
+                                    <Image TileSize="254" Overlap="1" MinZoom="0" MaxZoom="12" Type="deepzoom" CRS="simple" Format="jpg" ServerFormat="Default" xmlns="http://schemas.microsoft.com/deepzoom/2009">
+                                      <Size Width="3968" Height="2976" />
+                                    </Image>                             
+                                 */
+
+                                DeepZoomObject.Create(
+                                    //Create函数自动启动上述事件
+                                    deepZoomFile,
+                                    newfile
+                                );
                             }
-
-                            //----------- 事件侦听 ---------------
-
-                            //DeepZoomObject.InputNeeded += delegate (object Sender, StreamEventArgs Event)
-                            //{
-                            //    //第一步：若输入为文件流时，可通过【Event】参数指定文件流；若输入为文件时，此事件不可侦听！否则抛出异常
-                            //};
-
-                            //DeepZoomObject.InputCompleted += delegate (object Sender, StreamEventArgs Event)
-                            //{
-                            //    //第二步：到达这里，说明所需的各项参数输入完成并成功初始化【DeepZoomObject】对象
-                            //};
-
-                            DeepZoomObject.InputImageInfo += delegate
-                            //(object Sender, ImageInfoEventArgs Event)
-                            {
-                                //第三步
-                                this.Invoke(
-                                    new Action(
-                                        () =>
-                                        {
-                                            Loading.run();
-                                            statusText.Text = @"Slicing ...";
-                                            DeepZoomRun.Enabled = false;
-                                        }
-                                    )
-                                );
-
-                            };
-
-                            DeepZoomObject.CreateDirectory += delegate (object _, DirectoryEventArgs Event)
-                            {
-                                //第四步 ......
-                                this.Invoke(
-                                    new Action(
-                                        () =>
-                                        {
-                                            statusText.Text = $@"Creating - {Event.DirectoryName}";
-                                        }
-                                    )
-                                );
-
-                            };
-
-                            //DeepZoomObject.OutputCompleted += delegate (object Sender, StreamEventArgs Event)
-                            //{
-                            //    //第五步
-                            //};
-
-                            DeepZoomObject.OutputInfo += delegate
-                            //(object Sender, OutputInfoEventArgs Event)
-                            {
-                                //第六步
-                                this.Invoke(
-                                    new Action(
-                                        () =>
-                                        {
-                                            Loading.run(false);
-                                            DeepZoomRun.Enabled = true;
-                                            statusText.Text = @"Finished";
-                                        }
-                                    )
-                                );
-
-                            };
-
-                            //DeepZoomObj.OutputNeeded += delegate (object Sender, StreamEventArgs Event)
-                            //{
-                            //    //第七步：若输出为文件流时，可通过【Event】参数指定文件流；若输出为文件时，此事件不可侦听！否则抛出异常
-                            //};
-
-                            //将【Create】函数的执行结果（XElement类型）转换为文本（Json）格式，输出给界面控件
-                            //themeMetadata.Text =
-                            //    DeepZoomObject.XElementToJson(
-                            //DeepZoomObject.Create( 
-                            //        //Create函数自动启动上述事件
-                            //        DeepZoomOpenTextBox.Text,
-                            //        newfile
-                            //    )
-                            //);
-
-                            /*
-                                <Image TileSize="254" Overlap="1" MinZoom="0" MaxZoom="12" Type="deepzoom" CRS="simple" Format="jpg" ServerFormat="Default" xmlns="http://schemas.microsoft.com/deepzoom/2009">
-                                  <Size Width="3968" Height="2976" />
-                                </Image>                             
-                             */
-
-                            DeepZoomObject.Create(
-                                //Create函数自动启动上述事件
-                                DeepZoomOpenTextBox.Text,
-                                newfile
-                            );
                         }
                     }
                 }
@@ -5753,8 +6521,8 @@ namespace Geosite
 
                     break;
                 case 2:
-                    if (!File.Exists(ModelOpenTextBox.Text))
-                        statusError = @"File does not exist";
+                    if (string.IsNullOrWhiteSpace(ModelOpenTextBox.Text))
+                        statusError = @"File cannot be empty";
                     else
                     {
                         rasterTileSize.Text = int.TryParse(rasterTileSize.Text, out var size)
@@ -5765,7 +6533,8 @@ namespace Geosite
                         tileType = TileType.Standard;
                         EPSG4326.Checked = true; //暂强行按4326对待
                         typeCode = 12001; //暂强行按4326对待。//EPSG4326.Checked ? 12001 : 12002; //12000; //其余暂按无投影对待???
-                        themeMetadataX = GeositeTilePush.GetRasterMetaData(ModelOpenTextBox.Text, rasterTileSize.Text);
+
+                        themeMetadataX = new XElement("property"); //暂仅产生属性标签，以便不提示交互对话框
                     }
 
                     break;
@@ -5803,7 +6572,7 @@ namespace Geosite
             rasterWorker.RunWorkerAsync(
                 (
                     index: tilesource.SelectedIndex,
-                    theme: themeNameBox.Text.Trim(),
+                    theme: themeNameBox.Text.Trim(), //针对平铺栅格类型，可能有多个专题名称且由【|】分隔
                     type: tileType, //Type: 0=ogc 1=tms 2=mapcruncher 3=arcgis 4=deepzoom 5=raster 
                     typeCode,
                     update: UpdateBox.Checked, //更新模式？
@@ -5830,13 +6599,13 @@ namespace Geosite
             var oneForestResult = oneForest.Forest(
                 id: ClusterUser.forest, //森林编号采用GeositeServer系统管理员指定的【集群编号（小于0的整数）】
                 name: ClusterUser.name  //森林名称采用GeositeServer系统管理员指定的【集群用户名】
-                                        //, timestamp: $"{DateTime.Now: yyyyMMdd, HHmmss}" //默认按当前时间创建时间戳
+                                        //, timestamp: $"{DateTime.Now: yyyyMMdd, HHmmss}" //默认按当前时间创建时间戳 
             );
             if (!oneForestResult.Success)
                 return oneForestResult.Message;
 
+            var tabIndex = parameter.index;
             var themeMetadataX = parameter.metadata;
-
             var status = (short)(parameter.light ? 0 : 2);
 
             // 瓦片存储约定：
@@ -5848,354 +6617,425 @@ namespace Geosite
             // 6）叶子名称：采用界面提供的【专题名】，与文档树名称保持一致的好处是便于识别，同时意味着一棵树、一片叶子将对应一个专题
 
             var forest = ClusterUser.forest;
-            var name = parameter.theme;
-
-            //先大致检测是否存在指定的树记录，重点甄别类型码是否合适
-            var oldTreeType = PostgreSqlHelper.Scalar(
-                "SELECT type FROM tree WHERE forest = @forest AND name ILIKE @name::text LIMIT 1;",
-                new Dictionary<string, object>
-                {
-                    {"forest", forest},
-                    {"name", name}
-                }
-            );
-            if (oldTreeType != null)
+            
+            string[] themeNames;
+            string[] rasterSourceFileArray = null;
+            if (tabIndex == 2)
             {
-                //文档树要素类型码：
-                //0：非空间数据【默认】、
-                //1：Point点、
-                //2：Line线、
-                //3：Polygon面、
-                //4：Image地理贴图、
-
-                //10000：Wmts栅格金字塔瓦片服务类型[epsg:0 - 无投影瓦片]、
-                //10001：Wmts瓦片服务类型[epsg:4326 - 地理坐标系瓦片]、
-                //10002：Wmts栅格金字塔瓦片服务类型[epsg:3857 - 球体墨卡托瓦片]、
-
-                //11000：Tile栅格金字塔瓦片类型[epsg:0 - 无投影瓦片]、
-                //11001：Tile栅格金字塔瓦片类型[epsg:4326 - 地理坐标系瓦片]、
-                //11002：Tile栅格金字塔瓦片类型[epsg:3857 - 球体墨卡托瓦片]、
-
-                //12000：Tile栅格平铺式瓦片类型[epsg:0 - 无投影瓦片]、
-                //12001：Tile栅格平铺式瓦片类型[epsg:4326 - 地理坐标系瓦片]、
-                //12002：Tile栅格平铺式瓦片类型[epsg:3857 - 球体墨卡托瓦片]）
-
-                if (oldTreeType.GetType().Name != "DBNull")
-                {
-                    var typeArray = (int[])oldTreeType;
-                    var tileArray = typeArray.Where(t => t is >= 10000 and <= 12002).Select(t => t);
-                    if (typeArray.Length != tileArray.Count())
-                        return $"[{name}] is already used for vector theme";
-                }
-            }
-
-            //声明创建叶子子表所需的关键参量：
-            int tree;
-            string[] routeName;
-            int[] routeID;
-            long leaf; //之后将大于等于0
-            int typeCode; //非空间数据【默认】
-            XElement propertyX;
-
-            var oldTree = PostgreSqlHelper.Scalar(
-                "SELECT (branch.tree, branch.routename, branch.routeid, leaf.id, leaf.type, leaf.property) FROM leaf," +
-                "(" +
-                "   SELECT tree, array_agg(name) AS routename, array_agg(id) AS routeid FROM" +
-                "   (" +
-                "       SELECT * FROM branch WHERE tree IN" +
-                "       (" +
-                "           SELECT id FROM tree WHERE forest = @forest AND name ILIKE @name::text LIMIT 1" +
-                "       ) ORDER BY tree, level" +
-                "    ) AS branchtable" +
-                "    GROUP BY tree" +
-                ") AS branch " +
-                "WHERE leaf.name ILIKE @name::text AND leaf.branch = branch.routeid[array_length(branch.routeid, 1)] LIMIT 1;",
-                new Dictionary<string, object>
-                {
-                    {"forest", forest},
-                    {"name", name}
-                }
-            );
-
-            /*  瓦片树基本信息模板：
-                <FeatureCollection timeStamp="2021-07-27T08:26:02"> 
-                    <name>xxx</name>
-                    <layer>
-                        <name>yyy</name>
-                        <property remarks="注意：瓦片层的元数据信息应在member父级（最近容器）的property中表述">
-                            <minZoom remarks="最小缩放级，默认0">0</minZoom>
-                            <maxZoom remarks="最大缩放级，默认18" >18</maxZoom>
-                            <tileSize remarks="瓦片像素尺寸，默认256">256</tileSize>
-                            <boundary remarks="边框范围">
-                                <north remarks="上北，比如：85.0511287798066">85.0511287798066</north>
-                                <south remarks="下南，比如：-85.0511287798066">-85.0511287798066</south>
-                                <west remarks="左西，比如：-180">-180.0</west>
-                                <east remarks="右东,比如：180">180.0</east>
-                            </boundary>
-                        </property>
-                        <member type="Tile" timeStamp="2021-07-27T08:26:02">
-                            <name>yyy</name>
-                            <property>
-                                <srid>3857</srid>
-                                <bands remarks="波段/通道数">4</bands>
-                            </property>
-                        </member>
-                    </layer>
-                </FeatureCollection>                                                     
-            */
-            //下列代码将针对不同情况获取用于创建叶子子表的关键参量
-            if (oldTree != null)
-            {
-                var oldTreeResult = (object[])oldTree;
-                tree = (int)oldTreeResult[0];
-                routeName = (string[])oldTreeResult[1];
-                routeID = (int[])oldTreeResult[2];
-                leaf = (long)oldTreeResult[3];
-                typeCode = (int)oldTreeResult[4];
-                propertyX = XElement.Parse((string)oldTreeResult[5]);
+                rasterSourceFileArray = Regex.Split(ModelOpenTextBox.Text.Trim(), @"[\s]*[|][\s]*").Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
+                var rasterSourceFileCount = rasterSourceFileArray.Length; // >= 0 
+                //针对平铺栅格类型，可能有多个专题名称且由【|】分隔
+                themeNames = Regex.Split(parameter.theme, @"[\s]*[|][\s]*").Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
+                var themeNameCount = themeNames.Length; // >= 0 
+                if (rasterSourceFileCount != themeNameCount)
+                    return "The number of files is inconsistent with the number of themes";
             }
             else
-            {
-                var sequenceMax =
-                    PostgreSqlHelper.Scalar(
-                        "SELECT sequence FROM tree WHERE forest = @forest ORDER BY sequence DESC LIMIT 1;",
-                        new Dictionary<string, object>
-                        {
-                            {"forest", forest}
-                        }
-                    );
-                //文档树序号--[0,已有的最大值+1]
-                var sequence = sequenceMax == null ? 0 : 1 + int.Parse($"{sequenceMax}");
-                LayersBuilder getTreeLayers;
-                string treeUri;
-                DateTime treeLastWriteTime;
-                switch (parameter.index)
-                {
-                    case 0:
-                        var getFolder = new DirectoryInfo(localTileFolder.Text);
-                        treeLastWriteTime = getFolder.LastWriteTime;
-                        getTreeLayers = new LayersBuilder(treeUri = getFolder.FullName);
-                        break;
-                    case 1:
-                        treeUri = tilewebapi.Text;
-                        treeLastWriteTime = DateTime.Now;
-                        getTreeLayers = new LayersBuilder("Untitled"); //暂将分类路由信息默认为：Untitled
-                        break;
-                    case 2:
-                        var fileInfo = new FileInfo(ModelOpenTextBox.Text);
-                        treeUri = fileInfo.FullName;
-                        treeLastWriteTime = fileInfo.LastWriteTime;
-                        getTreeLayers = new LayersBuilder(ModelOpenTextBox.Text);
-                        break;
-                    default:
-                        return "This option is not supported";
-                }
-
-                getTreeLayers.ShowDialog();
-                if (getTreeLayers.OK)
-                {
-                    var treePathString = getTreeLayers.TreePathString; // 分类层级 由正斜杠【/】分隔
-                    var treeDescription = getTreeLayers.Description; // 分类树的属性
-                    var lastWriteTime = Regex.Split(
-                        $"{treeLastWriteTime: yyyyMMdd,HHmmss}",
-                        "[,]",
-                        RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace | RegexOptions.Singleline | RegexOptions.Multiline
-                    );
-                    int.TryParse(lastWriteTime[0], out var yyyyMMdd);
-                    int.TryParse(lastWriteTime[1], out var HHmmss);
-
-                    var timestamp =
-                        $"{forest},{sequence},{yyyyMMdd},{HHmmss}"; //[森林序号,文档序号,年月日（yyyyMMdd）,时分秒（HHmmss）]
-
-                    //构造一颗含有分类层级的 GeositeXML 文档树对象，以便启用【推模式】类
-                    var treeXML = new XElement(
-                        "FeatureCollection",
-                        new XAttribute("timeStamp", DateTime.Now.ToString("s")), //文档树时间戳以当前时间为准
-                        new XElement("name", name) //文档树名称采用UI界面提供的专题名
-                    );
-                    if (treeDescription != null)
-                        treeXML.Add(new XElement("property", treeDescription.Elements().Select(x => x)));
-
-                    XElement layersX = null;
-                    routeName = Regex.Split(treePathString, "[/]",
-                        RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Multiline);
-                    for (var i = routeName.Length - 1; i >= 0; i--)
-                    {
-                        if (layersX == null)
-                        {
-                            //最末层
-                            layersX = new XElement(
-                                "layer",
-                                new XElement("name", routeName[i]),
-                                themeMetadataX, //将元数据xml存入最末层
-                                new XElement(
-                                    "member", //在最末层放置一片叶子 parameter
-                                    new XAttribute("type", "Tile"),
-                                    new XAttribute("typeCode", parameter.typeCode),
-                                    new XAttribute("timeStamp", treeLastWriteTime.ToString("s")), //叶子时间戳以瓦片目录创建时间为准
-                                    new XElement("name", name),
-                                    new XElement("property",
-                                        new XElement("srid", parameter.srid),
-                                        //针对WMTS服务路径，若存在子域占位符{s}，必须携带子域替换符，以便实施负载均衡策略
-                                        parameter.index == 1 && !string.IsNullOrWhiteSpace(subdomainsBox.Text)
-                                            ? new XElement("subdomains", subdomainsBox.Text)
-                                            : null
-                                    )
-                                )
-                            );
-                        }
-                        else
-                        {
-                            layersX = new XElement(
-                                "layer",
-                                new XElement("name", routeName[i]),
-                                layersX
-                            );
-                        }
-                    }
-                    treeXML.Add(layersX);
-
-                    //创建【树】
-                    var oneTree = oneForest.Tree(
-                        timestamp,
-                        treeXML,
-                        treeUri,
-                        status,
-                        parameter.typeCode
-                    );
-                    if (oneTree.Success)
-                    {
-                        this.Invoke(
-                            new Action(
-                                () =>
-                                {
-                                    ClusterDate.Reset(); //刷新界面---专题列表
-                                }
-                            )
-                        );
-
-                        tree = oneTree.Id;
-                        var leafX = treeXML.DescendantsAndSelf("member").FirstOrDefault();
-
-                        //创建【枝干】
-                        var oneBranch = oneForest.Branch(
-                            forest,
-                            sequence,
-                            tree,
-                            leafX,
-                            treeXML
-                        );
-                        if (oneBranch.Success)
-                        {
-                            var routeArray = oneBranch.Route;
-                            //枝干id路由（route）数组的前三个元素分别是【节点森林（群）编号，文档树序号，文档树标识码】，后面依次为枝干id序列
-                            routeID = new ArraySegment<int>(routeArray, 3, routeArray.Length - 3).ToArray();
-                            //创建【叶子】瓦片存储约定策略：本颗树所属的全部瓦片均存入一片叶子
-                            var oneLeaf = oneForest.Leaf(routeArray, leafX);
-                            if (oneLeaf.Success)
-                            {
-                                leaf = oneLeaf.Id; //大于等于0
-                                propertyX = oneLeaf.Property; //可能为null
-                                typeCode = oneLeaf.Type;
-                            }
-                            else
-                                return oneLeaf.Message;
-                        }
-                        else
-                            return oneBranch.Message;
-                    }
-                    else
-                        return oneTree.Message;
-                }
-                else
-                    return "Abort task";
-            }
-
-            //将在单片叶子里，推送指定专题所属的全部瓦片
-            var geositeTilePush = new GeositeTilePush(
-                oneForest,
-                tree,
-                routeName,
-                routeID,
-                leaf,
-                typeCode,
-                propertyX,
-                parameter.update
-            );
-            geositeTilePush.onGeositeEvent += delegate (object _, GeositeEventArgs Event)
-            {
-                rasterWorker.ReportProgress(Event.progress ?? -1, Event.message ?? string.Empty);
-            };
+                themeNames = new string[] {parameter.theme};
 
             long total = 0;
-
-            switch (parameter.index)
+            for (var pointer = 0; pointer< themeNames.Length; pointer++)
             {
-                case 0: //本地文件夹（金字塔存储）
-                    try
-                    {
-                        var result0 = geositeTilePush.TilePush(
-                            0,
-                            localTileFolder.Text,
-                            parameter.type,
-                            parameter.tileMatrix,
-                            EPSG4326.Checked
-                        );
-                        total = result0.total;
-                        //var metaDataX= result0.metaDataX; //可获取元数据xml
-                    }
-                    catch (Exception error)
-                    {
-                        return error.Message;
-                    }
+                var themeName = themeNames[pointer];
 
-                    break;
-                case 1: //远程wmts服务地址（金字塔存储）
-                    try
+                //先大致检测是否存在指定的树记录，重点甄别类型码是否合适
+                var oldTreeType = PostgreSqlHelper.Scalar(
+                    "SELECT type FROM tree WHERE forest = @forest AND name ILIKE @name::text LIMIT 1;",
+                    new Dictionary<string, object>
                     {
-                        var result1 = geositeTilePush.TilePush(
-                            1,
-                            tilewebapi.Text,
-                            parameter.type,
-                            parameter.tileMatrix,
-                            EPSG4326.Checked,
-                            (wmtsNorth.Text, wmtsSouth.Text, wmtsWest.Text, wmtsEast.Text),
-                            wmtsSpider.Checked,
-                            parameter.index == 1 && !string.IsNullOrWhiteSpace(subdomainsBox.Text)
-                                ? subdomainsBox.Text
-                                : null
-                        );
-                        total = result1.total;
-                        //var metaDataX= result1.metaDataX; //可获取元数据xml
+                    {"forest", forest},
+                    {"name", themeName}
                     }
-                    catch (Exception error)
-                    {
-                        return error.Message;
-                    }
+                );
+                if (oldTreeType != null)
+                {
+                    //文档树要素类型码：
+                    //0：非空间数据【默认】、
+                    //1：Point点、
+                    //2：Line线、
+                    //3：Polygon面、
+                    //4：Image地理贴图、
 
-                    break;
-                case 2: //平铺式瓦片
-                    try
-                    {
-                        var result2 = geositeTilePush.TilePush(
-                            2,
-                            ModelOpenTextBox.Text,
-                            TileType.Standard, //强制为 OGC，以便识别 
-                            -1, //平铺式瓦片的【z】取【-1】
-                            true, //平铺式瓦片的投影系暂支持4326
-                            (rasterTileSize.Text, rasterTileSize.Text, nodatabox.Text, null) //注意：暂将宽度和高度以及无值信息按边框参数传递
-                        );
-                        total = result2.total;
-                        //var metaDataX= result2.metaDataX; //可获取元数据xml
-                    }
-                    catch (Exception error)
-                    {
-                        return error.Message;
-                    }
+                    //10000：Wmts栅格金字塔瓦片服务类型[epsg:0 - 无投影瓦片]、
+                    //10001：Wmts瓦片服务类型[epsg:4326 - 地理坐标系瓦片]、
+                    //10002：Wmts栅格金字塔瓦片服务类型[epsg:3857 - 球体墨卡托瓦片]、
 
-                    break;
+                    //11000：Tile栅格金字塔瓦片类型[epsg:0 - 无投影瓦片]、
+                    //11001：Tile栅格金字塔瓦片类型[epsg:4326 - 地理坐标系瓦片]、
+                    //11002：Tile栅格金字塔瓦片类型[epsg:3857 - 球体墨卡托瓦片]、
+
+                    //12000：Tile栅格平铺式瓦片类型[epsg:0 - 无投影瓦片]、
+                    //12001：Tile栅格平铺式瓦片类型[epsg:4326 - 地理坐标系瓦片]、
+                    //12002：Tile栅格平铺式瓦片类型[epsg:3857 - 球体墨卡托瓦片]）
+
+                    if (oldTreeType.GetType().Name != "DBNull")
+                    {
+                        var typeArray = (int[])oldTreeType;
+                        var tileArray = typeArray.Where(t => t is >= 10000 and <= 12002).Select(t => t);
+                        if (typeArray.Length != tileArray.Count())
+                            return $"[{themeName}] is already used for vector theme";
+                    }
+                }
+
+                //声明创建叶子子表所需的关键参量：
+                int tree;
+                string[] routeName;
+                int[] routeID;
+                long leaf; //之后将大于等于0
+                int typeCode; //非空间数据【默认】
+                XElement propertyX;
+
+                var oldTree = PostgreSqlHelper.Scalar(
+                    "SELECT (branch.tree, branch.routename, branch.routeid, leaf.id, leaf.type, leaf.property) FROM leaf," +
+                    "(" +
+                    "   SELECT tree, array_agg(name) AS routename, array_agg(id) AS routeid FROM" +
+                    "   (" +
+                    "       SELECT * FROM branch WHERE tree IN" +
+                    "       (" +
+                    "           SELECT id FROM tree WHERE forest = @forest AND name ILIKE @name::text LIMIT 1" +
+                    "       ) ORDER BY tree, level" +
+                    "    ) AS branchtable" +
+                    "    GROUP BY tree" +
+                    ") AS branch " +
+                    "WHERE leaf.name ILIKE @name::text AND leaf.branch = branch.routeid[array_length(branch.routeid, 1)] LIMIT 1;",
+                    new Dictionary<string, object>
+                    {
+                        {"forest", forest},
+                        {"name", themeName}
+                    }
+                );
+
+                /*  瓦片树基本信息模板：
+                    <FeatureCollection timeStamp="2021-07-27T08:26:02"> 
+                        <name>xxx</name>
+                        <layer>
+                            <name>yyy</name>
+                            <property remarks="注意：瓦片层的元数据信息应在member父级（最近容器）的property中表述">
+                                <minZoom remarks="最小缩放级，默认0">0</minZoom>
+                                <maxZoom remarks="最大缩放级，默认18" >18</maxZoom>
+                                <tileSize remarks="瓦片像素尺寸，默认256">256</tileSize>
+                                <boundary remarks="边框范围">
+                                    <north remarks="上北，比如：85.0511287798066">85.0511287798066</north>
+                                    <south remarks="下南，比如：-85.0511287798066">-85.0511287798066</south>
+                                    <west remarks="左西，比如：-180">-180.0</west>
+                                    <east remarks="右东,比如：180">180.0</east>
+                                </boundary>
+                            </property>
+                            <member type="Tile" timeStamp="2021-07-27T08:26:02">
+                                <name>yyy</name>
+                                <property>
+                                    <srid>3857</srid>
+                                    <bands remarks="波段/通道数">4</bands>
+                                </property>
+                            </member>
+                        </layer>
+                    </FeatureCollection>                                                     
+                */
+                //下列代码将针对不同情况获取用于创建叶子子表的关键参量
+                if (oldTree != null)
+                {
+                    var oldTreeResult = (object[])oldTree;
+                    tree = (int)oldTreeResult[0];
+                    routeName = (string[])oldTreeResult[1];
+                    routeID = (int[])oldTreeResult[2];
+                    leaf = (long)oldTreeResult[3];
+                    typeCode = (int)oldTreeResult[4];
+                    propertyX = XElement.Parse((string)oldTreeResult[5]);
+                }
+                else
+                {
+                    var sequenceMax =
+                        PostgreSqlHelper.Scalar(
+                            "SELECT sequence FROM tree WHERE forest = @forest ORDER BY sequence DESC LIMIT 1;",
+                            new Dictionary<string, object>
+                            {
+                                {"forest", forest}
+                            }
+                        );
+                    //文档树序号--[0,已有的最大值+1]
+                    var sequence = sequenceMax == null ? 0 : 1 + int.Parse($"{sequenceMax}");
+
+                    string treeUri;
+                    DateTime treeLastWriteTime;
+
+                    string TreePathString = null;
+                    XElement Description = null;
+                    var canDo = true;
+                    if (!DonotPromptLayersBuilder)
+                    {
+                        LayersBuilder getTreeLayers;
+                        switch (tabIndex)
+                        {
+                            case 0:
+                                getTreeLayers = new LayersBuilder(new DirectoryInfo(localTileFolder.Text).FullName);
+                                break;
+                            case 1:
+                                getTreeLayers = new LayersBuilder("Untitled"); //暂将分类路由信息默认为：Untitled
+                                break;
+                            case 2:
+                                getTreeLayers = new LayersBuilder(new FileInfo(rasterSourceFileArray[pointer]).FullName);
+                                break;
+                            default:
+                                return "This option is not supported";
+                        }
+                        getTreeLayers.ShowDialog();
+                        if (getTreeLayers.OK)
+                        {
+                            TreePathString = getTreeLayers.TreePathString;
+                            Description = getTreeLayers.Description;
+                            DonotPromptLayersBuilder = getTreeLayers.DonotPrompt;
+                        }
+                        else
+                            canDo = false;
+                    }
+                    else
+                    {
+                        switch (tabIndex)
+                        {
+                            case 0:
+                                TreePathString = ConsoleIO.FilePathToXPath(new DirectoryInfo(localTileFolder.Text).FullName);
+                                break;
+                            case 1:
+                                TreePathString = "Untitled"; //暂将分类路由信息默认为：Untitled
+                                break;
+                            case 2:
+                                TreePathString = ConsoleIO.FilePathToXPath(new FileInfo(rasterSourceFileArray[pointer]).FullName);
+                                break;
+                            default:
+                                return "This option is not supported";
+                        }
+                    }
+                    if (canDo)
+                    {
+                        switch (tabIndex)
+                        {
+                            case 0:
+                                var getFolder = new DirectoryInfo(localTileFolder.Text);
+                                treeLastWriteTime = getFolder.LastWriteTime;
+                                treeUri = getFolder.FullName;
+                                break;
+                            case 1:
+                                treeUri = tilewebapi.Text;
+                                treeLastWriteTime = DateTime.Now;
+                                break;
+                            case 2:
+                                var fileInfo = new FileInfo(rasterSourceFileArray[pointer]);
+                                treeUri = fileInfo.FullName;
+                                treeLastWriteTime = fileInfo.LastWriteTime;
+                                //
+                                themeMetadataX = GeositeTilePush.GetRasterMetaData(treeUri, rasterTileSize.Text);
+                                break;
+                            default:
+                                return "This option is not supported";
+                        }
+
+                        var treePathString = TreePathString; // 分类层级 由正斜杠【/】分隔
+                        var treeDescription = Description; // 分类树的属性
+                        var lastWriteTime = Regex.Split(
+                            $"{treeLastWriteTime: yyyyMMdd,HHmmss}",
+                            "[,]",
+                            RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace | RegexOptions.Singleline | RegexOptions.Multiline
+                        );
+                        int.TryParse(lastWriteTime[0], out var yyyyMMdd);
+                        int.TryParse(lastWriteTime[1], out var HHmmss);
+
+                        var timestamp =
+                            $"{forest},{sequence},{yyyyMMdd},{HHmmss}"; //[森林序号,文档序号,年月日（yyyyMMdd）,时分秒（HHmmss）]
+
+                        //构造一颗含有分类层级的 GeositeXML 文档树对象，以便启用【推模式】类
+                        var treeXML = new XElement(
+                            "FeatureCollection",
+                            new XAttribute("timeStamp", DateTime.Now.ToString("s")), //文档树时间戳以当前时间为准
+                            new XElement("name", themeName) //文档树名称采用UI界面提供的专题名
+                        );
+                        if (treeDescription != null)
+                            treeXML.Add(new XElement("property", treeDescription.Elements().Select(x => x)));
+
+                        XElement layersX = null;
+                        routeName = Regex.Split(treePathString, "[/]",
+                            RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Multiline);
+                        for (var i = routeName.Length - 1; i >= 0; i--)
+                        {
+                            if (layersX == null)
+                            {
+                                //最末层
+                                layersX = new XElement(
+                                    "layer",
+                                    new XElement("name", routeName[i]),
+                                    themeMetadataX, //将元数据xml存入最末层
+                                    new XElement(
+                                        "member", //在最末层放置一片叶子 parameter
+                                        new XAttribute("type", "Tile"),
+                                        new XAttribute("typeCode", parameter.typeCode),
+                                        new XAttribute("timeStamp", treeLastWriteTime.ToString("s")), //叶子时间戳以瓦片目录创建时间为准
+                                        new XElement("name", themeName),
+                                        new XElement("property",
+                                            new XElement("srid", parameter.srid),
+                                            //针对WMTS服务路径，若存在子域占位符{s}，必须携带子域替换符，以便实施负载均衡策略
+                                            tabIndex == 1 && !string.IsNullOrWhiteSpace(subdomainsBox.Text)
+                                                ? new XElement("subdomains", subdomainsBox.Text)
+                                                : null
+                                        )
+                                    )
+                                );
+                            }
+                            else
+                            {
+                                layersX = new XElement(
+                                    "layer",
+                                    new XElement("name", routeName[i]),
+                                    layersX
+                                );
+                            }
+                        }
+                        treeXML.Add(layersX);
+
+                        //创建【树】
+                        var oneTree = oneForest.Tree(
+                            timestamp,
+                            treeXML,
+                            treeUri,
+                            status,
+                            parameter.typeCode
+                        );
+                        if (oneTree.Success)
+                        {
+                            this.Invoke(
+                                new Action(
+                                    () =>
+                                    {
+                                        ClusterDate.Reset(); //刷新界面---专题列表
+                                }
+                                )
+                            );
+
+                            tree = oneTree.Id;
+                            var leafX = treeXML.DescendantsAndSelf("member").FirstOrDefault();
+
+                            //创建【枝干】
+                            var oneBranch = oneForest.Branch(
+                                forest,
+                                sequence,
+                                tree,
+                                leafX,
+                                treeXML
+                            );
+                            if (oneBranch.Success)
+                            {
+                                var routeArray = oneBranch.Route;
+                                //枝干id路由（route）数组的前三个元素分别是【节点森林（群）编号，文档树序号，文档树标识码】，后面依次为枝干id序列
+                                routeID = new ArraySegment<int>(routeArray, 3, routeArray.Length - 3).ToArray();
+                                //创建【叶子】瓦片存储约定策略：本颗树所属的全部瓦片均存入一片叶子
+                                var oneLeaf = oneForest.Leaf(routeArray, leafX);
+                                if (oneLeaf.Success)
+                                {
+                                    leaf = oneLeaf.Id; //大于等于0
+                                    propertyX = oneLeaf.Property; //可能为null
+                                    typeCode = oneLeaf.Type;
+                                }
+                                else
+                                    return oneLeaf.Message;
+                            }
+                            else
+                                return oneBranch.Message;
+                        }
+                        else
+                            return oneTree.Message;
+                    }
+                    else
+                        return "Abort task";
+                }
+
+                //将在单片叶子里，推送指定专题所属的全部瓦片
+                var geositeTilePush = new GeositeTilePush(
+                    oneForest,
+                    tree,
+                    routeName,
+                    routeID,
+                    leaf,
+                    typeCode,
+                    propertyX,
+                    parameter.update
+                );
+                var localI = pointer + 1;
+                geositeTilePush.onGeositeEvent += delegate (object _, GeositeEventArgs Event)
+                {
+                    object userStatus = !string.IsNullOrWhiteSpace(Event.message)
+                        ? themeNames.Length > 1
+                            ? $"[{localI}/{themeNames.Length}] {Event.message}"
+                            : Event.message
+                        : null;
+
+                    rasterWorker.ReportProgress(Event.progress ?? -1, userStatus ?? string.Empty); 
+                };
+
+                switch (tabIndex)
+                {
+                    case 0: //本地文件夹（金字塔存储）
+                        try
+                        {
+                            var result0 = geositeTilePush.TilePush(
+                                0,
+                                localTileFolder.Text,
+                                parameter.type,
+                                parameter.tileMatrix,
+                                EPSG4326.Checked
+                            );
+                            total += result0.total;
+                            //var metaDataX= result0.metaDataX; //可获取元数据xml
+                        }
+                        catch (Exception error)
+                        {
+                            return error.Message;
+                        }
+
+                        break;
+                    case 1: //远程wmts服务地址（金字塔存储）
+                        try
+                        {
+                            var result1 = geositeTilePush.TilePush(
+                                1,
+                                tilewebapi.Text,
+                                parameter.type,
+                                parameter.tileMatrix,
+                                EPSG4326.Checked,
+                                (wmtsNorth.Text, wmtsSouth.Text, wmtsWest.Text, wmtsEast.Text),
+                                wmtsSpider.Checked,
+                                tabIndex == 1 && !string.IsNullOrWhiteSpace(subdomainsBox.Text)
+                                    ? subdomainsBox.Text
+                                    : null
+                            );
+                            total += result1.total;
+                            //var metaDataX= result1.metaDataX; //可获取元数据xml
+                        }
+                        catch (Exception error)
+                        {
+                            return error.Message;
+                        }
+
+                        break;
+                    case 2: //平铺式瓦片
+                        try
+                        {
+                            var result2 = geositeTilePush.TilePush(
+                                2,
+                                rasterSourceFileArray[pointer],
+                                TileType.Standard, //强制为 OGC，以便识别 
+                                -1, //平铺式瓦片的【z】取【-1】
+                                true, //平铺式瓦片的投影系暂支持4326
+                                (rasterTileSize.Text, rasterTileSize.Text, nodatabox.Text, null) //注意：暂将宽度和高度以及无值信息按边框参数传递
+                            );
+                            total += result2.total;
+                            //var metaDataX= result2.metaDataX; //可获取元数据xml
+                        }
+                        catch (Exception error)
+                        {
+                            return error.Message;
+                        }
+
+                        break;
+                }
             }
-
             return total > 0 ? $"Pushed {total} tile" + (total > 1 ? "s" : "") : "No tile pushed";
         }
 
@@ -6203,10 +7043,10 @@ namespace Geosite
         {
             //e.code 状态码（0/null=预处理阶段；1=正在处理阶段；200=收尾阶段；400=异常信息）
             //e.ProgressPercentage 进度值（介于0~100之间，仅当code=1时有效）
-            var UserState = (string)e.UserState;
-            var ProgressPercentage = e.ProgressPercentage;
-            var pv = statusProgress.Value = ProgressPercentage is >= 0 and <= 100 ? ProgressPercentage : 0;
-            statusText.Text = UserState;
+            var userState = (string)e.UserState;
+            var progressPercentage = e.ProgressPercentage;
+            var pv = statusProgress.Value = progressPercentage is >= 0 and <= 100 ? progressPercentage : 0;
+            statusText.Text = userState;
             //实时刷新界面进度杆会明显降低执行速度！
             //下面采取每10个要素刷新一次 
             if (pv % 10 == 0)
@@ -6229,5 +7069,6 @@ namespace Geosite
             Loading.run(false);
             ogcCard.Enabled = true;
         }
+
     }
 }

@@ -57,6 +57,7 @@
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.tipsBox = new System.Windows.Forms.TextBox();
+            this.donotPrompt = new System.Windows.Forms.CheckBox();
             this.treePathTab.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -93,7 +94,6 @@
             // 
             // treePathBox
             // 
-            this.treePathBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.treePathBox.Location = new System.Drawing.Point(6, 130);
             this.treePathBox.Name = "treePathBox";
             this.treePathBox.Size = new System.Drawing.Size(379, 21);
@@ -333,12 +333,24 @@
             this.tipsBox.Size = new System.Drawing.Size(310, 14);
             this.tipsBox.TabIndex = 4;
             // 
+            // donotPrompt
+            // 
+            this.donotPrompt.AutoSize = true;
+            this.donotPrompt.Location = new System.Drawing.Point(14, 200);
+            this.donotPrompt.Name = "donotPrompt";
+            this.donotPrompt.Size = new System.Drawing.Size(132, 16);
+            this.donotPrompt.TabIndex = 25;
+            this.donotPrompt.Text = "Don\'t prompt again";
+            this.donotPrompt.UseVisualStyleBackColor = true;
+            this.donotPrompt.CheckedChanged += new System.EventHandler(this.donotPrompt_CheckedChanged);
+            // 
             // LayersBuilder
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(416, 227);
+            this.Controls.Add(this.donotPrompt);
             this.Controls.Add(this.tipsBox);
             this.Controls.Add(this.treePathTab);
             this.Controls.Add(this.OKbutton);
@@ -347,6 +359,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "LayersBuilder";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Classification & Supplementary information";
             this.TopMost = true;
             this.treePathTab.ResumeLayout(false);
@@ -390,5 +403,6 @@
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.TextBox tipsBox;
         private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.CheckBox donotPrompt;
     }
 }
