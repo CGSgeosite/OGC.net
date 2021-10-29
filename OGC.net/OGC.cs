@@ -443,8 +443,7 @@ namespace Geosite
                 var sourceFiles = Regex.Split(Argument.Value.SourcePath, @"[\s]*[|][\s]*");
 
                 var TargetPath = Argument.Value.TargetPath; //folder --- D:\tmp or file --- D:\tmp\wer.xml
-                var isDirectory = File.GetAttributes(TargetPath).HasFlag(FileAttributes.Directory);
-
+                var isDirectory = Path.GetExtension(TargetPath) == string.Empty; //there is no 100% way to distinguish a folder from a file by path alone. 
                 var saveAsFormat = Argument.Value.SaveAsFormat;
                 /* Argument.Value.SaveAsFormat
                     JSON(*.json)
@@ -476,21 +475,22 @@ namespace Geosite
                         var sourceFile = sourceFiles[i];
 
                         string targetFile;
-                        if (!isDirectory)
-                            targetFile = TargetPath;
-                        else
+                        if (isDirectory)
                         {
                             var postfix = 0;
                             do
                             {
                                 targetFile = Path.Combine(
                                     TargetPath,
-                                    Path.GetFileNameWithoutExtension(sourceFile) + (postfix == 0 ? "" : $"({postfix})") + targetType);
+                                    Path.GetFileNameWithoutExtension(sourceFile) +
+                                    (postfix == 0 ? "" : $"({postfix})") + targetType);
                                 if (!File.Exists(targetFile))
                                     break;
                                 postfix++;
                             } while (true);
                         }
+                        else
+                            targetFile = TargetPath;
 
                         var fileType = Path.GetExtension(sourceFile)?.ToLower();
                         switch (fileType)
@@ -5383,8 +5383,7 @@ namespace Geosite
 
                 if (saveAs != null)
                 {
-                    var isDirectory = File.GetAttributes(saveAs).HasFlag(FileAttributes.Directory);
-
+                    var isDirectory = Path.GetExtension(saveAs) == string.Empty; //there is no 100% way to distinguish a folder from a file by path alone. 
                     statusText.Text = @"Saving ...";
                     Application.DoEvents();
                     var pointer = 0;
@@ -5396,21 +5395,22 @@ namespace Geosite
                                 () =>
                                 {
                                     string targetFile;
-                                    if (!isDirectory)
-                                        targetFile = saveAs;
-                                    else
+                                    if (isDirectory)
                                     {
                                         var postfix = 0;
                                         do
                                         {
                                             targetFile = Path.Combine(
                                                 saveAs,
-                                                Path.GetFileNameWithoutExtension(rasterSourceFile) + (postfix == 0 ? "" : $"({postfix})") + ".tif");
+                                                Path.GetFileNameWithoutExtension(rasterSourceFile) +
+                                                (postfix == 0 ? "" : $"({postfix})") + ".tif");
                                             if (!File.Exists(targetFile))
                                                 break;
                                             postfix++;
                                         } while (true);
                                     }
+                                    else
+                                        targetFile = saveAs;
 
                                     return GeositeTilePush.SaveAsGeoTiff(
                                         sourceFile: rasterSourceFile,
