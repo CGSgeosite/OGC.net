@@ -83,7 +83,7 @@ namespace Geosite
                                 if (outputFile == null)
                                     throw new Exception("Output file not found.");
 
-                                var isDirectory = File.GetAttributes(outputFile[0]).HasFlag(FileAttributes.Directory);
+                                var isDirectory = Path.GetExtension(outputFile[0]) == string.Empty; //there is no 100% way to distinguish a folder from a file by path alone. 
                                 var inputFileCount = inputFile.Count;
 
                                 if (inputFileCount == 1 && !isDirectory || inputFileCount > 1 && isDirectory)
@@ -92,7 +92,7 @@ namespace Geosite
                                     {
                                         var sourceFile = inputFile[i];
                                         var mapgisMpj = new MapGis.MapGisProject();
-                                        var localI = i;
+                                        var localI = i+1;
                                         mapgisMpj.onGeositeEvent += (_, e) =>
                                         {
                                             var userStatus = !string.IsNullOrWhiteSpace(e.message)
@@ -119,6 +119,9 @@ namespace Geosite
                                             } while (true);
                                         }
                                         mapgisMpj.Open(file: sourceFile);
+                                        var directoryName = Path.GetDirectoryName(targetFile);
+                                        if (Directory.Exists(directoryName) == false) //如果不存在就创建文件夹
+                                            Directory.CreateDirectory(directoryName!);
                                         mapgisMpj.Export(SaveAs: targetFile);
                                     }
                                 }
@@ -157,7 +160,7 @@ namespace Geosite
 
                                 options.TryGetValue("pcolor", out var pcolor);
 
-                                var isDirectory = File.GetAttributes(outputFile[0]).HasFlag(FileAttributes.Directory);
+                                var isDirectory = Path.GetExtension(outputFile[0]) == string.Empty; //there is no 100% way to distinguish a folder from a file by path alone. 
                                 var inputFileCount = inputFile.Count;
 
                                 if (inputFileCount == 1 && !isDirectory || inputFileCount > 1 && isDirectory)
@@ -165,7 +168,7 @@ namespace Geosite
                                     for (var i = 0; i < inputFileCount; i++)
                                     {
                                         var sourceFile = inputFile[i];
-                                        var localI = i;
+                                        var localI = i+1;
                                         var mapgis = new MapGis.MapGisFile();
                                         mapgis.onGeositeEvent += (_, e) =>
                                         {
@@ -193,6 +196,9 @@ namespace Geosite
                                                 postfix++;
                                             } while (true);
                                         }
+                                        var directoryName = Path.GetDirectoryName(targetFile);
+                                        if (Directory.Exists(directoryName) == false) //如果不存在就创建文件夹
+                                            Directory.CreateDirectory(directoryName!);
                                         mapgis.Export(
                                             SaveAs: targetFile,
                                             Format: format != null ? format[0] : "geojson",
@@ -241,14 +247,14 @@ namespace Geosite
                                 if (!options.TryGetValue("d", out var description))
                                     options.TryGetValue("description", out description);
 
-                                var isDirectory = File.GetAttributes(outputFile[0]).HasFlag(FileAttributes.Directory);
+                                var isDirectory = Path.GetExtension(outputFile[0]) == string.Empty; //there is no 100% way to distinguish a folder from a file by path alone. 
                                 var inputFileCount = inputFile.Count;
                                 if (inputFileCount == 1 && !isDirectory || inputFileCount > 1 && isDirectory)
                                 {
                                     for (var i = 0; i < inputFileCount; i++)
                                     {
                                         var sourceFile = inputFile[i];
-                                        var localI = i;
+                                        var localI = i+1;
                                         var shapefile = new ShapeFile.ShapeFile();
                                         shapefile.onGeositeEvent += (_, e) =>
                                         {
@@ -279,6 +285,9 @@ namespace Geosite
                                                 postfix++;
                                             } while (true);
                                         }
+                                        var directoryName = Path.GetDirectoryName(targetFile);
+                                        if (Directory.Exists(directoryName) == false) //如果不存在就创建文件夹
+                                            Directory.CreateDirectory(directoryName!);
                                         shapefile.Export(
                                             SaveAs: targetFile,
                                             Format: format == null ? "geojson" : format[0],
@@ -326,14 +335,14 @@ namespace Geosite
                                 if (!options.TryGetValue("c", out var coordinateFieldName))
                                     options.TryGetValue("coordinate", out coordinateFieldName);
 
-                                var isDirectory = File.GetAttributes(outputFile[0]).HasFlag(FileAttributes.Directory);
+                                var isDirectory = Path.GetExtension(outputFile[0]) == string.Empty; //there is no 100% way to distinguish a folder from a file by path alone. 
                                 var inputFileCount = inputFile.Count;
                                 if (inputFileCount == 1 && !isDirectory || inputFileCount > 1 && isDirectory)
                                 {
                                     for (var i = 0; i < inputFileCount; i++)
                                     {
                                         var sourceFile = inputFile[i];
-                                        var localI = i;
+                                        var localI = i+1;
                                         var freeTextFields = commandName == ".txt"
                                             ? FreeText.TXT.TXT.GetFieldNames(sourceFile)
                                             : FreeText.CSV.CSV.GetFieldNames(sourceFile);
@@ -375,6 +384,9 @@ namespace Geosite
                                                     postfix++;
                                                 } while (true);
                                             }
+                                            var directoryName = Path.GetDirectoryName(targetFile);
+                                            if (Directory.Exists(directoryName) == false) //如果不存在就创建文件夹
+                                                Directory.CreateDirectory(directoryName!);
                                             freeText.Export(
                                                 SaveAs: targetFile,
                                                 Format: format == null ? "geojson" : format[0],
