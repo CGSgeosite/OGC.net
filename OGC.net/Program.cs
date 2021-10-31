@@ -39,7 +39,7 @@ namespace Geosite
                 (int Left, int Top)? cursorPosition = null;
 
                 var title =
-                    $@" {applicationName} for {RuntimeInformation.OSDescription} / {RuntimeInformation.FrameworkDescription} / {RuntimeInformation.ProcessArchitecture} ";
+                    $@" {applicationName} for {RuntimeInformation.OSDescription} / {RuntimeInformation.ProcessArchitecture} "; // /{RuntimeInformation.FrameworkDescription} 
                 var copyright =
                     @" Copyright (C) 2019-2021 Geosite Development Team of CGS (R)";
 
@@ -59,7 +59,7 @@ namespace Geosite
                     var options = ConsoleIO.Arguments(
                         args: args,
                         offset: 1 //1=Skip command parameter 
-                    );  
+                    );
                     var helper = options.ContainsKey("?") || options.ContainsKey("h") || options.ContainsKey("help");
 
                     switch (commandName)
@@ -92,7 +92,7 @@ namespace Geosite
                                     {
                                         var sourceFile = inputFile[i];
                                         var mapgisMpj = new MapGis.MapGisProject();
-                                        var localI = i+1;
+                                        var localI = i + 1;
                                         mapgisMpj.onGeositeEvent += (_, e) =>
                                         {
                                             var userStatus = !string.IsNullOrWhiteSpace(e.message)
@@ -168,7 +168,7 @@ namespace Geosite
                                     for (var i = 0; i < inputFileCount; i++)
                                     {
                                         var sourceFile = inputFile[i];
-                                        var localI = i+1;
+                                        var localI = i + 1;
                                         var mapgis = new MapGis.MapGisFile();
                                         mapgis.onGeositeEvent += (_, e) =>
                                         {
@@ -190,7 +190,7 @@ namespace Geosite
                                             {
                                                 targetFile = Path.Combine(
                                                     outputFile[0],
-                                                    Path.GetFileNameWithoutExtension(sourceFile) + (postfix == 0 ? "" : $"({postfix})") +"."+ (format != null ? format[0] : "geojson"));
+                                                    Path.GetFileNameWithoutExtension(sourceFile) + (postfix == 0 ? "" : $"({postfix})") + "." + (format != null ? format[0] : "geojson"));
                                                 if (!File.Exists(targetFile))
                                                     break;
                                                 postfix++;
@@ -254,7 +254,7 @@ namespace Geosite
                                     for (var i = 0; i < inputFileCount; i++)
                                     {
                                         var sourceFile = inputFile[i];
-                                        var localI = i+1;
+                                        var localI = i + 1;
                                         var shapefile = new ShapeFile.ShapeFile();
                                         shapefile.onGeositeEvent += (_, e) =>
                                         {
@@ -342,22 +342,22 @@ namespace Geosite
                                     for (var i = 0; i < inputFileCount; i++)
                                     {
                                         var sourceFile = inputFile[i];
-                                        var localI = i+1;
+                                        var localI = i + 1;
                                         var freeTextFields = commandName == ".txt"
                                             ? FreeText.TXT.TXT.GetFieldNames(sourceFile)
                                             : FreeText.CSV.CSV.GetFieldNames(sourceFile);
                                         if (freeTextFields.Length == 0)
                                             throw new Exception("No valid fields found.");
 
-                                        var CoordinateFieldName = freeTextFields.Any(f => f == "_position_") ? "_position_" :
+                                        var position = freeTextFields.Any(f => f == "_position_") ? "_position_" :
                                             coordinateFieldName?[0];
 
-                                        if (CoordinateFieldName != null)
+                                        if (position != null)
                                         {
                                             //Polymorphism: assigning derived class objects to base class objects
                                             FreeText.FreeText freeText = commandName == ".txt"
-                                                ? new FreeText.TXT.TXT(CoordinateFieldName: CoordinateFieldName)
-                                                : new FreeText.CSV.CSV(CoordinateFieldName: CoordinateFieldName);
+                                                ? new FreeText.TXT.TXT(CoordinateFieldName: position)
+                                                : new FreeText.CSV.CSV(CoordinateFieldName: position);
                                             freeText.onGeositeEvent += (_, e) =>
                                             {
                                                 var userStatus = !string.IsNullOrWhiteSpace(e.message)
@@ -422,7 +422,7 @@ namespace Geosite
                         Console.WriteLine($@"Usage: {applicationName} [Command] [Options]");
                         Console.WriteLine();
                         Console.WriteLine(@"Command:");
-                        Console.WriteLine(@"    -?/h/help");
+                        Console.WriteLine(@"    -?/help");
                         Console.WriteLine(@"    mpj/mapgismpj");
                         Console.WriteLine(@"    mapgis");
                         Console.WriteLine(@"    shp/shapefile");
@@ -430,7 +430,7 @@ namespace Geosite
                         Console.WriteLine(@"Options:");
                         Console.WriteLine(@"    -[key] [value]");
                         Console.WriteLine();
-                        Console.WriteLine($@"Run '{applicationName} [Command] -?/h/help' for more information on a command.");
+                        Console.WriteLine($@"Run '{applicationName} [Command] -?/help' for more information on a command.");
                     }
                 }
 
@@ -481,7 +481,7 @@ namespace Geosite
                     );
                     showProgressTask.Wait();
                 }
-                
+
                 void MapgisMpjHelper()
                 {
                     Console.WriteLine(@"Command: mpj/mapgismpj [Options]");
@@ -502,9 +502,11 @@ namespace Geosite
                     Console.WriteLine(@"        Format: shp/shapefile, geojson[default], gml, kml, xml");
                     Console.WriteLine(@"        TreePath: null[default]");
                     Console.WriteLine(@"        Description: null[default]");
-                    Console.WriteLine(@"        Pcolor: MapGIS Pcolor.lib");
+                    Console.WriteLine(@"        Pcolor: MapGisSlib/Pcolor.lib");
                     Console.WriteLine(@"Example:");
                     Console.WriteLine($@"   {applicationName} mapgis -i ./point.wt -o ./test.shp -f shapefile");
+                    Console.WriteLine($@"   {applicationName} mapgis -i ./line.wl -o ./test.shp -f shapefile -pcolor ./Slib/Pcolor.lib");
+                    Console.WriteLine($@"   {applicationName} mapgis -i ./point.wt ./line.wl ./polygon.wp -o ./testfolder -f shapefile");
                 }
 
                 void ShapeFileHelper()

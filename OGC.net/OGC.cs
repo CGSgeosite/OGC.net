@@ -18,7 +18,6 @@ using Geosite.Messager;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Microsoft.VisualBasic;
-// ReSharper disable All
 
 namespace Geosite
 {
@@ -26,12 +25,9 @@ namespace Geosite
     {
         private readonly string getCopyright; //软件版权信息
 
-        private bool PostgreSqlConnection; //数据库是否处于连接状态？
-
-        private (bool status, int forest, string name) ClusterUser; //集群用户信息，其中 name 将充当森林名称
-
+        private bool PostgreSqlConnection; //PostgreSql数据库是否处于连接状态？
+        private (bool status, int forest, string name) ClusterUser; //GeositeServer集群用户信息，其中 name 将充当森林名称
         private DataGrid ClusterDate;
-
         private string ClusterDateGridCell;
 
         private bool DonotPromptMetaData; //是否不再弹出元数据对话框？
@@ -1116,7 +1112,7 @@ namespace Geosite
                 FilterIndex = filterIndex,
                 Multiselect = true
             };
-            if (Directory.Exists(oldPath)) 
+            if (Directory.Exists(oldPath))
                 openFileDialog.InitialDirectory = oldPath;
             SaveAsFormat.Text = string.Empty;
             SaveAsFormat.Items.Clear();
@@ -1193,7 +1189,7 @@ namespace Geosite
                     return;
                 }
 
-                var key = vectorSaveFile.Name; 
+                var key = vectorSaveFile.Name;
                 var path = key + "_path";
                 var oldPath = RegEdit.getkey(path);
 
@@ -2522,7 +2518,7 @@ namespace Geosite
 
                                     dataGridPanel.Enabled =
                                     PostgreSqlConnection = true;
-                                    PostgresRun.Enabled = 
+                                    PostgresRun.Enabled =
                                         dataCards.SelectedIndex == 0
                                         ? !string.IsNullOrWhiteSpace(themeNameBox.Text) && tilesource.SelectedIndex is >= 0 and <= 2
                                         : vectorFilePool.Rows.Count > 0;
@@ -5522,7 +5518,7 @@ namespace Geosite
                 filterIndex = 0;
 
             var path = key + "_path";
-            var oldPath = RegEdit.getkey(path); 
+            var oldPath = RegEdit.getkey(path);
 
             var openFileDialog = new OpenFileDialog()
             {
@@ -5531,7 +5527,7 @@ namespace Geosite
                 FilterIndex = filterIndex,
                 Multiselect = true
             };
-            if (Directory.Exists(oldPath)) 
+            if (Directory.Exists(oldPath))
                 openFileDialog.InitialDirectory = oldPath;
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
@@ -6617,7 +6613,7 @@ namespace Geosite
             // 6）叶子名称：采用界面提供的【专题名】，与文档树名称保持一致的好处是便于识别，同时意味着一棵树、一片叶子将对应一个专题
 
             var forest = ClusterUser.forest;
-            
+
             string[] themeNames;
             string[] rasterSourceFileArray = null;
             if (tabIndex == 2)
@@ -6631,10 +6627,10 @@ namespace Geosite
                     return "The number of files is inconsistent with the number of themes";
             }
             else
-                themeNames = new string[] {parameter.theme};
+                themeNames = new string[] { parameter.theme };
 
             long total = 0;
-            for (var pointer = 0; pointer< themeNames.Length; pointer++)
+            for (var pointer = 0; pointer < themeNames.Length; pointer++)
             {
                 var themeName = themeNames[pointer];
 
@@ -6905,7 +6901,7 @@ namespace Geosite
                                     () =>
                                     {
                                         ClusterDate.Reset(); //刷新界面---专题列表
-                                }
+                                    }
                                 )
                             );
 
@@ -6966,7 +6962,7 @@ namespace Geosite
                             : Event.message
                         : null;
 
-                    rasterWorker.ReportProgress(Event.progress ?? -1, userStatus ?? string.Empty); 
+                    rasterWorker.ReportProgress(Event.progress ?? -1, userStatus ?? string.Empty);
                 };
 
                 switch (tabIndex)

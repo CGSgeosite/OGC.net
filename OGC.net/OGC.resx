@@ -6993,6 +6993,15 @@
   <metadata name="fileCard.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
+  <metadata name="tilesource.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="label1.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="tileLevels.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
   <metadata name="label1.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
@@ -7009,6 +7018,18 @@
     <value>True</value>
   </metadata>
   <metadata name="localTileFolder.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="localTileOpen.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="groupBox5.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="localTileFolder.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="pictureBox8.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
   <metadata name="pictureBox8.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -7453,6 +7474,9 @@
   <metadata name="pictureBox9.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
+  <metadata name="pictureBox9.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
   <data name="pictureBox9.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAYAAABV7bNHAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
@@ -7523,6 +7547,15 @@
         tnmnCFbLeluLC5S10EN5UMpYe/JxB0uK0dLWTKArhAl6XsGIWv0fro9/sfirzRMAAAAASUVORK5CYII=
 </value>
   </data>
+  <metadata name="VectorTheme.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="VectorURI.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="VectorStatus.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
   <metadata name="VectorTheme.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
@@ -9965,7 +9998,7 @@
     <value>文档格式简要说明：
 
 ⦁ MapGIS 文件
-  转换线元或面元时将自动剔除相邻的重复顶点；为适配调色板，可将与图幅对应系统库中的 pcolor.lib 色板文件替换[安装文件夹 - mapgisslib]下的 pcolor.lib 文件；
+  转换线元或面元时将自动剔除相邻的重复顶点；为适配调色板，可将与图幅对应系统库中的 pcolor.lib 色板文件替换[安装文件夹 - MapGis/Slib]下的 Pcolor.lib 文件；
   依据右手定则，面元转换时自动将外圈旋转方向强行调整为逆时针，内环旋转方向强行调整为顺时针；
   若将 MapGIS 转换为 ESRI-ShapeFile，要素样式将额外存储为 .style.txt，语系代码将存为 .cpg文件；
   如果MapGIS投影参数符合【十进制经纬度：地理坐标系】、【米制：兰伯特等角割圆锥】、【米制：阿尔勃斯等积割圆锥】，当另存为shp格式时，将额外存储一个prj文件，以便 ArcGIS 9+ 识别投影参数。
@@ -9995,9 +10028,8 @@
 ⦁ GeoJson 文件
   出于兼容性考虑,GeoJson的属性字段暂不支持嵌套结构,GML文件亦不产生样式标签。
 
-  数据库（PostgreSQL）连接说明：
-
-  建议在服务器端部署：
+⦁ 数据库（PostgreSQL）连接说明：
+  可在服务器端部署：
   1）PostgreSQL（容器地址：https://hub.docker.com/r/geosite/postgresqlx13）
   2）GeositeServer（容器地址：https://hub.docker.com/r/geosite/geositeserver）
   系统管理员可在【appsettings.json】文档中创建集群用户信息，形如：
@@ -10015,8 +10047,8 @@
   }
   之后，OGC.net可在局域网里连接GeositeServer并可推送矢量或栅格数据。
 
-⦁ 批处理
-  如果针对MapGIS、ShapeFile或者Txt/Csv文件进行批处理转换，可直接采用命令行方式进行，用法说明如下：
+⦁ 控制台应用
+  针对MapGIS、ShapeFile或者Txt/Csv文件，可直接采用命令行方式进行格式转换，用法说明如下：
   &gt;OGC.net -?</value>
   </data>
   <data name="textBox2.Text" xml:space="preserve">
