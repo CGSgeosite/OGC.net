@@ -35,6 +35,9 @@ namespace Geosite
                 //Attach to Console
                 AttachConsole(-1);
 
+                //bool PostgreSqlConnection; //PostgreSql数据库是否处于连接状态？
+                //(bool status, int forest, string name) ClusterUser; //GeositeServer集群用户信息，其中 name 将充当森林名称
+
                 var applicationName = Assembly.GetExecutingAssembly().GetName().Name;
                 (int Left, int Top)? cursorPosition = null;
 
@@ -69,7 +72,7 @@ namespace Geosite
                             {
                                 if (helper)
                                 {
-                                    MapgisMpjHelper();
+                                    CommandHelper(commandName);
                                     break;
                                 }
 
@@ -135,7 +138,7 @@ namespace Geosite
                             {
                                 if (helper)
                                 {
-                                    MapgisHelper();
+                                    CommandHelper(commandName);
                                     break;
                                 }
 
@@ -221,7 +224,7 @@ namespace Geosite
                             {
                                 if (helper)
                                 {
-                                    ShapeFileHelper();
+                                    CommandHelper(commandName);
                                     break;
                                 }
 
@@ -309,7 +312,7 @@ namespace Geosite
                             {
                                 if (helper)
                                 {
-                                    TextFileHelper();
+                                    CommandHelper(commandName);
                                     break;
                                 }
 
@@ -482,60 +485,62 @@ namespace Geosite
                     showProgressTask.Wait();
                 }
 
-                void MapgisMpjHelper()
+                void CommandHelper(string command)
                 {
-                    Console.WriteLine(@"Command: mpj/mapgismpj [Options]");
-                    Console.WriteLine(@"    Options: -i/input InputFile[s] -o/output OutputFile/OutputFolder");
-                    Console.WriteLine(@"        InputFile[s]: *.mpj");
-                    Console.WriteLine(@"        OutputFile/OutputFolder: *.geojson/folderPath");
-                    Console.WriteLine(@"Example:");
-                    Console.WriteLine($@"   {applicationName} mpj -i ./mapgis.mpj -o ./test.geojson");
-                    Console.WriteLine($@"   {applicationName} mpj -i ./mapgis1.mpj ./mapgis2.mpj -o ./testfolder");
-                }
-
-                void MapgisHelper()
-                {
-                    Console.WriteLine(@"Command: mapgis [Options]");
-                    Console.WriteLine(@"    Options: -i/input InputFile[s] -o/output OutputFile/OutputFolder -f/format Format -t/treepath TreePath -d/description Description -pcolor Pcolor");
-                    Console.WriteLine(@"        InputFile[s]: *.wt, *.wl, *.wp");
-                    Console.WriteLine(@"        OutputFile/OutputFolder: *.shp, *.geojson, *.gml, *.kml, *.xml / folderPath");
-                    Console.WriteLine(@"        Format: shp/shapefile, geojson[default], gml, kml, xml");
-                    Console.WriteLine(@"        TreePath: null[default]");
-                    Console.WriteLine(@"        Description: null[default]");
-                    Console.WriteLine(@"        Pcolor: MapGisSlib/Pcolor.lib");
-                    Console.WriteLine(@"Example:");
-                    Console.WriteLine($@"   {applicationName} mapgis -i ./point.wt -o ./test.shp -f shapefile");
-                    Console.WriteLine($@"   {applicationName} mapgis -i ./line.wl -o ./test.shp -f shapefile -pcolor ./Slib/Pcolor.lib");
-                    Console.WriteLine($@"   {applicationName} mapgis -i ./point.wt ./line.wl ./polygon.wp -o ./testfolder -f shapefile");
-                }
-
-                void ShapeFileHelper()
-                {
-                    Console.WriteLine(@"Command: shp/shapefile [Options]");
-                    Console.WriteLine(@"    Options: -i/input InputFile[s] -o/output OutputFile/OutputFolder -f/format Format -t/treepath TreePath -d/description Description -c/codepage CodePage");
-                    Console.WriteLine(@"        InputFile[s]: *.shp");
-                    Console.WriteLine(@"        OutputFile/OutputFolder: *.geojson, *.gml, *.kml, *.shp, *.xml / folderPath");
-                    Console.WriteLine(@"        Format: geojson[default], gml, kml, shp, xml");
-                    Console.WriteLine(@"        TreePath: null[default]");
-                    Console.WriteLine(@"        Description: null[default]");
-                    Console.WriteLine(@"        CodePage: 936[default]");
-                    Console.WriteLine(@"Example:");
-                    Console.WriteLine($@"   {applicationName} shapefile -i ./theme.shp -o ./test.geojson -f geojson");
-                }
-
-                void TextFileHelper()
-                {
-                    Console.WriteLine(@"Command: txt/csv [Options]");
-                    Console.WriteLine(@"    Options: -i/input InputFile[s] -o/output OutputFile/OutputFolder -f/format Format -t/treepath TreePath -d/description Description -c/coordinate Coordinate");
-                    Console.WriteLine(@"        InputFile[s]: *.txt/csv");
-                    Console.WriteLine(@"        OutputFile/OutputFolder: *.geojson, *.gml, *.kml, *.shp, *.xml");
-                    Console.WriteLine(@"        Format: geojson[default], gml, kml, shp, xml");
-                    Console.WriteLine(@"        TreePath: null[default]");
-                    Console.WriteLine(@"        Description: null[default]");
-                    Console.WriteLine(@"        Coordinate: _position_[default]");
-                    Console.WriteLine(@"Example:");
-                    Console.WriteLine($@"   {applicationName} txt -i ./line.txt -o ./test.shp -f shp");
-                    Console.WriteLine($@"   {applicationName} csv -i ./line.csv -o ./test.shp -f shp");
+                    switch (command)
+                    {
+                        case "mpj":
+                        case "mapgismpj":
+                            Console.WriteLine(@"Command: mpj/mapgismpj [Options]");
+                            Console.WriteLine(@"    Options: -i/input InputFile[s] -o/output OutputFile/OutputFolder");
+                            Console.WriteLine(@"        InputFile[s]: *.mpj");
+                            Console.WriteLine(@"        OutputFile/OutputFolder: *.geojson/folderPath");
+                            Console.WriteLine(@"Example:");
+                            Console.WriteLine($@"   {applicationName} mpj -i ./mapgis.mpj -o ./test.geojson");
+                            Console.WriteLine($@"   {applicationName} mpj -i ./mapgis1.mpj ./mapgis2.mpj -o ./testfolder");
+                            break;
+                        case "mapgis":
+                            Console.WriteLine(@"Command: mapgis [Options]");
+                            Console.WriteLine(@"    Options: -i/input InputFile[s] -o/output OutputFile/OutputFolder -f/format Format -t/treepath TreePath -d/description Description -pcolor Pcolor");
+                            Console.WriteLine(@"        InputFile[s]: *.wt, *.wl, *.wp");
+                            Console.WriteLine(@"        OutputFile/OutputFolder: *.shp, *.geojson, *.gml, *.kml, *.xml / folderPath");
+                            Console.WriteLine(@"        Format: shp/shapefile, geojson[default], gml, kml, xml");
+                            Console.WriteLine(@"        TreePath: null[default]");
+                            Console.WriteLine(@"        Description: null[default]");
+                            Console.WriteLine(@"        Pcolor: MapGisSlib/Pcolor.lib");
+                            Console.WriteLine(@"Example:");
+                            Console.WriteLine($@"   {applicationName} mapgis -i ./point.wt -o ./test.shp -f shapefile");
+                            Console.WriteLine($@"   {applicationName} mapgis -i ./line.wl -o ./test.shp -f shapefile -pcolor ./Slib/Pcolor.lib");
+                            Console.WriteLine($@"   {applicationName} mapgis -i ./point.wt ./line.wl ./polygon.wp -o ./testfolder -f shapefile");
+                            break;
+                        case "shp":
+                        case "shapefile":
+                            Console.WriteLine(@"Command: shp/shapefile [Options]");
+                            Console.WriteLine(@"    Options: -i/input InputFile[s] -o/output OutputFile/OutputFolder -f/format Format -t/treepath TreePath -d/description Description -c/codepage CodePage");
+                            Console.WriteLine(@"        InputFile[s]: *.shp");
+                            Console.WriteLine(@"        OutputFile/OutputFolder: *.geojson, *.gml, *.kml, *.shp, *.xml / folderPath");
+                            Console.WriteLine(@"        Format: geojson[default], gml, kml, shp, xml");
+                            Console.WriteLine(@"        TreePath: null[default]");
+                            Console.WriteLine(@"        Description: null[default]");
+                            Console.WriteLine(@"        CodePage: 936[default]");
+                            Console.WriteLine(@"Example:");
+                            Console.WriteLine($@"   {applicationName} shapefile -i ./theme.shp -o ./test.geojson -f geojson");
+                            break;
+                        case "txt":
+                        case "csv":
+                            Console.WriteLine(@"Command: txt/csv [Options]");
+                            Console.WriteLine(@"    Options: -i/input InputFile[s] -o/output OutputFile/OutputFolder -f/format Format -t/treepath TreePath -d/description Description -c/coordinate Coordinate");
+                            Console.WriteLine(@"        InputFile[s]: *.txt/csv");
+                            Console.WriteLine(@"        OutputFile/OutputFolder: *.geojson, *.gml, *.kml, *.shp, *.xml");
+                            Console.WriteLine(@"        Format: geojson[default], gml, kml, shp, xml");
+                            Console.WriteLine(@"        TreePath: null[default]");
+                            Console.WriteLine(@"        Description: null[default]");
+                            Console.WriteLine(@"        Coordinate: _position_[default]");
+                            Console.WriteLine(@"Example:");
+                            Console.WriteLine($@"   {applicationName} txt -i ./line.txt -o ./test.shp -f shp");
+                            Console.WriteLine($@"   {applicationName} csv -i ./line.csv -o ./test.shp -f shp");
+                            break;
+                    }
                 }
             }
         }
