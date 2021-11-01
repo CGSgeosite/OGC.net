@@ -58,7 +58,7 @@ namespace Geosite
                     //args ---> Dictionary<string, List<string>>
                     var options = ConsoleIO.Arguments(
                         args: args,
-                        offset: 1 //1=Skip command parameter 
+                        offset: 0 //1=Skip command parameter 
                     );
                     var helper = options.ContainsKey("?") || options.ContainsKey("h") || options.ContainsKey("help");
 
