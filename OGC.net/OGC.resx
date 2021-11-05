@@ -6740,852 +6740,6 @@
   <metadata name="fileCard.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
-  <metadata name="tilesource.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="label1.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="tileLevels.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="label1.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="tileLevels.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="tilesource.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="localTileOpen.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="groupBox5.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="localTileFolder.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="localTileOpen.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="groupBox5.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="localTileFolder.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="pictureBox5.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="pictureBox8.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="pictureBox9.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="VectorTheme.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="VectorURI.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="VectorStatus.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="VectorTheme.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="VectorURI.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="VectorStatus.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="ThemeName.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="ThemeType.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <data name="textBox1.Text" xml:space="preserve">
-    <value>文档格式简要说明：
-
-⦁ MapGIS 文件
-  转换线元或面元时将自动剔除相邻的重复顶点；为适配调色板，可将与图幅对应系统库中的 pcolor.lib 色板文件替换[安装文件夹 - MapGis/Slib]下的 Pcolor.lib 文件；
-  依据右手定则，面元转换时自动将外圈旋转方向强行调整为逆时针，内环旋转方向强行调整为顺时针；
-  若将 MapGIS 转换为 ESRI-ShapeFile，要素样式将额外存储为 .style.txt，语系代码将存为 .cpg文件；
-  如果MapGIS投影参数符合【十进制经纬度：地理坐标系】、【米制：兰伯特等角割圆锥】、【米制：阿尔勃斯等积割圆锥】，当另存为shp格式时，将额外存储一个prj文件，以便 ArcGIS 9+ 识别投影参数。
-
-⦁ TXT/CSV 文件
-  由制表符或逗号分隔的文本文件，通常在Office-Excel软件中录入数据并另存为制表符或逗号分隔的文本文件，支持UTF-8编码语系；
-  第一行至少定义一个坐标串栏目，第一行内其他栏目均充当属性字段名称；
-  除坐标栏之外，其余栏目的数据类型以不损失精度为前提自动识别，如果某栏目对应的内容属于混合类型，将强制为字符串类型；
-  与第一行栏目个数不一致的后续行将被忽略，同时忽略某栏目内容首尾的半角双引号和单引号；
-  几何要素类型将通过与坐标栏对应内容自动识别；
-  每个坐标对儿必须由【横坐标 分隔符 纵坐标】构成；
-  括弧可为：[]、【】、{｝、｛}、()、（）、&lt;&gt;、＜＞、《》、“”
-  分隔符可为：逗号、空格、顿号、分号；纵横坐标可为整数或浮点数（支持六十进制度分秒表达法）；
-  针对线和面坐标，自动剔除重复的相邻坐标点；针对面坐标，自动圈闭每个多边形；
-  针对点坐标，可简单表示为：102.5,34.5 推荐按geojson单点（Point）表达法：[102.5,34.5]
-  针对线坐标，可简单表示为：102.5,34.5,103.6,38.0,... 推荐按geojson单线（LineString）表达法：[[102.5,34.5],[103.6,38.0],...]
-  针对面坐标，可简单表示为：[[102.5,34.5,103.6,38.0,...]]，推荐按geojson单面（支持母子区）表达法：[[[102.5,34.5],[103.6,38.0],...],[[102.5,34.5],[103.6,38.0],...]]
-
-⦁ ShapeFile 文件
-  ESRI shapefile格式是一种常见的共享地理数据格式，shapefile格式最早出现在20世纪80年代，尽管有很大局限性，但仍然是GIS行业内用于交换数据的标准格式。一个完整的shapefile至少包含三个文件:
-  .shp - 保存坐标数据（x，y，[z、m]）；
-  .shx - 包含.shp中每条记录的偏移量和长度；
-  .dbf - 包含每条记录的属性数据。此文件基于多年之前流行的 DBASE III 格式。不支持“备注型”字段，文本型字段不能超过254个字节，字段名称不能超过10个字节！
-  shapefile格式的另一个限制是，每个shapefile只能包含一种形状要素（点、线或多边形）；
-  为解决读取dbf时属性易出现乱码问题，应尽量提供【.cpg】文件，否则将按【CodePage：936】对待。
-
-⦁ GeoJson 文件
-  出于兼容性考虑,GeoJson的属性字段暂不支持嵌套结构,GML文件亦不产生样式标签。
-
-⦁ 数据库（PostgreSQL）连接说明：
-  可在服务器端部署：
-  1）PostgreSQL（容器地址：https://hub.docker.com/r/geosite/postgresqlx13）
-  2）GeositeServer（容器地址：https://hub.docker.com/r/geosite/geositeserver）
-  系统管理员可在【appsettings.json】文档中创建集群用户信息，形如：
-  {
-        "appSettings": {
-            "connectionString": { "服务器名称或IP": "Password=postgres账户对应的密码;Username=postgres账户名称;Port=端口号;Database=数据库名称;" },
-            "clusterUser": [
-                {
-                    "name": "集群用户名",
-                    "forest": "群号（负值，比如：-1）"
-                }
-            ]
-        },
-        "AllowedHosts": "*"
-  }
-  之后，OGC.net可在局域网里连接GeositeServer并可推送矢量或栅格数据。
-
-⦁ 控制台应用
-  针对MapGIS、ShapeFile或者Txt/Csv文件，可直接采用命令行方式进行格式转换，用法说明如下：
-  &gt;OGC.net -?</value>
-  </data>
-  <data name="textBox2.Text" xml:space="preserve">
-    <value>开发接口简要说明：
-
-1、针对 MapGis 工程文件（mpj）
-
-/// &lt;summary&gt;
-/// 构造函数：如果file参数不为null，便打开文件并初始化公共属性；否则，不做任何事情
-/// &lt;/summary&gt;
-/// &lt;param name="file"&gt;MapGIS工程文件（*.MPJ），省略时取默认值：null&lt;/param&gt;
-public MapGisProject(string file = null);
-
-/// &lt;summary&gt;
-/// 打开文件并初始化公共属性成员，如果构造函数中已打开文件，就无需调用Open函数
-/// &lt;/summary&gt;
-/// &lt;param name="file"&gt;MapGIS工程文件（*.MPJ）&lt;/param&gt;
-/// &lt;returns&gt;&lt;/returns&gt;
-public void Open(string file);
-
-/// &lt;summary&gt;
-/// 获取mapgis工程文件内容（符合 JSON 格式的 JObject 类型对象）
-/// &lt;/summary&gt;
-public JObject JSON;
-
-/// &lt;summary&gt;
-/// 将 MapGIS 工程文件内容存储为 JSON 格式
-/// &lt;/summary&gt;
-/// &lt;param name="SaveAs"&gt;欲存盘的文件名&lt;/param&gt;
-public void Export(string SaveAs = null);
-
-2、针对 MapGis 点线面文件（wt、wl、wp）
-
-/// &lt;summary&gt;
-/// 构造函数：如果file参数不为null，便打开文件并初始化公共属性；否则，不做任何事情
-/// &lt;/summary&gt;
-/// &lt;param name="file"&gt;maigis文件名（wt、wl、wp）&lt;/param&gt;
-var mapgis = new MapGisFile(string file = null);
-
-/// &lt;summary&gt;
-/// maigis文件类型（Point、LineString、Polygon）
-/// &lt;/summary&gt;
-public string FileType;
-
-/// &lt;summary&gt;
-/// 边框范围
-/// &lt;/summary&gt;
-public JArray BBox;
-
-/// &lt;summary&gt;
-/// 投影代号
-/// &lt;/summary&gt;
-public string EPSG;
-
-/// &lt;summary&gt;
-/// 坐标参照系
-/// &lt;/summary&gt;
-public JObject Parameters;
-
-/// &lt;summary&gt;
-/// 文件创建时间戳
-/// &lt;/summary&gt;
-public string TimeStamp;
-
-/// &lt;summary&gt;
-/// 要素总数（包括有效和无效的要素）
-/// &lt;/summary&gt;
-public int RecordCount;
-
-/// &lt;summary&gt;
-/// 打开文件并初始化公共属性成员。如果构造函数中已打开文件，就无需调用Open函数。
-/// &lt;/summary&gt;
-/// &lt;param name="file"&gt;maigis文件名（wt、wl、wp）&lt;/param&gt;
-/// &lt;returns&gt;&lt;/returns&gt;
-public void Open(string file);
-
-/// &lt;summary&gt;
-/// 关闭文件句柄并调用析构函数。如果通过using语句块调用了构造函数，就无需调用Close函数。
-/// &lt;/summary&gt;
-public void Close();
-
-/// &lt;summary&gt;
-/// 获取字段信息
-/// &lt;/summary&gt;
-/// &lt;returns&gt;JObject数组类型&lt;/returns&gt;
-public JObject[] GetField();
-
-/// &lt;summary&gt;
-/// 获取可枚举的全部要素对象（包括有效和无效的要素，其中无效要素对象值为：null）。要素对象个数与 Count 一致！
-/// &lt;/summary&gt;
-/// &lt;returns&gt;可枚举的JObject类型要素对象（包括有效和无效的要素，其中无效要素对象值为：null），要素对象中携带了内点和边框&lt;/returns&gt;
-public IEnumerable&lt;JObject&gt; GetFeature();
-
-/// &lt;summary&gt;
-/// 获取文档基本信息
-/// &lt;/summary&gt;
-/// &lt;returns&gt;返回JObject类型对象&lt;/returns&gt;
-public JObject GetCapabilities();
-
-/// &lt;summary&gt;
-/// 将 MapGIS 要素文件内容导出为指定格式
-/// &lt;/summary&gt;
-/// &lt;param name="SaveAs"&gt;欲存盘的文件名&lt;/param&gt;
-/// &lt;param name="Format"&gt;导出格式（暂支持：geojson、shapefile、gml、GeositeXml、kml），省略取默认格式：geojson&lt;/param&gt;
-public void Export(string SaveAs, string Format = "geojson");
-
-3、针对 ShapeFile 文件（shp、dbf、shx）
-
-/// &lt;summary&gt;
-/// ShapeFile文件类型（Point、LineString、Polygon）
-/// &lt;/summary&gt;
-public string FileType;
-
-/// &lt;summary&gt;
-/// 构造函数
-/// &lt;/summary&gt;
-/// &lt;param name="shapeFilePath"&gt;shp文件路径，若设为空，随后可通过调用Open函数打开shp文档，此路径可不携带扩展名！&lt;/param&gt;
-public ShapeFile(string shapeFilePath = null);
-
-/// &lt;summary&gt;
-/// 打开文件并初始化公共属性成员，如果构造函数中已打开文件，就无需调用Open函数
-/// &lt;/summary&gt;
-/// &lt;param name="shapeFilePath"&gt;shapeFile 文件名（含路径信息，可不携带扩展名）&lt;/param&gt;
-public void Open(string shapeFilePath);
-
-/// &lt;summary&gt;
-/// 获取 ShapeFile 要素文件所含的字段信息
-/// 返回值中每个字段将至少包括：name（字段名称）、type（字段类型）、length（字段长度），针对浮点类型还将包括：decimal（小数位）
-/// &lt;/summary&gt;
-/// &lt;returns&gt;JObject数组类型&lt;/returns&gt;
-public JObject[] GetField();
-
-/// &lt;summary&gt;
-/// 获取 ShapeFile 要素文件内可枚举的全部要素对象（包括有效和无效的要素，其中无效要素对象值为：null）
-/// 要素对象个数与 RecordCount 属性值一致！
-/// &lt;/summary&gt;
-/// &lt;returns&gt;可枚举的JObject类型要素对象（包括有效和无效的要素，其中无效要素对象值为：null），要素对象中携带了内点和边框&lt;/returns&gt;
-public IEnumerable&lt;JObject&gt; GetFeature();
-
-/// &lt;summary&gt;
-/// 获取 ShapeFile 要素文件基本信息
-/// &lt;/summary&gt;
-/// &lt;returns&gt;返回JObject类型对象&lt;/returns&gt;
-public JObject GetCapabilities();
-
-/// &lt;summary&gt;
-/// 将 ShapeFile 文件内容导出为指定格式
-/// &lt;/summary&gt;
-/// &lt;param name="SaveAs"&gt;欲存盘的文件名&lt;/param&gt;
-/// &lt;param name="Format"&gt;导出格式（暂支持：geojson、shapefile、kml、gml、GeositeXml），省略取默认格式：geojson&lt;/param&gt;
-public void Export(string SaveAs, string Format = "geojson");
-
-/// &lt;summary&gt;
-/// 关闭已打开的shapefile文档句柄
-/// &lt;/summary&gt;
-public void Close();
-
-4、针对 TXT 文件（制表符分隔）
-/// &lt;summary&gt;
-/// 异常信息
-/// &lt;/summary&gt;
-public string ErrorMessage;
-
-/// &lt;summary&gt;
-/// 投影代号
-/// &lt;/summary&gt;
-public string EPSG;
-
-/// &lt;summary&gt;
-/// 边框范围
-/// &lt;/summary&gt;
-public JArray BBox;
-
-/// &lt;summary&gt;
-/// 文件创建时间戳
-/// &lt;/summary&gt;
-public string TimeStamp;
-
-/// &lt;summary&gt;
-/// 要素总数
-/// &lt;/summary&gt;
-public int RecordCount;
-
-/// &lt;summary&gt;
-/// 文件类型
-/// &lt;/summary&gt;
-public string FileType;
-
-/// &lt;summary&gt;
-/// 构造函数：如果file参数不为null，便打开文件并初始化公共属性；否则，不做任何事情
-/// &lt;/summary&gt;
-/// &lt;param name="TabTextFile"&gt;TXT文件名（txt）&lt;/param&gt;
-/// &lt;param name="CoordinateFieldName"&gt;坐标栏目名称，省略时取默认值："_position_"&lt;/param&gt;
-public TXT(string TabTextFile = null, string CoordinateFieldName = "coordinate")
-
-/// &lt;summary&gt;
-/// 打开文件并初始化公共属性成员，如果构造函数中已打开文件，就无需调用Open函数
-/// &lt;/summary&gt;
-/// &lt;param name="TabTextFile"&gt;TXT文件名（txt）&lt;/param&gt;
-/// &lt;returns&gt;&lt;/returns&gt;
-public void Open(string TabTextFile);
-
-/// &lt;summary&gt;
-/// 获取文件所含的字段信息
-/// 返回值中每个字段将至少包括：name（字段名称）、type（字段类型）、length（字段长度），针对浮点类型还将包括：decimal（小数位）
-/// &lt;/summary&gt;
-/// &lt;returns&gt;JObject数组类型&lt;/returns&gt;
-public JObject[] GetField()
-
-/// &lt;summary&gt;
-/// 获取文件内可枚举的全部要素对象
-/// 要素对象个数与 RecordCount 属性值一致！
-/// &lt;/summary&gt;
-/// &lt;returns&gt;可枚举的JObject类型要素对象，要素对象中携带了内点和边框&lt;/returns&gt;
-public IEnumerable&lt;JObject&gt; GetFeature();
-
-/// &lt;summary&gt;
-/// 获取文件基本信息
-/// &lt;/summary&gt;
-/// &lt;returns&gt;返回JObject类型对象&lt;/returns&gt;
-public JObject GetCapabilities();
-
-/// &lt;summary&gt;
-/// 将文件内容导出为指定格式
-/// &lt;/summary&gt;
-/// &lt;param name="SaveAs"&gt;欲存盘的文件名&lt;/param&gt;
-/// &lt;param name="Format"&gt;导出格式（暂支持：geojson、shapefile、kml、gml、GeositeXml），省略取默认格式：geojson&lt;/param&gt;
-public void Export(string SaveAs, string Format = "geojson");
-
-5、PostgreSQL通讯
-/// &lt;summary&gt;
-/// SQL查询助手，支持【参数化】和【事务】
-/// &lt;/summary&gt;
-public static class PostgreSqlHelper;
-
-/// &lt;summary&gt;
-/// PostgreSql连接配置
-/// &lt;/summary&gt;
-public struct PostgreSqlSetting
-{
-   public string
-   Host, //机器名或ip地址
-   Username, //postgresql账户名称，默认 postgres
-   Password, //postgresql账户名称对应的密码，默认为空白
-   Database, //集群数据库名称
-   Other; //postgresql连接时额外定义的参数，默认为空白
-   public int
-   CommandTimeout, //尝试执行命令时需要等待的时间（秒值），设为0可一直等待，默认值30秒
-   Port; //postgresql端口号，默认：5432
-   public bool
-   Pooling; //是否启用npgsql内部连接池，默认为真（启用）
-}
-
-/// &lt;summary&gt;
-/// 依据PostgreSQL连接参数连接指定数据库（并可顺便检查指定数据表是否存在）
-/// &lt;/summary&gt;
-/// &lt;param name="Host"&gt;数据库服务器主机名称或IP地址，默认：localhost&lt;/param&gt;
-/// &lt;param name="Port"&gt;数据库服务器主机端口号，默认：5432&lt;/param&gt;
-/// &lt;param name="Database"&gt;数据库名称，默认：null&lt;/param&gt;
-/// &lt;param name="Username"&gt;用户名，默认：postgres&lt;/param&gt;
-/// &lt;param name="Password"&gt;密码，默认：null&lt;/param&gt;
-/// &lt;param name="Tables"&gt;数据表，默认：null&lt;/param&gt;
-/// &lt;param name="Version"&gt;PostgreSQL最低版本要求，默认：9&lt;/param&gt;
-/// &lt;returns&gt;返回三元组：连接或创建是否成功、异常信息、PostgreSQL连接标志（0：连接成功；-1：PG未安装或者连接参数不正确；-2：PG版本太低；1：指定的数据库不存在；2：数据库同名但数据表不符合要求）&lt;/returns&gt;
-public static (bool Success, string Message, short flag) Connection();
-
-/// &lt;summary&gt;
-/// 执行非查询语句
-/// &lt;/summary&gt;
-/// &lt;param name="cmd"&gt;查询语句，若cmd为空，则仅尝试打开数据库，若成功就返回0，否则返回null。若返回值是null的话，存在两种情况：1是webconfig中未正确设置服务器；2是服务器或数据库无法连接&lt;/param&gt;
-/// &lt;param name="parameters"&gt;字段参数字典&lt;/param&gt;
-/// &lt;param name="pooling"&gt;是否开启池化连接，省略或默认值为true。在 linux 环境下动态创建数据库（create database）时，必须将 pooling 明确指定为 false（因为默认值为true），也就是说不能池化，以便使连接被关闭时立即生效！&lt;/param&gt;
-/// &lt;param name="postgres"&gt;是否直连【PostgreSQL数据库管理系统】（创建或删除数据库时必须设为真!），省略或默认值为false（仅操作已指定的当前数据库）&lt;/param&gt;
-/// &lt;param name="transaction"&gt;是否开启事务&lt;/param&gt;
-/// &lt;param name="timeout"&gt;尝试执行命令时需要等待的时间（秒值，默认30秒）&lt;/param&gt;
-/// &lt;returns&gt;针对insert、delete 和 update 操作，返回受影响的记录数；&lt;/returns&gt;
-public static int? NonQuery();
-
-/// &lt;summary&gt;
-/// 执行标量查询语句
-/// &lt;/summary&gt;
-/// &lt;param name="cmd"&gt;查询语句&lt;/param&gt;
-/// &lt;param name="parameters"&gt;字段参数字典&lt;/param&gt;
-/// &lt;param name="pooling"&gt;是否开启池化连接，省略或默认值为true&lt;/param&gt;
-/// &lt;param name="postgres"&gt;是否直连【PostgreSQL数据库管理系统】（创建或删除数据库时必须设为真!），省略或默认值为false（仅操作已指定的当前数据库）&lt;/param&gt;
-/// &lt;param name="transaction"&gt;是否开启事务&lt;/param&gt;
-/// &lt;param name="timeout"&gt;尝试执行命令时需要等待的时间（秒值，默认30秒）&lt;/param&gt;
-/// &lt;returns&gt;针对可返回单值的sql语句（标量查询函数），返回对象型结果；若失败，返回空 &lt;/returns&gt;
-public static object Scalar();
-
-/// &lt;summary&gt;
-/// 执行查询语句，返回可枚举的Dictionary&lt;string, object&gt;对象序列
-/// &lt;/summary&gt;
-/// &lt;param name="cmd"&gt;查询语句&lt;/param&gt;
-/// &lt;param name="parameters"&gt;字段参数字典&lt;/param&gt;
-/// &lt;param name="pooling"&gt;是否开启池化连接，省略或默认值为true&lt;/param&gt;
-/// &lt;param name="postgres"&gt;是否直连【PostgreSQL数据库管理系统】（创建或删除数据库时必须设为真!），省略或默认值为false（仅操作已指定的当前数据库）&lt;/param&gt;
-/// &lt;param name="transaction"&gt;是否开启事务&lt;/param&gt;
-/// &lt;param name="timeout"&gt;尝试执行命令时需要等待的时间（秒值，默认30秒）&lt;/param&gt;
-/// &lt;returns&gt;&lt;/returns&gt;
-public static IEnumerable&lt;Dictionary&lt;string, object&gt;&gt; DictionaryReader();
-
-/// &lt;summary&gt;
-/// 执行查询语句，返回DataTable格式对象
-/// &lt;/summary&gt;
-/// &lt;param name="cmd"&gt;查询语句&lt;/param&gt;
-/// &lt;param name="parameters"&gt;字段参数字典&lt;/param&gt;
-/// &lt;param name="pooling"&gt;是否开启池化连接，省略或默认值为true&lt;/param&gt;
-/// &lt;param name="postgres"&gt;是否直连【PostgreSQL数据库管理系统】（创建或删除数据库时必须设为真!），省略或默认值为false（仅操作已指定的当前数据库）&lt;/param&gt;
-/// &lt;param name="transaction"&gt;是否开启事务&lt;/param&gt;
-/// &lt;param name="timeout"&gt;尝试执行命令时需要等待的时间（秒值，默认30秒）&lt;/param&gt;
-/// &lt;returns&gt;若返回null，说明查询无效；若结果对象的Rows为0，说明仅存在字段，并未发现任何记录！&lt;/returns&gt;
-public static DataTable DataTableReader();
-
-/// &lt;summary&gt;
-/// 执行查询语句，返回xml格式对象
-/// &lt;/summary&gt;
-/// &lt;param name="cmd"&gt;查询语句&lt;/param&gt;
-/// &lt;param name="parameters"&gt;字段参数字典&lt;/param&gt;
-/// &lt;param name="pooling"&gt;是否开启池化连接，省略或默认值为true&lt;/param&gt;
-/// &lt;param name="postgres"&gt;是否直连【PostgreSQL数据库管理系统】（创建或删除数据库时必须设为真!），省略或默认值为false（仅操作已指定的当前数据库）&lt;/param&gt;
-/// &lt;param name="transaction"&gt;是否开启事务&lt;/param&gt;
-/// &lt;param name="timeout"&gt;尝试执行命令时需要等待的时间（秒值，默认30秒）&lt;/param&gt;
-/// &lt;param name="XElementRootName"&gt;返回XElement格式对象的根标签名称，默认：【table】&lt;/param&gt;
-/// &lt;param name="XElementNodeName"&gt;返回XElement格式对象的节点标签名称，默认：【row】&lt;/param&gt;
-/// &lt;returns&gt;返回XElement格式对象。如果某字段内容符合json格式便将其转换为xml&lt;/returns&gt;
-public static XElement XElementReader();
-
-6、WKB编码类
-/// &lt;summary&gt;
-/// WKB（PostGIS-Raster类型）编码类
-/// &lt;/summary&gt;
-public static class PostGisRaster;
-
-/// &lt;summary&gt;
-/// 将本地或远程瓦片文件按PostGIS-Raster类型进行WKB格式编码
-/// &lt;/summary&gt;
-/// &lt;param name="uri"&gt;本地或远程瓦片文件路径&lt;/param&gt;
-/// &lt;param name="z"&gt;缩放级&lt;/param&gt;
-/// &lt;param name="x"&gt;横向图块坐标（从左至右）&lt;/param&gt;
-/// &lt;param name="y"&gt;纵向图块坐标（从上至下）&lt;/param&gt;
-/// &lt;param name="EPSG4326"&gt;是否为十进制经纬度瓦片格式？默认：false&lt;/param&gt;
-/// &lt;param name="tileType"&gt;瓦片类型，默认：TileType.Standard，其他选项为：TileType.TMS、TileType.MapCruncher、TileType.ARCGIS、TileType.DeepZoom、TileType.Raster&lt;/param&gt;
-/// &lt;param name="localFile"&gt;uri是否为本地文件？默认：true。如果设为false，将从远程WMTS服务抓取瓦片内容&lt;/param&gt;
-/// &lt;returns&gt;三元组对象，包括【瓦片WKB编码、瓦片尺寸（宽度、高度和深度）、边框（东南西北）】&lt;/returns&gt;
-public static (string wkb, (ushort width, ushort height, ushort depth) size, (double north, double south, double west, double east) boundary)? WKB();
-
-/// &lt;summary&gt;
-/// 将Gdal的影像数据集Dataset对象按指定的数据块进行十六进制（PostGIS raster）WKB编码
-/// &lt;/summary&gt;
-/// &lt;param name="rasterDataset"&gt;由Gdal.Open(filename, Access.GA_ReadOnly)创建的多波段栅格图像数据集&lt;/param&gt;
-/// &lt;param name="tilewidth"&gt;指定的切片像素宽度（若为0或者超过图像本身的宽度，将以图像本身宽度为准）&lt;/param&gt;
-/// &lt;param name="tileheight"&gt;指定的切片像素高度（若为0或者超过图像本身的高度，将以图像本身高度为准）&lt;/param&gt;
-/// &lt;param name="hasnodata"&gt;是否指定了【无值】，默认：false&lt;/param&gt;
-/// &lt;param name="nodata"&gt;无值替换值，空字符（默认）=不指定；其他值=实际数值&lt;/param&gt;
-/// &lt;returns&gt;可枚举的十六进制（postgis raster）wkb编码以及相应的图块信息xml&lt;/returns&gt;
-public static IEnumerable&lt;XElement&gt; RasterWKB();
-
-7、GeositeXml推模式类
-/// &lt;summary&gt;
-/// GeositeXml推模式类: 将集群节点森林体系存储为关系型数据库
-/// &lt;/summary&gt;
-public class GeositeXmlPush;
-
-/// &lt;summary&gt;
-/// 森林（支持创建或更新辅助信息）
-/// &lt;/summary&gt;
-/// &lt;param name="id"&gt;节点森林序号（通常由注册表[register.xml]中[forest]节的先后顺序决定）&lt;/param&gt;
-/// &lt;param name="name"&gt;节点森林名称。省略时取默认值：null&lt;/param&gt;
-/// &lt;param name="property"&gt;节点森林属性描述。省略时取默认值：null&lt;/param&gt;
-/// &lt;param name="timestamp"&gt;节点森林创建时间戳[年月日（yyyyMMdd）,时分秒（HHmmss）]二元整型编码字符串。省略时取默认值：当前日期和时间&lt;/param&gt;
-/// &lt;param name="status"&gt;节点森林状态码。省略时取默认值：0。提示：待森林中所有文档树推送成功后，应将status置为奇数&lt;/param&gt;
-/// &lt;param name="relation"&gt;节点森林关系描述。省略时取默认值：null&lt;/param&gt;
-/// &lt;returns&gt;返回三元组：是否创建或更新成功，异常信息，森林节点id码&lt;/returns&gt;
-public (bool Success, string Message, int Id) Forest();
-
-/// &lt;summary&gt;
-/// 树（创建树根基本信息，不处理树的枝干体系和叶子）
-/// &lt;/summary&gt;
-/// &lt;param name="timestamp"&gt;文档树编码印章，采用[节点森林序号,文档序号,年月日（yyyyMMdd）,时分秒（HHmmss）]整型编码字符串&lt;/param&gt;
-/// &lt;param name="treeX"&gt;文档树XElement格式对象&lt;/param&gt;
-/// &lt;param name="uri"&gt;文档树全称路径名称（URI），默认值：null&lt;/param&gt;
-/// &lt;param name="forestStatus"&gt;森林状态码。省略时取默认值：0。提示：文档树推送成功后，应将status置为奇数&lt;/param&gt;
-/// &lt;param name="typeCode"&gt;树类型码。省略时取默认值：0&lt;/param&gt;
-/// &lt;param name="enclosure"&gt;建议每次调用Tree之后，在通过提供enclosure（默认值：null）参数的方式，设置文档树的完整性（status和type字段）标识。id码通常源自前次调用Tree时的返回结果，执行时尽量将叶子状态码（status）设置为奇数（完整性标识）并将类型码（type）补充完整&lt;/param&gt;
-/// &lt;returns&gt;返回三元组：文档树是否存在或者是否成功创建、异常信息、文档树id码（如果失败或者时间戳未发生变更，id返回-1）&lt;/returns&gt;
-public (bool Success, string Message, int Id) Tree();
-
-/// &lt;summary&gt;
-/// 枝干（以文档树为处理单元，创建某片叶子的父代枝干节点记录）
-/// &lt;/summary&gt;
-/// &lt;param name="forest"&gt;节点森林（群）编号&lt;/param&gt;
-/// &lt;param name="sequence"&gt;文档树序号&lt;/param&gt;
-/// &lt;param name="tree"&gt;文档树标识码&lt;/param&gt;
-/// &lt;param name="leafX"&gt;叶子对象，其归属的分类通过层级【layer】包裹表述&lt;/param&gt;
-/// &lt;param name="leafRootX"&gt;叶子所属树根对象，默认值：null（此种情况要求叶子对象参数必须是树对象的子集）&lt;/param&gt;
-/// &lt;returns&gt;返回枝干id路由（route）数组，前三个分别是【节点森林（群）编号，文档树序号，文档树标识码】，后面依次为枝干id序列。若处理失败，返回：null&lt;/returns&gt;
-public (bool Success, string Message, int[] Route) Branch();
-
-/// &lt;summary&gt;
-/// 叶子
-/// &lt;/summary&gt;
-/// &lt;param name="route"&gt;叶子要素隶属枝干id路由序列，前三个分别是【节点森林（群）编号，文档树序号，文档树标识码】，后面依次为枝干id序列&lt;/param&gt;
-/// &lt;param name="leafX"&gt;叶子对象&lt;/param&gt;
-/// &lt;param name="timestamp"&gt;叶子要素创建时间戳（由[年月日：yyyyMMdd,时分秒：HHmmss]二元整型数组编码字符串）。省略时取默认值：当前日期和时间&lt;/param&gt;
-/// &lt;param name="topology"&gt;是否执行拓扑操作，仅针对【线/面】有效&lt;/param&gt;
-/// &lt;returns&gt;返回五元组：1）是否新建成功；2）异常信息；3）叶子id码；4）叶子类型码；5）属性对象&lt;/returns&gt;
-public (bool Success, string Message, long Id, int Type, XElement Property) Leaf();
-
-/// &lt;summary&gt;
-/// 叶子路由（此表主要用于回溯叶子所属枝干的分类谱系）
-/// &lt;/summary&gt;
-/// &lt;param name="leaf"&gt;叶子标识码&lt;/param&gt;
-/// &lt;param name="routeArray"&gt;叶子要素隶属枝干id路由序列，前三个分别是【节点森林（群）编号，文档树序号，文档树标识码】，后面依次为枝干id序列&lt;/param&gt;
-/// &lt;returns&gt;二元组：记录插入是否成功，异常信息&lt;/returns&gt;
-public (bool Success, string Message) leaf_route();
-
-/// &lt;summary&gt;
-/// 叶子样式（扁平化对象序列）
-/// &lt;/summary&gt;
-/// &lt;param name="leaf"&gt;叶子标识码&lt;/param&gt;
-/// &lt;param name="leafX"&gt;叶子对象&lt;/param&gt;
-/// &lt;param name="update"&gt;当记录已存在时是否更新？默认：true&lt;/param&gt;
-/// &lt;returns&gt;二元组：记录插入是否成功，异常信息&lt;/returns&gt;
-public (bool Success, string Message)? leaf_style();
-
-/// &lt;summary&gt;
-/// 叶子属性【键、值】
-/// &lt;/summary&gt;
-/// &lt;param name="leaf"&gt;叶子标识码&lt;/param&gt;
-/// &lt;param name="propertyX"&gt;叶子属性对象，通常源自Leaf函数的返回值&lt;/param&gt;
-/// &lt;param name="update"&gt;当记录已存在时是否更新？默认：true&lt;/param&gt;
-/// &lt;returns&gt;二元组：记录插入是否成功，异常信息&lt;/returns&gt;
-public (bool Success, string Message)? leaf_property();
-
-/// &lt;summary&gt;
-/// 叶子关系描述
-/// &lt;/summary&gt;
-/// &lt;param name="leaf"&gt;叶子标识码&lt;/param&gt;
-/// &lt;param name="leafX"&gt;叶子对象&lt;/param&gt;
-/// &lt;param name="update"&gt;当记录已存在时是否更新？默认：true&lt;/param&gt;
-/// &lt;returns&gt;二元组：记录插入是否成功，异常信息&lt;/returns&gt;
-public (bool Success, string Message)? leaf_relation();
-
-/// &lt;summary&gt;
-/// 叶子矢量几何（注：一片叶子仅存储一个几何要素）
-/// &lt;/summary&gt;
-/// &lt;param name="leaf"&gt;叶子标识码&lt;/param&gt;
-/// &lt;param name="leafX"&gt;叶子对象&lt;/param&gt;
-/// &lt;param name="type"&gt;叶子类型（1=Point点、2=Line线、3=Polygon面、4=Image地理贴图）&lt;/param&gt;
-/// &lt;param name="propertyX"&gt;叶子属性，通常源自Leaf函数的返回值。默认值：null（本函数将酌情向此参量添加拓扑属性）&lt;/param&gt;
-/// &lt;param name="topology"&gt;是否执行拓扑，默认值：false&lt;/param&gt;
-/// &lt;param name="update"&gt;当记录已存在时是否更新？默认：true&lt;/param&gt;
-/// &lt;returns&gt;三元组：记录插入是否成功，异常信息&lt;/returns&gt;
-public (bool Success, string Message, int TypeCode)? leaf_geometry();
-
-/// &lt;summary&gt;
-/// 叶子栅格瓦片（注：一片叶子可存储海量瓦片，此函数通常由桌面app调用）
-/// 栅格专题的元数据可在叶子表中的property中按GeositeXML格式进行表述，如果推送平铺式瓦片，亦应指定zxy参数并使其联合唯一
-/// &lt;/summary&gt;
-/// &lt;param name="leaf"&gt;叶子要素的标识码&lt;/param&gt;
-/// &lt;param name="leafX"&gt;叶子对象&lt;/param&gt;
-/// &lt;param name="type"&gt;叶子类型（tile），默认：Tile&lt;/param&gt;
-/// &lt;param name="propertyX"&gt;叶子属性，通常源自Leaf函数的返回值。默认值：null（自动从叶子对象中提取属性）&lt;/param&gt;
-/// &lt;param name="update"&gt;当记录已存在时是否更新？默认：true&lt;/param&gt;
-/// &lt;returns&gt;三元组：记录插入是否成功、异常信息、类型代码：11000：Tile栅格金字塔瓦片类型[epsg:0 - 无投影瓦片]；11001：Tile栅格金字塔瓦片类型[epsg:4326 - 地理坐标系瓦片]；11002：Tile栅格金字塔瓦片类型[epsg:3857 - 球体墨卡托瓦片]；12000：Tile栅格平铺式瓦片类型[epsg:0 - 无投影瓦片]；12001：Tile栅格平铺式瓦片类型[epsg:4326 - 地理坐标系瓦片]；12002：Tile栅格平铺式瓦片类型[epsg:3857 - 球体墨卡托瓦片]）&lt;/returns&gt;
-public (bool Success, string Message, int TypeCode)? leaf_tile();
-
-/// &lt;summary&gt;
-/// 叶子栅格瓦片服务地址模板存储函数（注：一片叶子应仅存放一个地址）
-/// &lt;/summary&gt;
-/// &lt;param name="leaf"&gt;叶子要素的标识码&lt;/param&gt; 
-/// &lt;param name="leafX"&gt;叶子对象&lt;/param&gt;
-/// &lt;param name="type"&gt;叶子类型（tile），默认：Tile&lt;/param&gt;
-/// &lt;param name="propertyX"&gt;叶子属性，通常源自Leaf函数的返回值。默认值：null（自动从叶子对象中提取属性）&lt;/param&gt;
-/// &lt;param name="update"&gt;当记录已存在时是否更新？默认：true&lt;/param&gt;
-/// &lt;returns&gt;返回三元组对象：记录插入是否成功、异常信息、类型代码：10000：Wmts栅格金字塔瓦片服务类型[epsg:0 - 无投影瓦片]；10001：Wmts瓦片服务类型[epsg:4326 - 地理坐标系瓦片]；10002：Wmts栅格金字塔瓦片服务类型[epsg:3857 - 球体墨卡托瓦片]&lt;/returns&gt;
-public (bool Success, string Message, int TypeCode)? leaf_wmts();
-
-8、瓦片类型枚举
-public enum TileType{
-  Standard,		//0
-  TMS,			//1
-  MapCruncher,	//2
-  ARCGIS, 		//3
-  DeepZoom,   	//4
-  Raster  		//5
-}
-
-9、瓦片推送类
-/// &lt;summary&gt;
-/// 瓦片推送类（仅针对一片叶子容器）
-/// &lt;/summary&gt;
-public class GeositeTilePush();
-
-/// &lt;summary&gt;
-/// 构造函数
-/// &lt;/summary&gt;
-/// &lt;param name="forest"&gt;森林对象（GeositeXmlPush类型）&lt;/param&gt;
-/// &lt;param name="leaf"&gt;叶子编号&lt;/param&gt;
-/// &lt;param name="typeCode"&gt;叶子类型码，默认：【0】&lt;/param&gt;
-/// &lt;param name="propertyX"&gt;叶子属性对象，默认：null。提供此参数的目的是加速叶子子表针对srid的提取效率&lt;/param&gt;
-/// &lt;param name="update"&gt;是否启用更新模式？默认：true&lt;/param&gt;
-public GeositeTilePush();
-
-/// &lt;summary&gt;
-/// 依据指定参数执行瓦片推送任务
-/// &lt;/summary&gt;
-/// &lt;param name="code"&gt;瓦片类型码：0=本地文件夹（金字塔存储）；1=远程wmts服务地址（金字塔存储）；2=平铺式瓦片&lt;/param&gt;
-/// &lt;param name="tileUri"&gt;瓦片存放或访问路径&lt;/param&gt;
-/// &lt;param name="tileType"&gt;瓦片类型，默认：TileType.Standard&lt;/param&gt;
-/// &lt;param name="level"&gt;推送的缩放级别，默认：-1&lt;/param&gt;
-/// &lt;param name="EPSG4326"&gt;是否为经纬度格式瓦片？默认：false&lt;/param&gt;
-/// &lt;param name="boundary"&gt;针对WMTS服务的几何边界约束条件&lt;/param&gt;
-/// &lt;param name="isWMTS"&gt;针对WMTS服务，是否推送远程瓦片？默认：false = 仅存储远程链接地址模板&lt;/param&gt;
-/// &lt;param name="subdomains"&gt;针对WMTS服务路径，若存在子域占位符{s}，必须携带子域替换符，以便实施负载均衡策略&lt;/param&gt;
-/// &lt;param name="ascending"&gt;缩放级和图块坐标编码文件的读取顺序，默认：true = 按（从小到大）顺序遍历&lt;/param&gt;
-public (long total, XElement metaDataX) TilePush();
-
-10、参考椭球类
-public static class Ellipsoid;
-
-/// &lt;summary&gt;
-/// 球体墨卡托投影
-/// &lt;/summary&gt;
-/// &lt;param name="lng"&gt;十进制经度&lt;/param&gt;
-/// &lt;param name="lat"&gt;十进制纬度&lt;/param&gt;
-/// &lt;param name="x"&gt;米制横坐标&lt;/param&gt;
-/// &lt;param name="y"&gt;米制纵坐标&lt;/param&gt;
-/// &lt;returns&gt;正反算结果&lt;/returns&gt;
-public static string WebMercator();
-
-/// &lt;summary&gt;
-/// 高斯克吕格投影，优先识别直角坐标（x、y）执行反算，其次识别地理坐标（经、纬度）并执行正算！
-/// 若输入的参数值不符合要求，返回空白字符串，否则返回符合json编码格式的字符串
-/// &lt;/summary&gt;
-/// &lt;param name="centralMeridian"&gt;中央子午线经度centralMeridian（省略或空白取默认值：六度分带；若能解析为角度值就按自定义中央子午线对待；若不能解析为角度值（比如字母或标点符号等），就强行视为三度分带）&lt;/param&gt;
-/// &lt;param name="x"&gt;纵坐标（米制）&lt;/param&gt;
-/// &lt;param name="y"&gt;横坐标（米制，可含带号）通用值或自然值&lt;/param&gt;
-/// &lt;param name="longitude"&gt;经度（十进制度或者六十进制度分秒格式）&lt;/param&gt;
-/// &lt;param name="latitude"&gt;纬度（十进制度或者六十进制度分秒格式）&lt;/param&gt;
-/// &lt;param name="crs"&gt;坐标系年代（1954=北京坐标系；1980=西安坐标系；1984=WGS84系；2000=CGCS2000坐标系，省略取默认值：2000）&lt;/param&gt;
-/// &lt;returns&gt;正算时返回米制纵坐标和横坐标的（含带号）通用值；反算时返回十进制经纬度&lt;/returns&gt;
-public static string GaussKruger();
-
-/// &lt;summary&gt;
-/// 阿尔伯斯球体双标准纬线等积割圆锥投影
-/// &lt;/summary&gt;
-/// &lt;param name="crs"&gt;坐标系代号：1954 1980 1984 2000；默认值：2000&lt;/param&gt;
-/// &lt;param name="lng"&gt;经度（十进制度）；默认值：0&lt;/param&gt;
-/// &lt;param name="lat"&gt;纬度（十进制度）；默认值：0&lt;/param&gt;
-/// &lt;param name="lng0"&gt;中央经线（十进制度）；默认值：0&lt;/param&gt;
-/// &lt;param name="lat0"&gt;底点纬度（十进制度）；默认值：0&lt;/param&gt;
-/// &lt;param name="lat1"&gt;第一标准纬线（十进制度）；默认值：20&lt;/param&gt;
-/// &lt;param name="lat2"&gt;第二标准纬线（十进制度）；默认值：50&lt;/param&gt;
-/// &lt;param name="x"&gt;横向坐标米制&lt;/param&gt;
-/// &lt;param name="y"&gt;纵向坐标米制&lt;/param&gt;
-/// &lt;returns&gt;计算结果&lt;/returns&gt;
-public static string Albers();
-
-/// &lt;summary&gt;
-/// 由坐标流计算长度（或周长）。若连续的两个点位于同一个投影带且指定的椭球半径属于北京或西安或国家坐标系，便按高斯-克吕格投影进行计算，否则按wgs84下的web墨卡托计算
-/// &lt;/summary&gt;
-/// &lt;param name="coordinate"&gt;由十进制经纬度格式组成的坐标串（(起始点)十进制经度,十进制纬度 空格 ...,...,... 空格 (最末点)十进制经度,十进制纬度）形成的折线&lt;/param&gt;
-/// &lt;param name="crs"&gt;坐标系代号：1954、1980、1984、2000、其他值；默认值：2000。其他值=不进行投影，直接计算长度&lt;/param&gt;
-/// &lt;returns&gt;米制长度（或周长），若计算失败，返回null&lt;/returns&gt;
-public static double? Perimeter();
-
-/// &lt;summary&gt;
-/// 由坐标流计算面积。若整个范围位于同一个六度投影带且指定的椭球半径属于北京或西安或国家坐标系，便按高斯-克吕格投影进行计算
-/// &lt;/summary&gt;
-/// &lt;param name="coordinate"&gt;由十进制经纬度格式组成的坐标串（(起始点)十进制经度,十进制纬度 空格 ...,...,... 空格 (最末点)十进制经度,十进制纬度）形成的折线或多边形&lt;/param&gt;
-/// &lt;param name="crs"&gt;坐标系代号：1954、1980、1984、2000、其他值；默认值：2000。其他值=不进行投影，直接计算笛卡尔坐标系面积&lt;/param&gt;
-/// &lt;returns&gt;米制面积，，若计算失败，返回null&lt;/returns&gt;
-public static double? Area();
-
-11、OGC格式转换类
-public static class OGCformat;
-
-/// &lt;summary&gt;
-/// 将符合WKT或者GeoJson格式的坐标串生成OGC-WKT几何文本
-/// &lt;/summary&gt;
-/// &lt;param name="geometryCode"&gt;几何类型代码：0=点（默认值）；1=线；2=面；暂不支持：3=集合；4=三维地表；5=三角剖分&lt;/param&gt;
-/// &lt;param name="geometry"&gt;几何坐标字符串，默认值为空白&lt;/param&gt;
-/// &lt;param name="simplify"&gt;简化输出内容吗？&lt;/param&gt;
-/// &lt;returns&gt;符合OGC约定的WKT格式文本，若转换失败，返回null。针对面元，将自动封闭&lt;/returns&gt;
-public static string TextToWkt(int geometryCode = 0, string geometry = null, bool simplify = false);
-
-/// &lt;summary&gt;
-/// 将符合WKT或者GeoJson格式的坐标串生成OGC-WKB十六进制几何文本
-/// &lt;/summary&gt;
-/// &lt;param name="geometryCode"&gt;几何类型代码：0=点（默认值）；1=线；2=面；暂不支持：3=集合；4=三维地表；5=三角剖分&lt;/param&gt;
-/// &lt;param name="geometry"&gt;几何坐标字符串，默认值为空白&lt;/param&gt;
-/// &lt;param name="srid"&gt;几何投影参照系OGC类型代码，默认值：4326=十进制经纬度格式；若指定0，意指未定义参照系&lt;/param&gt;
-/// &lt;returns&gt;符合OGC约定的OGC-WKB十六进制几何文本，若转换失败，返回null。针对面元，将自动封闭&lt;/returns&gt;
-public static string TextToWkb(int geometryCode = 0, string geometry = null, string srid = "4326")
-
-/// &lt;summary&gt;
-/// 由kml几何要素节生成OGC-WKB十六进制几何文本
-/// &lt;/summary&gt;
-/// &lt;param name="geometryCode"&gt;几何类型代码：0=点（默认值）；1=线；2=面；3=集合；暂不支持：4=三维地表；5=三角剖分&lt;/param&gt;
-/// &lt;param name="geometry"&gt;kml几何要素节&lt;/param&gt;
-/// &lt;param name="srid"&gt;几何投影参照系OGC类型代码，默认值：4326=十进制经纬度格式；若指定0，意指未定义参照系&lt;/param&gt;
-/// &lt;returns&gt;符合OGC约定的OGC-WKB十六进制几何文本，若转换失败，返回null。针对面元，将自动封闭&lt;/returns&gt;
-public static string KmlToWkb(int geometryCode = 0, XElement geometry = null, string srid = "4326")
-
-/// &lt;summary&gt;
-/// 将OGC-WKB十六进制几何文本转换为WKT
-/// &lt;/summary&gt;
-/// &lt;param name="wkb"&gt;OGC-WKB十六进制几何文本&lt;/param&gt;
-/// &lt;returns&gt;二元组，成员为：wkt和srid&lt;/returns&gt;
-public static (string wkt,int srid) WkbToWkt(string wkb)
-
-/// &lt;summary&gt;
-/// 将WKT或者GeoJson转为为KML格式
-/// &lt;/summary&gt;
-/// &lt;param name="geometryCode"&gt;几何类型代码：0=点（默认值）；1=线；2=面；暂不支持：3=集合；4=三维地表；5=三角剖分&lt;/param&gt;
-/// &lt;param name="geometry"&gt;wkt或者geojson&lt;/param&gt;
-/// &lt;returns&gt;XElement类型的KML格式对象&lt;/returns&gt;
-public static XElement TextToKml(int geometryCode = 0, string geometry = null)
-
-/// &lt;summary&gt;
-/// 由OGC-WKT几何文本生成XElement类型的KML格式对象
-/// &lt;/summary&gt;
-/// &lt;param name="geometryCode"&gt;几何类型代码：0=点（默认值）；1=线；2=面；3=集合；暂不支持：4=三维地表；5=三角剖分&lt;/param&gt;
-/// &lt;param name="geometry"&gt;符合OGC约定的WKT格式文本&lt;/param&gt;
-/// &lt;returns&gt;XElement类型的KML格式对象&lt;/returns&gt;
-public static XElement WktToKml(int geometryCode = 0, string geometry = null)
-
-/// &lt;summary&gt;
-/// 由OGC-WKT几何文本生成XElement类型的GML格式对象
-/// &lt;/summary&gt;
-/// &lt;param name="geometryCode"&gt;几何类型代码：0=点（默认值）；1=线；2=面；3=集合；暂不支持：4=三维地表；5=三角剖分&lt;/param&gt;
-/// &lt;param name="geometry"&gt;符合OGC约定的WKT格式文本&lt;/param&gt;
-/// &lt;returns&gt;XElement类型的GML格式对象&lt;/returns&gt;
-public static XElement WktToGml(int geometryCode = 0, string geometry = null)
-
-/// &lt;summary&gt;
-/// 由OGC-WKT几何文本生成GeoJson文本
-/// &lt;/summary&gt;
-/// &lt;param name="geometryCode"&gt;几何类型代码：0=点（默认值）；1=线；2=面；暂不支持：3=集合；4=三维地表；5=三角剖分&lt;/param&gt;
-/// &lt;param name="geometry"&gt;符合OGC约定的WKT格式文本&lt;/param&gt;
-/// &lt;param name="simplify"&gt;简化输出内容吗？&lt;/param&gt;
-/// &lt;returns&gt;GeoJson坐标文本&lt;/returns&gt;
-public static string WktToGeoJson(int geometryCode = 0, string geometry = null, bool simplify = false)
-
-/// &lt;summary&gt;
-/// 由GeoJson文本（或坐标文本）生成XElement类型kml格式对象
-/// &lt;/summary&gt;
-/// &lt;param name="geometryCode"&gt;几何类型代码：0=点（默认值）；1=线；2=面；暂不支持：3=集合；4=三维地表；5=三角剖分&lt;/param&gt;
-/// &lt;param name="geometry"&gt;符合GeoJson约定的坐标文本&lt;/param&gt;
-/// &lt;returns&gt;XElement类型的kml格式对象&lt;/returns&gt;
-public static XElement GeoJsonToKml(int geometryCode = 0, string geometry = null)
-
-/// &lt;summary&gt;
-/// 由GeoJson文本（或坐标文本）生成OGC-WKT文本
-/// &lt;/summary&gt;
-/// &lt;param name="geometryCode"&gt;几何类型代码：0=点（默认值）；1=线；2=面；暂不支持：3=集合；4=三维地表；5=三角剖分&lt;/param&gt;
-/// &lt;param name="geometry"&gt;符合GeoJson约定的坐标文本&lt;/param&gt;
-/// &lt;param name="simplify"&gt;简化输出内容吗？&lt;/param&gt;
-/// &lt;returns&gt;符合OGC约定的WKT格式文本&lt;/returns&gt;
-public static string GeoJsonToWkt(int geometryCode = 0, string geometry = null, bool simplify = false)
-
-/// &lt;summary&gt;
-/// 由kml几何要素节生成OGC-WKT几何文本
-/// &lt;/summary&gt;
-/// &lt;param name="geometryCode"&gt;几何类型代码：0=点（默认值）；1=线；2=面；3=集合；暂不支持：4=三维地表；5=三角剖分&lt;/param&gt;
-/// &lt;param name="geometry"&gt;kml几何要素节&lt;/param&gt;
-/// &lt;param name="simplify"&gt;简化输出内容吗？&lt;/param&gt;
-/// &lt;returns&gt;符合OGC约定的WKT格式文本，若转换失败，返回null。针对面元，将自动封闭&lt;/returns&gt;
-public static string KmlToWkt(int geometryCode = 0, XElement geometry = null, bool simplify = false)
-
-/// &lt;summary&gt;
-/// 由XElement类型的kml格式对象生成GeoJson坐标文本
-/// &lt;/summary&gt;
-/// &lt;param name="geometryCode"&gt;几何类型代码：0=点（默认值）；1=线；2=面；3=集合；暂不支持：4=三维地表；5=三角剖分&lt;/param&gt;
-/// &lt;param name="geometry"&gt;kml对象中的几何要素节&lt;/param&gt;
-/// &lt;param name="simplify"&gt;简化输出内容吗？&lt;/param&gt;
-/// &lt;returns&gt;GeoJson坐标文本，若转换失败，返回null&lt;/returns&gt;
-public static string KmlToGeoJson(int geometryCode = 0, XElement geometry = null, bool simplify = false)
-
-/// &lt;summary&gt;
-/// 由Kml几何对象生成Gml（V3）几何对象
-/// &lt;/summary&gt;
-/// &lt;param name="geometryCode"&gt;几何类型代码：0=点（默认值）；1=线；2=面；暂不支持：3=集合；4=三维地表；5=三角剖分&lt;/param&gt;
-/// &lt;param name="geometry"&gt;Kml几何对象&lt;/param&gt;
-/// &lt;returns&gt;Gml（V3）几何对象&lt;/returns&gt;
-public static XElement KmlToGml(int geometryCode = 0, XElement geometry = null)
-
-/// &lt;summary&gt;
-/// 由Gml（V2/3）几何对象生成Kml几何对象
-/// &lt;/summary&gt;
-/// &lt;param name="geometryCode"&gt;几何类型代码：0=点（默认值）；1=线；2=面；暂不支持：3=集合；4=三维地表；5=三角剖分&lt;/param&gt;
-/// &lt;param name="geometry"&gt;Gml（V2/3）几何对象，要求根节点的命名空间必须对gml前缀进行命名&lt;/param&gt;
-/// &lt;returns&gt;Kml几何对象&lt;/returns&gt;
-public static XElement GmlToKml(int geometryCode = 0, XElement geometry = null)
-
-/// &lt;summary&gt;
-/// 由Gml（V2/3）几何对象生成GeoJson坐标文本
-/// &lt;/summary&gt;
-/// &lt;param name="geometryCode"&gt;几何类型代码：0=点（默认值）；1=线；2=面；暂不支持：3=集合；4=三维地表；5=三角剖分&lt;/param&gt;
-/// &lt;param name="geometry"&gt;Gml（V2/3）几何对象，要求根节点的命名空间必须对gml前缀进行命名&lt;/param&gt;
-/// &lt;param name="simplify"&gt;简化输出内容吗？&lt;/param&gt;
-/// &lt;returns&gt;GeoJson坐标文本&lt;/returns&gt;
-public static string GmlToGeoJson(int geometryCode = 0, XElement geometry = null, bool simplify = false)
-
-// -----------------------------------------------------------
-// Copyright © Geosite Development Team of CGS ®
-// ----------------------------------------------------------</value>
-  </data>
-  <metadata name="vectorWorker.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>352, 17</value>
-  </metadata>
-  <metadata name="rasterWorker.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>484, 17</value>
-  </metadata>
-  <metadata name="statusBar.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>613, 17</value>
-  </metadata>
-  <metadata name="statusBar.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
   <data name="PostgresLight.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAEYAAAAnCAYAAACyhj57AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
@@ -7636,6 +6790,12 @@ public static string GmlToGeoJson(int geometryCode = 0, XElement geometry = null
         snyYcObJggEBADs=
 </value>
   </data>
+  <metadata name="label1.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="tileLevels.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
   <data name="EPSG4326.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         R0lGODlhEAAQAIEAAAAAAP///39/f////yH/C05FVFNDQVBFMi4wAwEAAAAh+QQBAAADACwAAAAAEAAQ
@@ -7643,6 +6803,18 @@ public static string GmlToGeoJson(int geometryCode = 0, XElement geometry = null
         xry4UqLHmSptthTpkGTCgAA7
 </value>
   </data>
+  <metadata name="tilesource.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="localTileOpen.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="groupBox5.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="localTileFolder.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
   <data name="wmtsSpider.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAGUAAABACAYAAAADHblKAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
@@ -8257,6 +7429,15 @@ public static string GmlToGeoJson(int geometryCode = 0, XElement geometry = null
         9onCBCw6CS1Ii8B1AftEYQJPdiLVQhT2icINf2yvfwGLEEXpkV91AAAAAElFTkSuQmCC
 </value>
   </data>
+  <metadata name="VectorTheme.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="VectorURI.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="VectorStatus.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
   <data name="VectorFileClear.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
@@ -8287,6 +7468,12 @@ public static string GmlToGeoJson(int geometryCode = 0, XElement geometry = null
         bZQG2ygNtlEabJ/uUf8ACDBa4FopoFAAAAAASUVORK5CYII=
 </value>
   </data>
+  <metadata name="ThemeName.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="ThemeType.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
   <data name="GeositeServerLink.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACUAAAAlCAYAAADFniADAAAABGdBTUEAALGPC/xhBQAAABl0RVh0U29m
@@ -10774,6 +9961,771 @@ public static string GmlToGeoJson(int geometryCode = 0, XElement geometry = null
         TQmC5tChvwEpVnjEGpe6lAAAAABJRU5ErkJggg==
 </value>
   </data>
+  <data name="textBox1.Text" xml:space="preserve">
+    <value>文档格式简要说明：
+
+⦁ MapGIS 文件
+  转换线元或面元时将自动剔除相邻的重复顶点；为适配调色板，可将与图幅对应系统库中的 pcolor.lib 色板文件替换[安装文件夹 - MapGis/Slib]下的 Pcolor.lib 文件；
+  依据右手定则，面元转换时自动将外圈旋转方向强行调整为逆时针，内环旋转方向强行调整为顺时针；
+  若将 MapGIS 转换为 ESRI-ShapeFile，要素样式将额外存储为 .style.txt，语系代码将存为 .cpg文件；
+  如果MapGIS投影参数符合【十进制经纬度：地理坐标系】、【米制：兰伯特等角割圆锥】、【米制：阿尔勃斯等积割圆锥】，当另存为shp格式时，将额外存储一个prj文件，以便 ArcGIS 9+ 识别投影参数。
+
+⦁ TXT/CSV 文件
+  由制表符或逗号分隔的文本文件，通常在Office-Excel软件中录入数据并另存为制表符或逗号分隔的文本文件，支持UTF-8编码语系；
+  第一行至少定义一个坐标串栏目，第一行内其他栏目均充当属性字段名称；
+  除坐标栏之外，其余栏目的数据类型以不损失精度为前提自动识别，如果某栏目对应的内容属于混合类型，将强制为字符串类型；
+  与第一行栏目个数不一致的后续行将被忽略，同时忽略某栏目内容首尾的半角双引号和单引号；
+  几何要素类型将通过与坐标栏对应内容自动识别；
+  每个坐标对儿必须由【横坐标 分隔符 纵坐标】构成；
+  括弧可为：[]、【】、{｝、｛}、()、（）、&lt;&gt;、＜＞、《》、“”
+  分隔符可为：逗号、空格、顿号、分号；纵横坐标可为整数或浮点数（支持六十进制度分秒表达法）；
+  针对线和面坐标，自动剔除重复的相邻坐标点；针对面坐标，自动圈闭每个多边形；
+  针对点坐标，可简单表示为：102.5,34.5 推荐按geojson单点（Point）表达法：[102.5,34.5]
+  针对线坐标，可简单表示为：102.5,34.5,103.6,38.0,... 推荐按geojson单线（LineString）表达法：[[102.5,34.5],[103.6,38.0],...]
+  针对面坐标，可简单表示为：[[102.5,34.5,103.6,38.0,...]]，推荐按geojson单面（支持母子区）表达法：[[[102.5,34.5],[103.6,38.0],...],[[102.5,34.5],[103.6,38.0],...]]
+
+⦁ ShapeFile 文件
+  ESRI shapefile格式是一种常见的共享地理数据格式，shapefile格式最早出现在20世纪80年代，尽管有很大局限性，但仍然是GIS行业内用于交换数据的标准格式。一个完整的shapefile至少包含三个文件:
+  .shp - 保存坐标数据（x，y，[z、m]）；
+  .shx - 包含.shp中每条记录的偏移量和长度；
+  .dbf - 包含每条记录的属性数据。此文件基于多年之前流行的 DBASE III 格式。不支持“备注型”字段，文本型字段不能超过254个字节，字段名称不能超过10个字节！
+  shapefile格式的另一个限制是，每个shapefile只能包含一种形状要素（点、线或多边形）；
+  为解决读取dbf时属性易出现乱码问题，应尽量提供【.cpg】文件，否则将按【CodePage：936】对待。
+
+⦁ GeoJson 文件
+  出于兼容性考虑,GeoJson的属性字段暂不支持嵌套结构,GML文件亦不产生样式标签。
+
+⦁ 数据库（PostgreSQL）连接说明：
+  可在服务器端部署：
+  1）PostgreSQL（容器地址：https://hub.docker.com/r/geosite/postgresqlx13）
+  2）GeositeServer（容器地址：https://hub.docker.com/r/geosite/geositeserver）
+  系统管理员可在【appsettings.json】文档中创建集群用户信息，形如：
+  {
+        "appSettings": {
+            "connectionString": { "服务器名称或IP": "Password=postgres账户对应的密码;Username=postgres账户名称;Port=端口号;Database=数据库名称;" },
+            "clusterUser": [
+                {
+                    "name": "集群用户名",
+                    "forest": "群号（负值，比如：-1）"
+                }
+            ]
+        },
+        "AllowedHosts": "*"
+  }
+  之后，OGC.net可在局域网里连接GeositeServer并可推送矢量或栅格数据。
+
+⦁ 控制台应用
+  针对MapGIS、ShapeFile或者Txt/Csv文件，可直接采用命令行方式进行格式转换，用法说明如下：
+  &gt;OGC.net -?</value>
+  </data>
+  <data name="textBox2.Text" xml:space="preserve">
+    <value>开发接口简要说明：
+
+1、针对 MapGis 工程文件（mpj）
+
+/// &lt;summary&gt;
+/// 构造函数：如果file参数不为null，便打开文件并初始化公共属性；否则，不做任何事情
+/// &lt;/summary&gt;
+/// &lt;param name="file"&gt;MapGIS工程文件（*.MPJ），省略时取默认值：null&lt;/param&gt;
+public MapGisProject(string file = null);
+
+/// &lt;summary&gt;
+/// 打开文件并初始化公共属性成员，如果构造函数中已打开文件，就无需调用Open函数
+/// &lt;/summary&gt;
+/// &lt;param name="file"&gt;MapGIS工程文件（*.MPJ）&lt;/param&gt;
+/// &lt;returns&gt;&lt;/returns&gt;
+public void Open(string file);
+
+/// &lt;summary&gt;
+/// 获取mapgis工程文件内容（符合 JSON 格式的 JObject 类型对象）
+/// &lt;/summary&gt;
+public JObject JSON;
+
+/// &lt;summary&gt;
+/// 将 MapGIS 工程文件内容存储为 JSON 格式
+/// &lt;/summary&gt;
+/// &lt;param name="SaveAs"&gt;欲存盘的文件名&lt;/param&gt;
+public void Export(string SaveAs = null);
+
+2、针对 MapGis 点线面文件（wt、wl、wp）
+
+/// &lt;summary&gt;
+/// 构造函数：如果file参数不为null，便打开文件并初始化公共属性；否则，不做任何事情
+/// &lt;/summary&gt;
+/// &lt;param name="file"&gt;maigis文件名（wt、wl、wp）&lt;/param&gt;
+var mapgis = new MapGisFile(string file = null);
+
+/// &lt;summary&gt;
+/// maigis文件类型（Point、LineString、Polygon）
+/// &lt;/summary&gt;
+public string FileType;
+
+/// &lt;summary&gt;
+/// 边框范围
+/// &lt;/summary&gt;
+public JArray BBox;
+
+/// &lt;summary&gt;
+/// 投影代号
+/// &lt;/summary&gt;
+public string EPSG;
+
+/// &lt;summary&gt;
+/// 坐标参照系
+/// &lt;/summary&gt;
+public JObject Parameters;
+
+/// &lt;summary&gt;
+/// 文件创建时间戳
+/// &lt;/summary&gt;
+public string TimeStamp;
+
+/// &lt;summary&gt;
+/// 要素总数（包括有效和无效的要素）
+/// &lt;/summary&gt;
+public int RecordCount;
+
+/// &lt;summary&gt;
+/// 打开文件并初始化公共属性成员。如果构造函数中已打开文件，就无需调用Open函数。
+/// &lt;/summary&gt;
+/// &lt;param name="file"&gt;maigis文件名（wt、wl、wp）&lt;/param&gt;
+/// &lt;returns&gt;&lt;/returns&gt;
+public void Open(string file);
+
+/// &lt;summary&gt;
+/// 关闭文件句柄并调用析构函数。如果通过using语句块调用了构造函数，就无需调用Close函数。
+/// &lt;/summary&gt;
+public void Close();
+
+/// &lt;summary&gt;
+/// 获取字段信息
+/// &lt;/summary&gt;
+/// &lt;returns&gt;JObject数组类型&lt;/returns&gt;
+public JObject[] GetField();
+
+/// &lt;summary&gt;
+/// 获取可枚举的全部要素对象（包括有效和无效的要素，其中无效要素对象值为：null）。要素对象个数与 Count 一致！
+/// &lt;/summary&gt;
+/// &lt;returns&gt;可枚举的JObject类型要素对象（包括有效和无效的要素，其中无效要素对象值为：null），要素对象中携带了内点和边框&lt;/returns&gt;
+public IEnumerable&lt;JObject&gt; GetFeature();
+
+/// &lt;summary&gt;
+/// 获取文档基本信息
+/// &lt;/summary&gt;
+/// &lt;returns&gt;返回JObject类型对象&lt;/returns&gt;
+public JObject GetCapabilities();
+
+/// &lt;summary&gt;
+/// 将 MapGIS 要素文件内容导出为指定格式
+/// &lt;/summary&gt;
+/// &lt;param name="SaveAs"&gt;欲存盘的文件名&lt;/param&gt;
+/// &lt;param name="Format"&gt;导出格式（暂支持：geojson、shapefile、gml、GeositeXml、kml），省略取默认格式：geojson&lt;/param&gt;
+public void Export(string SaveAs, string Format = "geojson");
+
+3、针对 ShapeFile 文件（shp、dbf、shx）
+
+/// &lt;summary&gt;
+/// ShapeFile文件类型（Point、LineString、Polygon）
+/// &lt;/summary&gt;
+public string FileType;
+
+/// &lt;summary&gt;
+/// 构造函数
+/// &lt;/summary&gt;
+/// &lt;param name="shapeFilePath"&gt;shp文件路径，若设为空，随后可通过调用Open函数打开shp文档，此路径可不携带扩展名！&lt;/param&gt;
+public ShapeFile(string shapeFilePath = null);
+
+/// &lt;summary&gt;
+/// 打开文件并初始化公共属性成员，如果构造函数中已打开文件，就无需调用Open函数
+/// &lt;/summary&gt;
+/// &lt;param name="shapeFilePath"&gt;shapeFile 文件名（含路径信息，可不携带扩展名）&lt;/param&gt;
+public void Open(string shapeFilePath);
+
+/// &lt;summary&gt;
+/// 获取 ShapeFile 要素文件所含的字段信息
+/// 返回值中每个字段将至少包括：name（字段名称）、type（字段类型）、length（字段长度），针对浮点类型还将包括：decimal（小数位）
+/// &lt;/summary&gt;
+/// &lt;returns&gt;JObject数组类型&lt;/returns&gt;
+public JObject[] GetField();
+
+/// &lt;summary&gt;
+/// 获取 ShapeFile 要素文件内可枚举的全部要素对象（包括有效和无效的要素，其中无效要素对象值为：null）
+/// 要素对象个数与 RecordCount 属性值一致！
+/// &lt;/summary&gt;
+/// &lt;returns&gt;可枚举的JObject类型要素对象（包括有效和无效的要素，其中无效要素对象值为：null），要素对象中携带了内点和边框&lt;/returns&gt;
+public IEnumerable&lt;JObject&gt; GetFeature();
+
+/// &lt;summary&gt;
+/// 获取 ShapeFile 要素文件基本信息
+/// &lt;/summary&gt;
+/// &lt;returns&gt;返回JObject类型对象&lt;/returns&gt;
+public JObject GetCapabilities();
+
+/// &lt;summary&gt;
+/// 将 ShapeFile 文件内容导出为指定格式
+/// &lt;/summary&gt;
+/// &lt;param name="SaveAs"&gt;欲存盘的文件名&lt;/param&gt;
+/// &lt;param name="Format"&gt;导出格式（暂支持：geojson、shapefile、kml、gml、GeositeXml），省略取默认格式：geojson&lt;/param&gt;
+public void Export(string SaveAs, string Format = "geojson");
+
+/// &lt;summary&gt;
+/// 关闭已打开的shapefile文档句柄
+/// &lt;/summary&gt;
+public void Close();
+
+4、针对 TXT 文件（制表符分隔）
+/// &lt;summary&gt;
+/// 异常信息
+/// &lt;/summary&gt;
+public string ErrorMessage;
+
+/// &lt;summary&gt;
+/// 投影代号
+/// &lt;/summary&gt;
+public string EPSG;
+
+/// &lt;summary&gt;
+/// 边框范围
+/// &lt;/summary&gt;
+public JArray BBox;
+
+/// &lt;summary&gt;
+/// 文件创建时间戳
+/// &lt;/summary&gt;
+public string TimeStamp;
+
+/// &lt;summary&gt;
+/// 要素总数
+/// &lt;/summary&gt;
+public int RecordCount;
+
+/// &lt;summary&gt;
+/// 文件类型
+/// &lt;/summary&gt;
+public string FileType;
+
+/// &lt;summary&gt;
+/// 构造函数：如果file参数不为null，便打开文件并初始化公共属性；否则，不做任何事情
+/// &lt;/summary&gt;
+/// &lt;param name="TabTextFile"&gt;TXT文件名（txt）&lt;/param&gt;
+/// &lt;param name="CoordinateFieldName"&gt;坐标栏目名称，省略时取默认值："_position_"&lt;/param&gt;
+public TXT(string TabTextFile = null, string CoordinateFieldName = "coordinate")
+
+/// &lt;summary&gt;
+/// 打开文件并初始化公共属性成员，如果构造函数中已打开文件，就无需调用Open函数
+/// &lt;/summary&gt;
+/// &lt;param name="TabTextFile"&gt;TXT文件名（txt）&lt;/param&gt;
+/// &lt;returns&gt;&lt;/returns&gt;
+public void Open(string TabTextFile);
+
+/// &lt;summary&gt;
+/// 获取文件所含的字段信息
+/// 返回值中每个字段将至少包括：name（字段名称）、type（字段类型）、length（字段长度），针对浮点类型还将包括：decimal（小数位）
+/// &lt;/summary&gt;
+/// &lt;returns&gt;JObject数组类型&lt;/returns&gt;
+public JObject[] GetField()
+
+/// &lt;summary&gt;
+/// 获取文件内可枚举的全部要素对象
+/// 要素对象个数与 RecordCount 属性值一致！
+/// &lt;/summary&gt;
+/// &lt;returns&gt;可枚举的JObject类型要素对象，要素对象中携带了内点和边框&lt;/returns&gt;
+public IEnumerable&lt;JObject&gt; GetFeature();
+
+/// &lt;summary&gt;
+/// 获取文件基本信息
+/// &lt;/summary&gt;
+/// &lt;returns&gt;返回JObject类型对象&lt;/returns&gt;
+public JObject GetCapabilities();
+
+/// &lt;summary&gt;
+/// 将文件内容导出为指定格式
+/// &lt;/summary&gt;
+/// &lt;param name="SaveAs"&gt;欲存盘的文件名&lt;/param&gt;
+/// &lt;param name="Format"&gt;导出格式（暂支持：geojson、shapefile、kml、gml、GeositeXml），省略取默认格式：geojson&lt;/param&gt;
+public void Export(string SaveAs, string Format = "geojson");
+
+5、PostgreSQL通讯
+/// &lt;summary&gt;
+/// SQL查询助手，支持【参数化】和【事务】
+/// &lt;/summary&gt;
+public static class PostgreSqlHelper;
+
+/// &lt;summary&gt;
+/// PostgreSql连接配置
+/// &lt;/summary&gt;
+public struct PostgreSqlSetting
+{
+   public string
+   Host, //机器名或ip地址
+   Username, //postgresql账户名称，默认 postgres
+   Password, //postgresql账户名称对应的密码，默认为空白
+   Database, //集群数据库名称
+   Other; //postgresql连接时额外定义的参数，默认为空白
+   public int
+   CommandTimeout, //尝试执行命令时需要等待的时间（秒值），设为0可一直等待，默认值30秒
+   Port; //postgresql端口号，默认：5432
+   public bool
+   Pooling; //是否启用npgsql内部连接池，默认为真（启用）
+}
+
+/// &lt;summary&gt;
+/// 依据PostgreSQL连接参数连接指定数据库（并可顺便检查指定数据表是否存在）
+/// &lt;/summary&gt;
+/// &lt;param name="Host"&gt;数据库服务器主机名称或IP地址，默认：localhost&lt;/param&gt;
+/// &lt;param name="Port"&gt;数据库服务器主机端口号，默认：5432&lt;/param&gt;
+/// &lt;param name="Database"&gt;数据库名称，默认：null&lt;/param&gt;
+/// &lt;param name="Username"&gt;用户名，默认：postgres&lt;/param&gt;
+/// &lt;param name="Password"&gt;密码，默认：null&lt;/param&gt;
+/// &lt;param name="Tables"&gt;数据表，默认：null&lt;/param&gt;
+/// &lt;param name="Version"&gt;PostgreSQL最低版本要求，默认：9&lt;/param&gt;
+/// &lt;returns&gt;返回三元组：连接或创建是否成功、异常信息、PostgreSQL连接标志（0：连接成功；-1：PG未安装或者连接参数不正确；-2：PG版本太低；1：指定的数据库不存在；2：数据库同名但数据表不符合要求）&lt;/returns&gt;
+public static (bool Success, string Message, short flag) Connection();
+
+/// &lt;summary&gt;
+/// 执行非查询语句
+/// &lt;/summary&gt;
+/// &lt;param name="cmd"&gt;查询语句，若cmd为空，则仅尝试打开数据库，若成功就返回0，否则返回null。若返回值是null的话，存在两种情况：1是webconfig中未正确设置服务器；2是服务器或数据库无法连接&lt;/param&gt;
+/// &lt;param name="parameters"&gt;字段参数字典&lt;/param&gt;
+/// &lt;param name="pooling"&gt;是否开启池化连接，省略或默认值为true。在 linux 环境下动态创建数据库（create database）时，必须将 pooling 明确指定为 false（因为默认值为true），也就是说不能池化，以便使连接被关闭时立即生效！&lt;/param&gt;
+/// &lt;param name="postgres"&gt;是否直连【PostgreSQL数据库管理系统】（创建或删除数据库时必须设为真!），省略或默认值为false（仅操作已指定的当前数据库）&lt;/param&gt;
+/// &lt;param name="transaction"&gt;是否开启事务&lt;/param&gt;
+/// &lt;param name="timeout"&gt;尝试执行命令时需要等待的时间（秒值，默认30秒）&lt;/param&gt;
+/// &lt;returns&gt;针对insert、delete 和 update 操作，返回受影响的记录数；&lt;/returns&gt;
+public static int? NonQuery();
+
+/// &lt;summary&gt;
+/// 执行标量查询语句
+/// &lt;/summary&gt;
+/// &lt;param name="cmd"&gt;查询语句&lt;/param&gt;
+/// &lt;param name="parameters"&gt;字段参数字典&lt;/param&gt;
+/// &lt;param name="pooling"&gt;是否开启池化连接，省略或默认值为true&lt;/param&gt;
+/// &lt;param name="postgres"&gt;是否直连【PostgreSQL数据库管理系统】（创建或删除数据库时必须设为真!），省略或默认值为false（仅操作已指定的当前数据库）&lt;/param&gt;
+/// &lt;param name="transaction"&gt;是否开启事务&lt;/param&gt;
+/// &lt;param name="timeout"&gt;尝试执行命令时需要等待的时间（秒值，默认30秒）&lt;/param&gt;
+/// &lt;returns&gt;针对可返回单值的sql语句（标量查询函数），返回对象型结果；若失败，返回空 &lt;/returns&gt;
+public static object Scalar();
+
+/// &lt;summary&gt;
+/// 执行查询语句，返回可枚举的Dictionary&lt;string, object&gt;对象序列
+/// &lt;/summary&gt;
+/// &lt;param name="cmd"&gt;查询语句&lt;/param&gt;
+/// &lt;param name="parameters"&gt;字段参数字典&lt;/param&gt;
+/// &lt;param name="pooling"&gt;是否开启池化连接，省略或默认值为true&lt;/param&gt;
+/// &lt;param name="postgres"&gt;是否直连【PostgreSQL数据库管理系统】（创建或删除数据库时必须设为真!），省略或默认值为false（仅操作已指定的当前数据库）&lt;/param&gt;
+/// &lt;param name="transaction"&gt;是否开启事务&lt;/param&gt;
+/// &lt;param name="timeout"&gt;尝试执行命令时需要等待的时间（秒值，默认30秒）&lt;/param&gt;
+/// &lt;returns&gt;&lt;/returns&gt;
+public static IEnumerable&lt;Dictionary&lt;string, object&gt;&gt; DictionaryReader();
+
+/// &lt;summary&gt;
+/// 执行查询语句，返回DataTable格式对象
+/// &lt;/summary&gt;
+/// &lt;param name="cmd"&gt;查询语句&lt;/param&gt;
+/// &lt;param name="parameters"&gt;字段参数字典&lt;/param&gt;
+/// &lt;param name="pooling"&gt;是否开启池化连接，省略或默认值为true&lt;/param&gt;
+/// &lt;param name="postgres"&gt;是否直连【PostgreSQL数据库管理系统】（创建或删除数据库时必须设为真!），省略或默认值为false（仅操作已指定的当前数据库）&lt;/param&gt;
+/// &lt;param name="transaction"&gt;是否开启事务&lt;/param&gt;
+/// &lt;param name="timeout"&gt;尝试执行命令时需要等待的时间（秒值，默认30秒）&lt;/param&gt;
+/// &lt;returns&gt;若返回null，说明查询无效；若结果对象的Rows为0，说明仅存在字段，并未发现任何记录！&lt;/returns&gt;
+public static DataTable DataTableReader();
+
+/// &lt;summary&gt;
+/// 执行查询语句，返回xml格式对象
+/// &lt;/summary&gt;
+/// &lt;param name="cmd"&gt;查询语句&lt;/param&gt;
+/// &lt;param name="parameters"&gt;字段参数字典&lt;/param&gt;
+/// &lt;param name="pooling"&gt;是否开启池化连接，省略或默认值为true&lt;/param&gt;
+/// &lt;param name="postgres"&gt;是否直连【PostgreSQL数据库管理系统】（创建或删除数据库时必须设为真!），省略或默认值为false（仅操作已指定的当前数据库）&lt;/param&gt;
+/// &lt;param name="transaction"&gt;是否开启事务&lt;/param&gt;
+/// &lt;param name="timeout"&gt;尝试执行命令时需要等待的时间（秒值，默认30秒）&lt;/param&gt;
+/// &lt;param name="XElementRootName"&gt;返回XElement格式对象的根标签名称，默认：【table】&lt;/param&gt;
+/// &lt;param name="XElementNodeName"&gt;返回XElement格式对象的节点标签名称，默认：【row】&lt;/param&gt;
+/// &lt;returns&gt;返回XElement格式对象。如果某字段内容符合json格式便将其转换为xml&lt;/returns&gt;
+public static XElement XElementReader();
+
+6、WKB编码类
+/// &lt;summary&gt;
+/// WKB（PostGIS-Raster类型）编码类
+/// &lt;/summary&gt;
+public static class PostGisRaster;
+
+/// &lt;summary&gt;
+/// 将本地或远程瓦片文件按PostGIS-Raster类型进行WKB格式编码
+/// &lt;/summary&gt;
+/// &lt;param name="uri"&gt;本地或远程瓦片文件路径&lt;/param&gt;
+/// &lt;param name="z"&gt;缩放级&lt;/param&gt;
+/// &lt;param name="x"&gt;横向图块坐标（从左至右）&lt;/param&gt;
+/// &lt;param name="y"&gt;纵向图块坐标（从上至下）&lt;/param&gt;
+/// &lt;param name="EPSG4326"&gt;是否为十进制经纬度瓦片格式？默认：false&lt;/param&gt;
+/// &lt;param name="tileType"&gt;瓦片类型，默认：TileType.Standard，其他选项为：TileType.TMS、TileType.MapCruncher、TileType.ARCGIS、TileType.DeepZoom、TileType.Raster&lt;/param&gt;
+/// &lt;param name="localFile"&gt;uri是否为本地文件？默认：true。如果设为false，将从远程WMTS服务抓取瓦片内容&lt;/param&gt;
+/// &lt;returns&gt;三元组对象，包括【瓦片WKB编码、瓦片尺寸（宽度、高度和深度）、边框（东南西北）】&lt;/returns&gt;
+public static (string wkb, (ushort width, ushort height, ushort depth) size, (double north, double south, double west, double east) boundary)? WKB();
+
+/// &lt;summary&gt;
+/// 将Gdal的影像数据集Dataset对象按指定的数据块进行十六进制（PostGIS raster）WKB编码
+/// &lt;/summary&gt;
+/// &lt;param name="rasterDataset"&gt;由Gdal.Open(filename, Access.GA_ReadOnly)创建的多波段栅格图像数据集&lt;/param&gt;
+/// &lt;param name="tilewidth"&gt;指定的切片像素宽度（若为0或者超过图像本身的宽度，将以图像本身宽度为准）&lt;/param&gt;
+/// &lt;param name="tileheight"&gt;指定的切片像素高度（若为0或者超过图像本身的高度，将以图像本身高度为准）&lt;/param&gt;
+/// &lt;param name="hasnodata"&gt;是否指定了【无值】，默认：false&lt;/param&gt;
+/// &lt;param name="nodata"&gt;无值替换值，空字符（默认）=不指定；其他值=实际数值&lt;/param&gt;
+/// &lt;returns&gt;可枚举的十六进制（postgis raster）wkb编码以及相应的图块信息xml&lt;/returns&gt;
+public static IEnumerable&lt;XElement&gt; RasterWKB();
+
+7、GeositeXml推模式类
+/// &lt;summary&gt;
+/// GeositeXml推模式类: 将集群节点森林体系存储为关系型数据库
+/// &lt;/summary&gt;
+public class GeositeXmlPush;
+
+/// &lt;summary&gt;
+/// 森林（支持创建或更新辅助信息）
+/// &lt;/summary&gt;
+/// &lt;param name="id"&gt;节点森林序号（通常由注册表[register.xml]中[forest]节的先后顺序决定）&lt;/param&gt;
+/// &lt;param name="name"&gt;节点森林名称。省略时取默认值：null&lt;/param&gt;
+/// &lt;param name="property"&gt;节点森林属性描述。省略时取默认值：null&lt;/param&gt;
+/// &lt;param name="timestamp"&gt;节点森林创建时间戳[年月日（yyyyMMdd）,时分秒（HHmmss）]二元整型编码字符串。省略时取默认值：当前日期和时间&lt;/param&gt;
+/// &lt;param name="status"&gt;节点森林状态码。省略时取默认值：0。提示：待森林中所有文档树推送成功后，应将status置为奇数&lt;/param&gt;
+/// &lt;param name="relation"&gt;节点森林关系描述。省略时取默认值：null&lt;/param&gt;
+/// &lt;returns&gt;返回三元组：是否创建或更新成功，异常信息，森林节点id码&lt;/returns&gt;
+public (bool Success, string Message, int Id) Forest();
+
+/// &lt;summary&gt;
+/// 树（创建树根基本信息，不处理树的枝干体系和叶子）
+/// &lt;/summary&gt;
+/// &lt;param name="timestamp"&gt;文档树编码印章，采用[节点森林序号,文档序号,年月日（yyyyMMdd）,时分秒（HHmmss）]整型编码字符串&lt;/param&gt;
+/// &lt;param name="treeX"&gt;文档树XElement格式对象&lt;/param&gt;
+/// &lt;param name="uri"&gt;文档树全称路径名称（URI），默认值：null&lt;/param&gt;
+/// &lt;param name="forestStatus"&gt;森林状态码。省略时取默认值：0。提示：文档树推送成功后，应将status置为奇数&lt;/param&gt;
+/// &lt;param name="typeCode"&gt;树类型码。省略时取默认值：0&lt;/param&gt;
+/// &lt;param name="enclosure"&gt;建议每次调用Tree之后，在通过提供enclosure（默认值：null）参数的方式，设置文档树的完整性（status和type字段）标识。id码通常源自前次调用Tree时的返回结果，执行时尽量将叶子状态码（status）设置为奇数（完整性标识）并将类型码（type）补充完整&lt;/param&gt;
+/// &lt;returns&gt;返回三元组：文档树是否存在或者是否成功创建、异常信息、文档树id码（如果失败或者时间戳未发生变更，id返回-1）&lt;/returns&gt;
+public (bool Success, string Message, int Id) Tree();
+
+/// &lt;summary&gt;
+/// 枝干（以文档树为处理单元，创建某片叶子的父代枝干节点记录）
+/// &lt;/summary&gt;
+/// &lt;param name="forest"&gt;节点森林（群）编号&lt;/param&gt;
+/// &lt;param name="sequence"&gt;文档树序号&lt;/param&gt;
+/// &lt;param name="tree"&gt;文档树标识码&lt;/param&gt;
+/// &lt;param name="leafX"&gt;叶子对象，其归属的分类通过层级【layer】包裹表述&lt;/param&gt;
+/// &lt;param name="leafRootX"&gt;叶子所属树根对象，默认值：null（此种情况要求叶子对象参数必须是树对象的子集）&lt;/param&gt;
+/// &lt;returns&gt;返回枝干id路由（route）数组，前三个分别是【节点森林（群）编号，文档树序号，文档树标识码】，后面依次为枝干id序列。若处理失败，返回：null&lt;/returns&gt;
+public (bool Success, string Message, int[] Route) Branch();
+
+/// &lt;summary&gt;
+/// 叶子
+/// &lt;/summary&gt;
+/// &lt;param name="route"&gt;叶子要素隶属枝干id路由序列，前三个分别是【节点森林（群）编号，文档树序号，文档树标识码】，后面依次为枝干id序列&lt;/param&gt;
+/// &lt;param name="leafX"&gt;叶子对象&lt;/param&gt;
+/// &lt;param name="timestamp"&gt;叶子要素创建时间戳（由[年月日：yyyyMMdd,时分秒：HHmmss]二元整型数组编码字符串）。省略时取默认值：当前日期和时间&lt;/param&gt;
+/// &lt;param name="topology"&gt;是否执行拓扑操作，仅针对【线/面】有效&lt;/param&gt;
+/// &lt;returns&gt;返回五元组：1）是否新建成功；2）异常信息；3）叶子id码；4）叶子类型码；5）属性对象&lt;/returns&gt;
+public (bool Success, string Message, long Id, int Type, XElement Property) Leaf();
+
+/// &lt;summary&gt;
+/// 叶子路由（此表主要用于回溯叶子所属枝干的分类谱系）
+/// &lt;/summary&gt;
+/// &lt;param name="leaf"&gt;叶子标识码&lt;/param&gt;
+/// &lt;param name="routeArray"&gt;叶子要素隶属枝干id路由序列，前三个分别是【节点森林（群）编号，文档树序号，文档树标识码】，后面依次为枝干id序列&lt;/param&gt;
+/// &lt;returns&gt;二元组：记录插入是否成功，异常信息&lt;/returns&gt;
+public (bool Success, string Message) leaf_route();
+
+/// &lt;summary&gt;
+/// 叶子样式（扁平化对象序列）
+/// &lt;/summary&gt;
+/// &lt;param name="leaf"&gt;叶子标识码&lt;/param&gt;
+/// &lt;param name="leafX"&gt;叶子对象&lt;/param&gt;
+/// &lt;param name="update"&gt;当记录已存在时是否更新？默认：true&lt;/param&gt;
+/// &lt;returns&gt;二元组：记录插入是否成功，异常信息&lt;/returns&gt;
+public (bool Success, string Message)? leaf_style();
+
+/// &lt;summary&gt;
+/// 叶子属性【键、值】
+/// &lt;/summary&gt;
+/// &lt;param name="leaf"&gt;叶子标识码&lt;/param&gt;
+/// &lt;param name="propertyX"&gt;叶子属性对象，通常源自Leaf函数的返回值&lt;/param&gt;
+/// &lt;param name="update"&gt;当记录已存在时是否更新？默认：true&lt;/param&gt;
+/// &lt;returns&gt;二元组：记录插入是否成功，异常信息&lt;/returns&gt;
+public (bool Success, string Message)? leaf_property();
+
+/// &lt;summary&gt;
+/// 叶子关系描述
+/// &lt;/summary&gt;
+/// &lt;param name="leaf"&gt;叶子标识码&lt;/param&gt;
+/// &lt;param name="leafX"&gt;叶子对象&lt;/param&gt;
+/// &lt;param name="update"&gt;当记录已存在时是否更新？默认：true&lt;/param&gt;
+/// &lt;returns&gt;二元组：记录插入是否成功，异常信息&lt;/returns&gt;
+public (bool Success, string Message)? leaf_relation();
+
+/// &lt;summary&gt;
+/// 叶子矢量几何（注：一片叶子仅存储一个几何要素）
+/// &lt;/summary&gt;
+/// &lt;param name="leaf"&gt;叶子标识码&lt;/param&gt;
+/// &lt;param name="leafX"&gt;叶子对象&lt;/param&gt;
+/// &lt;param name="type"&gt;叶子类型（1=Point点、2=Line线、3=Polygon面、4=Image地理贴图）&lt;/param&gt;
+/// &lt;param name="propertyX"&gt;叶子属性，通常源自Leaf函数的返回值。默认值：null（本函数将酌情向此参量添加拓扑属性）&lt;/param&gt;
+/// &lt;param name="topology"&gt;是否执行拓扑，默认值：false&lt;/param&gt;
+/// &lt;param name="update"&gt;当记录已存在时是否更新？默认：true&lt;/param&gt;
+/// &lt;returns&gt;三元组：记录插入是否成功，异常信息&lt;/returns&gt;
+public (bool Success, string Message, int TypeCode)? leaf_geometry();
+
+/// &lt;summary&gt;
+/// 叶子栅格瓦片（注：一片叶子可存储海量瓦片，此函数通常由桌面app调用）
+/// 栅格专题的元数据可在叶子表中的property中按GeositeXML格式进行表述，如果推送平铺式瓦片，亦应指定zxy参数并使其联合唯一
+/// &lt;/summary&gt;
+/// &lt;param name="leaf"&gt;叶子要素的标识码&lt;/param&gt;
+/// &lt;param name="leafX"&gt;叶子对象&lt;/param&gt;
+/// &lt;param name="type"&gt;叶子类型（tile），默认：Tile&lt;/param&gt;
+/// &lt;param name="propertyX"&gt;叶子属性，通常源自Leaf函数的返回值。默认值：null（自动从叶子对象中提取属性）&lt;/param&gt;
+/// &lt;param name="update"&gt;当记录已存在时是否更新？默认：true&lt;/param&gt;
+/// &lt;returns&gt;三元组：记录插入是否成功、异常信息、类型代码：11000：Tile栅格金字塔瓦片类型[epsg:0 - 无投影瓦片]；11001：Tile栅格金字塔瓦片类型[epsg:4326 - 地理坐标系瓦片]；11002：Tile栅格金字塔瓦片类型[epsg:3857 - 球体墨卡托瓦片]；12000：Tile栅格平铺式瓦片类型[epsg:0 - 无投影瓦片]；12001：Tile栅格平铺式瓦片类型[epsg:4326 - 地理坐标系瓦片]；12002：Tile栅格平铺式瓦片类型[epsg:3857 - 球体墨卡托瓦片]）&lt;/returns&gt;
+public (bool Success, string Message, int TypeCode)? leaf_tile();
+
+/// &lt;summary&gt;
+/// 叶子栅格瓦片服务地址模板存储函数（注：一片叶子应仅存放一个地址）
+/// &lt;/summary&gt;
+/// &lt;param name="leaf"&gt;叶子要素的标识码&lt;/param&gt; 
+/// &lt;param name="leafX"&gt;叶子对象&lt;/param&gt;
+/// &lt;param name="type"&gt;叶子类型（tile），默认：Tile&lt;/param&gt;
+/// &lt;param name="propertyX"&gt;叶子属性，通常源自Leaf函数的返回值。默认值：null（自动从叶子对象中提取属性）&lt;/param&gt;
+/// &lt;param name="update"&gt;当记录已存在时是否更新？默认：true&lt;/param&gt;
+/// &lt;returns&gt;返回三元组对象：记录插入是否成功、异常信息、类型代码：10000：Wmts栅格金字塔瓦片服务类型[epsg:0 - 无投影瓦片]；10001：Wmts瓦片服务类型[epsg:4326 - 地理坐标系瓦片]；10002：Wmts栅格金字塔瓦片服务类型[epsg:3857 - 球体墨卡托瓦片]&lt;/returns&gt;
+public (bool Success, string Message, int TypeCode)? leaf_wmts();
+
+8、瓦片类型枚举
+public enum TileType{
+  Standard,		//0
+  TMS,			//1
+  MapCruncher,	//2
+  ARCGIS, 		//3
+  DeepZoom,   	//4
+  Raster  		//5
+}
+
+9、瓦片推送类
+/// &lt;summary&gt;
+/// 瓦片推送类（仅针对一片叶子容器）
+/// &lt;/summary&gt;
+public class GeositeTilePush();
+
+/// &lt;summary&gt;
+/// 构造函数
+/// &lt;/summary&gt;
+/// &lt;param name="forest"&gt;森林对象（GeositeXmlPush类型）&lt;/param&gt;
+/// &lt;param name="leaf"&gt;叶子编号&lt;/param&gt;
+/// &lt;param name="typeCode"&gt;叶子类型码，默认：【0】&lt;/param&gt;
+/// &lt;param name="propertyX"&gt;叶子属性对象，默认：null。提供此参数的目的是加速叶子子表针对srid的提取效率&lt;/param&gt;
+/// &lt;param name="update"&gt;是否启用更新模式？默认：true&lt;/param&gt;
+public GeositeTilePush();
+
+/// &lt;summary&gt;
+/// 依据指定参数执行瓦片推送任务
+/// &lt;/summary&gt;
+/// &lt;param name="code"&gt;瓦片类型码：0=本地文件夹（金字塔存储）；1=远程wmts服务地址（金字塔存储）；2=平铺式瓦片&lt;/param&gt;
+/// &lt;param name="tileUri"&gt;瓦片存放或访问路径&lt;/param&gt;
+/// &lt;param name="tileType"&gt;瓦片类型，默认：TileType.Standard&lt;/param&gt;
+/// &lt;param name="level"&gt;推送的缩放级别，默认：-1&lt;/param&gt;
+/// &lt;param name="EPSG4326"&gt;是否为经纬度格式瓦片？默认：false&lt;/param&gt;
+/// &lt;param name="boundary"&gt;针对WMTS服务的几何边界约束条件&lt;/param&gt;
+/// &lt;param name="isWMTS"&gt;针对WMTS服务，是否推送远程瓦片？默认：false = 仅存储远程链接地址模板&lt;/param&gt;
+/// &lt;param name="subdomains"&gt;针对WMTS服务路径，若存在子域占位符{s}，必须携带子域替换符，以便实施负载均衡策略&lt;/param&gt;
+/// &lt;param name="ascending"&gt;缩放级和图块坐标编码文件的读取顺序，默认：true = 按（从小到大）顺序遍历&lt;/param&gt;
+public (long total, XElement metaDataX) TilePush();
+
+10、参考椭球类
+public static class Ellipsoid;
+
+/// &lt;summary&gt;
+/// 球体墨卡托投影
+/// &lt;/summary&gt;
+/// &lt;param name="lng"&gt;十进制经度&lt;/param&gt;
+/// &lt;param name="lat"&gt;十进制纬度&lt;/param&gt;
+/// &lt;param name="x"&gt;米制横坐标&lt;/param&gt;
+/// &lt;param name="y"&gt;米制纵坐标&lt;/param&gt;
+/// &lt;returns&gt;正反算结果&lt;/returns&gt;
+public static string WebMercator();
+
+/// &lt;summary&gt;
+/// 高斯克吕格投影，优先识别直角坐标（x、y）执行反算，其次识别地理坐标（经、纬度）并执行正算！
+/// 若输入的参数值不符合要求，返回空白字符串，否则返回符合json编码格式的字符串
+/// &lt;/summary&gt;
+/// &lt;param name="centralMeridian"&gt;中央子午线经度centralMeridian（省略或空白取默认值：六度分带；若能解析为角度值就按自定义中央子午线对待；若不能解析为角度值（比如字母或标点符号等），就强行视为三度分带）&lt;/param&gt;
+/// &lt;param name="x"&gt;纵坐标（米制）&lt;/param&gt;
+/// &lt;param name="y"&gt;横坐标（米制，可含带号）通用值或自然值&lt;/param&gt;
+/// &lt;param name="longitude"&gt;经度（十进制度或者六十进制度分秒格式）&lt;/param&gt;
+/// &lt;param name="latitude"&gt;纬度（十进制度或者六十进制度分秒格式）&lt;/param&gt;
+/// &lt;param name="crs"&gt;坐标系年代（1954=北京坐标系；1980=西安坐标系；1984=WGS84系；2000=CGCS2000坐标系，省略取默认值：2000）&lt;/param&gt;
+/// &lt;returns&gt;正算时返回米制纵坐标和横坐标的（含带号）通用值；反算时返回十进制经纬度&lt;/returns&gt;
+public static string GaussKruger();
+
+/// &lt;summary&gt;
+/// 阿尔伯斯球体双标准纬线等积割圆锥投影
+/// &lt;/summary&gt;
+/// &lt;param name="crs"&gt;坐标系代号：1954 1980 1984 2000；默认值：2000&lt;/param&gt;
+/// &lt;param name="lng"&gt;经度（十进制度）；默认值：0&lt;/param&gt;
+/// &lt;param name="lat"&gt;纬度（十进制度）；默认值：0&lt;/param&gt;
+/// &lt;param name="lng0"&gt;中央经线（十进制度）；默认值：0&lt;/param&gt;
+/// &lt;param name="lat0"&gt;底点纬度（十进制度）；默认值：0&lt;/param&gt;
+/// &lt;param name="lat1"&gt;第一标准纬线（十进制度）；默认值：20&lt;/param&gt;
+/// &lt;param name="lat2"&gt;第二标准纬线（十进制度）；默认值：50&lt;/param&gt;
+/// &lt;param name="x"&gt;横向坐标米制&lt;/param&gt;
+/// &lt;param name="y"&gt;纵向坐标米制&lt;/param&gt;
+/// &lt;returns&gt;计算结果&lt;/returns&gt;
+public static string Albers();
+
+/// &lt;summary&gt;
+/// 由坐标流计算长度（或周长）。若连续的两个点位于同一个投影带且指定的椭球半径属于北京或西安或国家坐标系，便按高斯-克吕格投影进行计算，否则按wgs84下的web墨卡托计算
+/// &lt;/summary&gt;
+/// &lt;param name="coordinate"&gt;由十进制经纬度格式组成的坐标串（(起始点)十进制经度,十进制纬度 空格 ...,...,... 空格 (最末点)十进制经度,十进制纬度）形成的折线&lt;/param&gt;
+/// &lt;param name="crs"&gt;坐标系代号：1954、1980、1984、2000、其他值；默认值：2000。其他值=不进行投影，直接计算长度&lt;/param&gt;
+/// &lt;returns&gt;米制长度（或周长），若计算失败，返回null&lt;/returns&gt;
+public static double? Perimeter();
+
+/// &lt;summary&gt;
+/// 由坐标流计算面积。若整个范围位于同一个六度投影带且指定的椭球半径属于北京或西安或国家坐标系，便按高斯-克吕格投影进行计算
+/// &lt;/summary&gt;
+/// &lt;param name="coordinate"&gt;由十进制经纬度格式组成的坐标串（(起始点)十进制经度,十进制纬度 空格 ...,...,... 空格 (最末点)十进制经度,十进制纬度）形成的折线或多边形&lt;/param&gt;
+/// &lt;param name="crs"&gt;坐标系代号：1954、1980、1984、2000、其他值；默认值：2000。其他值=不进行投影，直接计算笛卡尔坐标系面积&lt;/param&gt;
+/// &lt;returns&gt;米制面积，，若计算失败，返回null&lt;/returns&gt;
+public static double? Area();
+
+11、OGC格式转换类
+public static class OGCformat;
+
+/// &lt;summary&gt;
+/// 将符合WKT或者GeoJson格式的坐标串生成OGC-WKT几何文本
+/// &lt;/summary&gt;
+/// &lt;param name="geometryCode"&gt;几何类型代码：0=点（默认值）；1=线；2=面；暂不支持：3=集合；4=三维地表；5=三角剖分&lt;/param&gt;
+/// &lt;param name="geometry"&gt;几何坐标字符串，默认值为空白&lt;/param&gt;
+/// &lt;param name="simplify"&gt;简化输出内容吗？&lt;/param&gt;
+/// &lt;returns&gt;符合OGC约定的WKT格式文本，若转换失败，返回null。针对面元，将自动封闭&lt;/returns&gt;
+public static string TextToWkt(int geometryCode = 0, string geometry = null, bool simplify = false);
+
+/// &lt;summary&gt;
+/// 将符合WKT或者GeoJson格式的坐标串生成OGC-WKB十六进制几何文本
+/// &lt;/summary&gt;
+/// &lt;param name="geometryCode"&gt;几何类型代码：0=点（默认值）；1=线；2=面；暂不支持：3=集合；4=三维地表；5=三角剖分&lt;/param&gt;
+/// &lt;param name="geometry"&gt;几何坐标字符串，默认值为空白&lt;/param&gt;
+/// &lt;param name="srid"&gt;几何投影参照系OGC类型代码，默认值：4326=十进制经纬度格式；若指定0，意指未定义参照系&lt;/param&gt;
+/// &lt;returns&gt;符合OGC约定的OGC-WKB十六进制几何文本，若转换失败，返回null。针对面元，将自动封闭&lt;/returns&gt;
+public static string TextToWkb(int geometryCode = 0, string geometry = null, string srid = "4326")
+
+/// &lt;summary&gt;
+/// 由kml几何要素节生成OGC-WKB十六进制几何文本
+/// &lt;/summary&gt;
+/// &lt;param name="geometryCode"&gt;几何类型代码：0=点（默认值）；1=线；2=面；3=集合；暂不支持：4=三维地表；5=三角剖分&lt;/param&gt;
+/// &lt;param name="geometry"&gt;kml几何要素节&lt;/param&gt;
+/// &lt;param name="srid"&gt;几何投影参照系OGC类型代码，默认值：4326=十进制经纬度格式；若指定0，意指未定义参照系&lt;/param&gt;
+/// &lt;returns&gt;符合OGC约定的OGC-WKB十六进制几何文本，若转换失败，返回null。针对面元，将自动封闭&lt;/returns&gt;
+public static string KmlToWkb(int geometryCode = 0, XElement geometry = null, string srid = "4326")
+
+/// &lt;summary&gt;
+/// 将OGC-WKB十六进制几何文本转换为WKT
+/// &lt;/summary&gt;
+/// &lt;param name="wkb"&gt;OGC-WKB十六进制几何文本&lt;/param&gt;
+/// &lt;returns&gt;二元组，成员为：wkt和srid&lt;/returns&gt;
+public static (string wkt,int srid) WkbToWkt(string wkb)
+
+/// &lt;summary&gt;
+/// 将WKT或者GeoJson转为为KML格式
+/// &lt;/summary&gt;
+/// &lt;param name="geometryCode"&gt;几何类型代码：0=点（默认值）；1=线；2=面；暂不支持：3=集合；4=三维地表；5=三角剖分&lt;/param&gt;
+/// &lt;param name="geometry"&gt;wkt或者geojson&lt;/param&gt;
+/// &lt;returns&gt;XElement类型的KML格式对象&lt;/returns&gt;
+public static XElement TextToKml(int geometryCode = 0, string geometry = null)
+
+/// &lt;summary&gt;
+/// 由OGC-WKT几何文本生成XElement类型的KML格式对象
+/// &lt;/summary&gt;
+/// &lt;param name="geometryCode"&gt;几何类型代码：0=点（默认值）；1=线；2=面；3=集合；暂不支持：4=三维地表；5=三角剖分&lt;/param&gt;
+/// &lt;param name="geometry"&gt;符合OGC约定的WKT格式文本&lt;/param&gt;
+/// &lt;returns&gt;XElement类型的KML格式对象&lt;/returns&gt;
+public static XElement WktToKml(int geometryCode = 0, string geometry = null)
+
+/// &lt;summary&gt;
+/// 由OGC-WKT几何文本生成XElement类型的GML格式对象
+/// &lt;/summary&gt;
+/// &lt;param name="geometryCode"&gt;几何类型代码：0=点（默认值）；1=线；2=面；3=集合；暂不支持：4=三维地表；5=三角剖分&lt;/param&gt;
+/// &lt;param name="geometry"&gt;符合OGC约定的WKT格式文本&lt;/param&gt;
+/// &lt;returns&gt;XElement类型的GML格式对象&lt;/returns&gt;
+public static XElement WktToGml(int geometryCode = 0, string geometry = null)
+
+/// &lt;summary&gt;
+/// 由OGC-WKT几何文本生成GeoJson文本
+/// &lt;/summary&gt;
+/// &lt;param name="geometryCode"&gt;几何类型代码：0=点（默认值）；1=线；2=面；暂不支持：3=集合；4=三维地表；5=三角剖分&lt;/param&gt;
+/// &lt;param name="geometry"&gt;符合OGC约定的WKT格式文本&lt;/param&gt;
+/// &lt;param name="simplify"&gt;简化输出内容吗？&lt;/param&gt;
+/// &lt;returns&gt;GeoJson坐标文本&lt;/returns&gt;
+public static string WktToGeoJson(int geometryCode = 0, string geometry = null, bool simplify = false)
+
+/// &lt;summary&gt;
+/// 由GeoJson文本（或坐标文本）生成XElement类型kml格式对象
+/// &lt;/summary&gt;
+/// &lt;param name="geometryCode"&gt;几何类型代码：0=点（默认值）；1=线；2=面；暂不支持：3=集合；4=三维地表；5=三角剖分&lt;/param&gt;
+/// &lt;param name="geometry"&gt;符合GeoJson约定的坐标文本&lt;/param&gt;
+/// &lt;returns&gt;XElement类型的kml格式对象&lt;/returns&gt;
+public static XElement GeoJsonToKml(int geometryCode = 0, string geometry = null)
+
+/// &lt;summary&gt;
+/// 由GeoJson文本（或坐标文本）生成OGC-WKT文本
+/// &lt;/summary&gt;
+/// &lt;param name="geometryCode"&gt;几何类型代码：0=点（默认值）；1=线；2=面；暂不支持：3=集合；4=三维地表；5=三角剖分&lt;/param&gt;
+/// &lt;param name="geometry"&gt;符合GeoJson约定的坐标文本&lt;/param&gt;
+/// &lt;param name="simplify"&gt;简化输出内容吗？&lt;/param&gt;
+/// &lt;returns&gt;符合OGC约定的WKT格式文本&lt;/returns&gt;
+public static string GeoJsonToWkt(int geometryCode = 0, string geometry = null, bool simplify = false)
+
+/// &lt;summary&gt;
+/// 由kml几何要素节生成OGC-WKT几何文本
+/// &lt;/summary&gt;
+/// &lt;param name="geometryCode"&gt;几何类型代码：0=点（默认值）；1=线；2=面；3=集合；暂不支持：4=三维地表；5=三角剖分&lt;/param&gt;
+/// &lt;param name="geometry"&gt;kml几何要素节&lt;/param&gt;
+/// &lt;param name="simplify"&gt;简化输出内容吗？&lt;/param&gt;
+/// &lt;returns&gt;符合OGC约定的WKT格式文本，若转换失败，返回null。针对面元，将自动封闭&lt;/returns&gt;
+public static string KmlToWkt(int geometryCode = 0, XElement geometry = null, bool simplify = false)
+
+/// &lt;summary&gt;
+/// 由XElement类型的kml格式对象生成GeoJson坐标文本
+/// &lt;/summary&gt;
+/// &lt;param name="geometryCode"&gt;几何类型代码：0=点（默认值）；1=线；2=面；3=集合；暂不支持：4=三维地表；5=三角剖分&lt;/param&gt;
+/// &lt;param name="geometry"&gt;kml对象中的几何要素节&lt;/param&gt;
+/// &lt;param name="simplify"&gt;简化输出内容吗？&lt;/param&gt;
+/// &lt;returns&gt;GeoJson坐标文本，若转换失败，返回null&lt;/returns&gt;
+public static string KmlToGeoJson(int geometryCode = 0, XElement geometry = null, bool simplify = false)
+
+/// &lt;summary&gt;
+/// 由Kml几何对象生成Gml（V3）几何对象
+/// &lt;/summary&gt;
+/// &lt;param name="geometryCode"&gt;几何类型代码：0=点（默认值）；1=线；2=面；暂不支持：3=集合；4=三维地表；5=三角剖分&lt;/param&gt;
+/// &lt;param name="geometry"&gt;Kml几何对象&lt;/param&gt;
+/// &lt;returns&gt;Gml（V3）几何对象&lt;/returns&gt;
+public static XElement KmlToGml(int geometryCode = 0, XElement geometry = null)
+
+/// &lt;summary&gt;
+/// 由Gml（V2/3）几何对象生成Kml几何对象
+/// &lt;/summary&gt;
+/// &lt;param name="geometryCode"&gt;几何类型代码：0=点（默认值）；1=线；2=面；暂不支持：3=集合；4=三维地表；5=三角剖分&lt;/param&gt;
+/// &lt;param name="geometry"&gt;Gml（V2/3）几何对象，要求根节点的命名空间必须对gml前缀进行命名&lt;/param&gt;
+/// &lt;returns&gt;Kml几何对象&lt;/returns&gt;
+public static XElement GmlToKml(int geometryCode = 0, XElement geometry = null)
+
+/// &lt;summary&gt;
+/// 由Gml（V2/3）几何对象生成GeoJson坐标文本
+/// &lt;/summary&gt;
+/// &lt;param name="geometryCode"&gt;几何类型代码：0=点（默认值）；1=线；2=面；暂不支持：3=集合；4=三维地表；5=三角剖分&lt;/param&gt;
+/// &lt;param name="geometry"&gt;Gml（V2/3）几何对象，要求根节点的命名空间必须对gml前缀进行命名&lt;/param&gt;
+/// &lt;param name="simplify"&gt;简化输出内容吗？&lt;/param&gt;
+/// &lt;returns&gt;GeoJson坐标文本&lt;/returns&gt;
+public static string GmlToGeoJson(int geometryCode = 0, XElement geometry = null, bool simplify = false)
+
+// -----------------------------------------------------------
+// Copyright © Geosite Development Team of CGS ®
+// ----------------------------------------------------------</value>
+  </data>
   <data name="pictureBox12.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAADAAAAAvCAYAAAClgknJAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
@@ -10789,6 +10741,18 @@ public static string GmlToGeoJson(int geometryCode = 0, XElement geometry = null
         YII=
 </value>
   </data>
+  <metadata name="vectorWorker.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>352, 17</value>
+  </metadata>
+  <metadata name="rasterWorker.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>484, 17</value>
+  </metadata>
+  <metadata name="statusBar.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>613, 17</value>
+  </metadata>
+  <metadata name="statusBar.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
   <data name="dataGridViewImageColumn1.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         R0lGODlhEAAQAIEAAGZmZv///wAAAAAAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQBAAABACwAAAAAEAAQ

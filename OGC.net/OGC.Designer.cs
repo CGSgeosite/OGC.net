@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OGCform));
             this.vectorSourceFile = new System.Windows.Forms.TextBox();
             this.vectorTargetFile = new System.Windows.Forms.TextBox();
@@ -137,7 +137,6 @@
             this.waitingBar = new System.Windows.Forms.ProgressBar();
             this.GeositeServerPort = new System.Windows.Forms.TextBox();
             this.GeositeServerName = new System.Windows.Forms.TextBox();
-            this.panel7 = new System.Windows.Forms.Panel();
             this.helpCard = new System.Windows.Forms.TabPage();
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.tabPage3 = new System.Windows.Forms.TabPage();
@@ -175,6 +174,8 @@
             this.topologyCheckBox = new System.Windows.Forms.CheckBox();
             this.VectorFileClear = new System.Windows.Forms.Button();
             this.VectorOpen = new System.Windows.Forms.Button();
+            this.ReClean = new System.Windows.Forms.Button();
+            this.ReIndex = new System.Windows.Forms.Button();
             this.GeositeServerLink = new System.Windows.Forms.Button();
             this.pictureBox4 = new System.Windows.Forms.PictureBox();
             this.pictureBox10 = new System.Windows.Forms.PictureBox();
@@ -355,9 +356,9 @@
             // 
             // GeositeServerUrl
             // 
-            this.GeositeServerUrl.Location = new System.Drawing.Point(25, 4);
+            this.GeositeServerUrl.Location = new System.Drawing.Point(23, 4);
             this.GeositeServerUrl.Name = "GeositeServerUrl";
-            this.GeositeServerUrl.Size = new System.Drawing.Size(187, 21);
+            this.GeositeServerUrl.Size = new System.Drawing.Size(189, 21);
             this.GeositeServerUrl.TabIndex = 1;
             this.OGCtoolTip.SetToolTip(this.GeositeServerUrl, "GeositeServer Url");
             this.GeositeServerUrl.TextChanged += new System.EventHandler(this.GeositeServer_LinkChanged);
@@ -448,9 +449,9 @@
             this.deleteForest.Enabled = false;
             this.deleteForest.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.deleteForest.ForeColor = System.Drawing.Color.Black;
-            this.deleteForest.Location = new System.Drawing.Point(135, 32);
+            this.deleteForest.Location = new System.Drawing.Point(135, 92);
             this.deleteForest.Name = "deleteForest";
-            this.deleteForest.Size = new System.Drawing.Size(27, 51);
+            this.deleteForest.Size = new System.Drawing.Size(27, 52);
             this.deleteForest.TabIndex = 20;
             this.deleteForest.Text = "×";
             this.OGCtoolTip.SetToolTip(this.deleteForest, "Delete user data");
@@ -559,18 +560,18 @@
             // 
             // GeositeServerUser
             // 
-            this.GeositeServerUser.Location = new System.Drawing.Point(25, 32);
+            this.GeositeServerUser.Location = new System.Drawing.Point(23, 32);
             this.GeositeServerUser.Name = "GeositeServerUser";
-            this.GeositeServerUser.Size = new System.Drawing.Size(105, 21);
+            this.GeositeServerUser.Size = new System.Drawing.Size(139, 21);
             this.GeositeServerUser.TabIndex = 1;
             this.OGCtoolTip.SetToolTip(this.GeositeServerUser, "GeositeServer user name");
             this.GeositeServerUser.TextChanged += new System.EventHandler(this.GeositeServer_LinkChanged);
             // 
             // GeositeServerPassword
             // 
-            this.GeositeServerPassword.Location = new System.Drawing.Point(25, 62);
+            this.GeositeServerPassword.Location = new System.Drawing.Point(23, 62);
             this.GeositeServerPassword.Name = "GeositeServerPassword";
-            this.GeositeServerPassword.Size = new System.Drawing.Size(105, 21);
+            this.GeositeServerPassword.Size = new System.Drawing.Size(139, 21);
             this.GeositeServerPassword.TabIndex = 1;
             this.OGCtoolTip.SetToolTip(this.GeositeServerPassword, "GeositeServer user password");
             this.GeositeServerPassword.UseSystemPasswordChar = true;
@@ -1589,8 +1590,8 @@
             // 
             // VectorStatus
             // 
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.VectorStatus.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.VectorStatus.DefaultCellStyle = dataGridViewCellStyle1;
             this.VectorStatus.HeaderText = "※";
             this.VectorStatus.Name = "VectorStatus";
             this.VectorStatus.ReadOnly = true;
@@ -1599,10 +1600,11 @@
             // 
             // databasePanel
             // 
+            this.databasePanel.Controls.Add(this.ReClean);
+            this.databasePanel.Controls.Add(this.ReIndex);
             this.databasePanel.Controls.Add(this.dataGridPanel);
             this.databasePanel.Controls.Add(this.GeositeServerPort);
             this.databasePanel.Controls.Add(this.GeositeServerName);
-            this.databasePanel.Controls.Add(this.panel7);
             this.databasePanel.Controls.Add(this.deleteForest);
             this.databasePanel.Controls.Add(this.GeositeServerLink);
             this.databasePanel.Controls.Add(this.GeositeServerPassword);
@@ -1648,13 +1650,13 @@
             this.clusterDataPool.AllowUserToAddRows = false;
             this.clusterDataPool.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
             this.clusterDataPool.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle8.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.clusterDataPool.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.clusterDataPool.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             this.clusterDataPool.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.clusterDataPool.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.ThemeName,
@@ -1703,29 +1705,21 @@
             // 
             this.GeositeServerPort.BackColor = System.Drawing.Color.WhiteSmoke;
             this.GeositeServerPort.Enabled = false;
-            this.GeositeServerPort.Location = new System.Drawing.Point(25, 123);
+            this.GeositeServerPort.Location = new System.Drawing.Point(23, 123);
             this.GeositeServerPort.Name = "GeositeServerPort";
             this.GeositeServerPort.ReadOnly = true;
-            this.GeositeServerPort.Size = new System.Drawing.Size(137, 21);
+            this.GeositeServerPort.Size = new System.Drawing.Size(107, 21);
             this.GeositeServerPort.TabIndex = 22;
             // 
             // GeositeServerName
             // 
             this.GeositeServerName.BackColor = System.Drawing.Color.WhiteSmoke;
             this.GeositeServerName.Enabled = false;
-            this.GeositeServerName.Location = new System.Drawing.Point(25, 95);
+            this.GeositeServerName.Location = new System.Drawing.Point(23, 92);
             this.GeositeServerName.Name = "GeositeServerName";
             this.GeositeServerName.ReadOnly = true;
-            this.GeositeServerName.Size = new System.Drawing.Size(137, 21);
+            this.GeositeServerName.Size = new System.Drawing.Size(107, 21);
             this.GeositeServerName.TabIndex = 22;
-            // 
-            // panel7
-            // 
-            this.panel7.BackColor = System.Drawing.Color.Gainsboro;
-            this.panel7.Location = new System.Drawing.Point(1, 88);
-            this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(162, 1);
-            this.panel7.TabIndex = 21;
             // 
             // helpCard
             // 
@@ -2205,15 +2199,43 @@
             this.VectorOpen.UseVisualStyleBackColor = false;
             this.VectorOpen.Click += new System.EventHandler(this.VectorOpen_Click);
             // 
+            // ReClean
+            // 
+            this.ReClean.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.ReClean.Enabled = false;
+            this.ReClean.Image = global::Geosite.Properties.Resources.reclean;
+            this.ReClean.Location = new System.Drawing.Point(167, 117);
+            this.ReClean.Margin = new System.Windows.Forms.Padding(0);
+            this.ReClean.Name = "ReClean";
+            this.ReClean.Size = new System.Drawing.Size(45, 28);
+            this.ReClean.TabIndex = 24;
+            this.OGCtoolTip.SetToolTip(this.ReClean, "ReClean");
+            this.ReClean.UseVisualStyleBackColor = true;
+            this.ReClean.Click += new System.EventHandler(this.ReClean_Click);
+            // 
+            // ReIndex
+            // 
+            this.ReIndex.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.ReIndex.Enabled = false;
+            this.ReIndex.Image = global::Geosite.Properties.Resources.reindex;
+            this.ReIndex.Location = new System.Drawing.Point(167, 86);
+            this.ReIndex.Margin = new System.Windows.Forms.Padding(0);
+            this.ReIndex.Name = "ReIndex";
+            this.ReIndex.Size = new System.Drawing.Size(45, 28);
+            this.ReIndex.TabIndex = 24;
+            this.OGCtoolTip.SetToolTip(this.ReIndex, "ReIndex");
+            this.ReIndex.UseVisualStyleBackColor = true;
+            this.ReIndex.Click += new System.EventHandler(this.ReIndex_Click);
+            // 
             // GeositeServerLink
             // 
             this.GeositeServerLink.BackColor = System.Drawing.Color.White;
             this.GeositeServerLink.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("GeositeServerLink.BackgroundImage")));
             this.GeositeServerLink.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.GeositeServerLink.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.GeositeServerLink.Location = new System.Drawing.Point(167, 32);
+            this.GeositeServerLink.Location = new System.Drawing.Point(167, 31);
             this.GeositeServerLink.Name = "GeositeServerLink";
-            this.GeositeServerLink.Size = new System.Drawing.Size(45, 112);
+            this.GeositeServerLink.Size = new System.Drawing.Size(45, 51);
             this.GeositeServerLink.TabIndex = 2;
             this.OGCtoolTip.SetToolTip(this.GeositeServerLink, "Connect to GeositeServer");
             this.GeositeServerLink.UseVisualStyleBackColor = false;
@@ -2223,7 +2245,7 @@
             // 
             this.pictureBox4.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox4.BackgroundImage")));
             this.pictureBox4.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.pictureBox4.Location = new System.Drawing.Point(1, 62);
+            this.pictureBox4.Location = new System.Drawing.Point(-1, 62);
             this.pictureBox4.Name = "pictureBox4";
             this.pictureBox4.Size = new System.Drawing.Size(21, 21);
             this.pictureBox4.TabIndex = 0;
@@ -2234,7 +2256,7 @@
             // 
             this.pictureBox10.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox10.BackgroundImage")));
             this.pictureBox10.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.pictureBox10.Location = new System.Drawing.Point(1, 123);
+            this.pictureBox10.Location = new System.Drawing.Point(-1, 123);
             this.pictureBox10.Name = "pictureBox10";
             this.pictureBox10.Size = new System.Drawing.Size(21, 21);
             this.pictureBox10.TabIndex = 0;
@@ -2245,7 +2267,7 @@
             // 
             this.pictureBox6.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox6.BackgroundImage")));
             this.pictureBox6.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.pictureBox6.Location = new System.Drawing.Point(1, 95);
+            this.pictureBox6.Location = new System.Drawing.Point(-1, 92);
             this.pictureBox6.Name = "pictureBox6";
             this.pictureBox6.Size = new System.Drawing.Size(21, 21);
             this.pictureBox6.TabIndex = 0;
@@ -2256,7 +2278,7 @@
             // 
             this.pictureBox3.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox3.BackgroundImage")));
             this.pictureBox3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.pictureBox3.Location = new System.Drawing.Point(1, 32);
+            this.pictureBox3.Location = new System.Drawing.Point(-1, 32);
             this.pictureBox3.Name = "pictureBox3";
             this.pictureBox3.Size = new System.Drawing.Size(21, 21);
             this.pictureBox3.TabIndex = 0;
@@ -2267,7 +2289,7 @@
             // 
             this.pictureBox2.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox2.BackgroundImage")));
             this.pictureBox2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.pictureBox2.Location = new System.Drawing.Point(1, 4);
+            this.pictureBox2.Location = new System.Drawing.Point(-1, 4);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(21, 21);
             this.pictureBox2.TabIndex = 0;
@@ -2556,7 +2578,6 @@
         private System.Windows.Forms.TextBox subdomainsBox;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.PictureBox pictureBox7;
-        private System.Windows.Forms.Panel panel7;
         private System.Windows.Forms.Button ModelSave;
         private System.Windows.Forms.PictureBox pictureBox6;
         private System.Windows.Forms.PictureBox pictureBox10;
@@ -2579,6 +2600,8 @@
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.Panel panel12;
         private System.Windows.Forms.PictureBox pictureBox13;
+        private System.Windows.Forms.Button ReIndex;
+        private System.Windows.Forms.Button ReClean;
     }
 }
 

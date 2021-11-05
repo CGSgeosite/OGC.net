@@ -1599,7 +1599,7 @@ namespace Geosite
 
             if (string.IsNullOrWhiteSpace(ServerUrl) || string.IsNullOrWhiteSpace(ServerUser) || string.IsNullOrWhiteSpace(ServerPassword))
             {
-                statusText.Text = @"Connection parameters must not be blank";
+                statusText.Text = @"Connection parameters should not be blank";
                 return;
             }
 
@@ -1617,12 +1617,12 @@ namespace Geosite
             PostgresRun.Enabled =
             PostgreSqlConnection = false;
 
-            var task = new Func<(string Message, string Host, int Port)>(() =>
+            var task = new Func<(string Message, string Host, int Port, bool Administrator)>(() =>
             {
                 var userX = GeositeServerUsers.GetClusterUser(
                    ServerUrl,
                    ServerUser,
-                   $"{GeositeConfuser.Cryptography.hashEncoder(ServerPassword)}" //将密码以哈希密文形式传输
+                   $"{GeositeConfuser.Cryptography.hashEncoder(ServerPassword)}" //将密码以哈希密文形式传输，以防链路侦听密码
                );
                 /*  返回样例：
                     <User>
@@ -1639,12 +1639,14 @@ namespace Geosite
                           <Pooling></Pooling>
                         </Server>
                       </Servers>
-                      <Forest MachineName="" OSVersion="" ProcessorCount=""></Forest>
+                      <Forest MachineName="" OSVersion="" ProcessorCount="" Administrator="False/True"></Forest>
                     </User>             
                  */
                 string errorMessage = null;
                 string Host = null;
                 var Port = -1;
+                var administrator = false;
+
                 if (userX != null)
                 {
                     var Server = userX.Element("Servers")?.Element("Server");
@@ -1661,6 +1663,9 @@ namespace Geosite
                     var ForestX = userX.Element("Forest");
                     if (!int.TryParse(ForestX?.Value.Trim(), out var Forest))
                         Forest = -1;
+
+                    if (!bool.TryParse(ForestX?.Attribute("Administrator")?.Value.Trim() ?? "false", out administrator))
+                        administrator = false;
 
                     var checkGeositeServer =
                         PostgreSqlHelper.Connection(
@@ -2496,25 +2501,25 @@ namespace Geosite
                     errorMessage = @"Connection failed."; //通常因为服务器端管理员尚未设置账户群信息
                 }
 
-                return (errorMessage, Host, Port);
+                return (Message: errorMessage, Host, Port, Administrator: administrator);
             });
 
             task.BeginInvoke(
                 (x) =>
                 {
-                    var ResultMessage = task.EndInvoke(x);
+                    var resultMessage = task.EndInvoke(x);
                     this.Invoke(
                         new Action(
                             () =>
                             {
-                                if (ResultMessage.Message == null)
+                                if (resultMessage.Message == null)
                                 {
                                     statusText.Text = @"Connection OK.";
                                     GeositeServerLink.BackgroundImage = Properties.Resources.linkok;
 
                                     deleteForest.Enabled = true;
-                                    GeositeServerName.Text = ResultMessage.Host;
-                                    GeositeServerPort.Text = $@"{ResultMessage.Port}";
+                                    GeositeServerName.Text = resultMessage.Host;
+                                    GeositeServerPort.Text = $@"{resultMessage.Port}";
 
                                     dataGridPanel.Enabled =
                                     PostgreSqlConnection = true;
@@ -2525,14 +2530,14 @@ namespace Geosite
                                 }
                                 else
                                 {
-                                    statusText.Text = ResultMessage.Message;
+                                    statusText.Text = resultMessage.Message;
                                     GeositeServerLink.BackgroundImage = Properties.Resources.linkfail;
 
                                     deleteForest.Enabled = false;
-                                    GeositeServerName.Text = "";
+                                    GeositeServerName.Text = 
                                     GeositeServerPort.Text = "";
                                 }
-
+                                ReIndex.Enabled = ReClean.Enabled = resultMessage.Message == null && resultMessage.Administrator;
                                 databasePanel.Enabled = true;
                                 Loading.run(false);
                             }
@@ -2542,6 +2547,231 @@ namespace Geosite
                 null
             );
 
+        }
+
+        private void ReIndex_Click(object sender, EventArgs e)
+        {
+            Loading.run();
+
+            var task = new Action(() =>
+            {
+                try
+                {
+                    ogcCard.Enabled = false;
+
+                    // 先处理【键集】问题：刷新叶子表频度并删除键集子表内容
+                    statusText.Text = "● Access frequency synchronization ...";
+                    Application.DoEvents();
+                    GeositeHits.Refresh();
+
+                    statusText.Text = "● forest ...";
+                    Application.DoEvents();
+                    if (PostgreSqlHelper.NonQuery("REINDEX TABLE forest;", timeout: 0) == null)
+                        throw new Exception(PostgreSqlHelper.ErrorMessage);
+
+                    statusText.Text = "● forest_relation ...";
+                    Application.DoEvents();
+                    if (PostgreSqlHelper.NonQuery("REINDEX TABLE forest_relation;", timeout: 0) == null)
+                        throw new Exception(PostgreSqlHelper.ErrorMessage);
+
+                    statusText.Text = "● tree ...";
+                    Application.DoEvents();
+                    if (PostgreSqlHelper.NonQuery("REINDEX TABLE tree;", timeout: 0) == null)
+                        throw new Exception(PostgreSqlHelper.ErrorMessage);
+
+                    statusText.Text = "● tree_relation ...";
+                    Application.DoEvents();
+                    if (PostgreSqlHelper.NonQuery("REINDEX TABLE tree_relation;", timeout: 0) == null)
+                        throw new Exception(PostgreSqlHelper.ErrorMessage);
+
+                    statusText.Text = "● branch ...";
+                    Application.DoEvents();
+                    if (PostgreSqlHelper.NonQuery("REINDEX TABLE branch;", timeout: 0) == null)
+                        throw new Exception(PostgreSqlHelper.ErrorMessage);
+
+                    statusText.Text = "● branch_relation ...";
+                    Application.DoEvents();
+                    if (PostgreSqlHelper.NonQuery("REINDEX TABLE branch_relation;", timeout: 0) == null)
+                        throw new Exception(PostgreSqlHelper.ErrorMessage);
+
+                    statusText.Text = "● leaf ...";
+                    Application.DoEvents();
+                    if (PostgreSqlHelper.NonQuery("REINDEX TABLE leaf;", timeout: 0) == null)
+                        throw new Exception(PostgreSqlHelper.ErrorMessage);
+
+                    statusText.Text = "● leaf_relation ...";
+                    Application.DoEvents();
+                    if (PostgreSqlHelper.NonQuery("REINDEX TABLE leaf_relation;", timeout: 0) == null)
+                        throw new Exception(PostgreSqlHelper.ErrorMessage);
+
+                    statusText.Text = "● leaf_route ...";
+                    Application.DoEvents();
+                    if (PostgreSqlHelper.NonQuery("REINDEX TABLE leaf_route;", timeout: 0) == null)
+                        throw new Exception(PostgreSqlHelper.ErrorMessage);
+
+                    statusText.Text = "● leaf_property ...";
+                    Application.DoEvents();
+                    if (PostgreSqlHelper.NonQuery("REINDEX TABLE leaf_property;", timeout: 0) == null)
+                        throw new Exception(PostgreSqlHelper.ErrorMessage);
+
+                    statusText.Text = "● leaf_style ...";
+                    Application.DoEvents();
+                    if (PostgreSqlHelper.NonQuery("REINDEX TABLE leaf_style;", timeout: 0) == null)
+                        throw new Exception(PostgreSqlHelper.ErrorMessage);
+
+                    statusText.Text = "● leaf_geometry ...";
+                    Application.DoEvents();
+                    if (PostgreSqlHelper.NonQuery("REINDEX TABLE leaf_geometry;", timeout: 0) == null)
+                        throw new Exception(PostgreSqlHelper.ErrorMessage);
+
+                    statusText.Text = "● leaf_tile ...";
+                    Application.DoEvents();
+                    if (PostgreSqlHelper.NonQuery("REINDEX TABLE leaf_tile;", timeout: 0) == null)
+                        throw new Exception(PostgreSqlHelper.ErrorMessage);
+
+                    statusText.Text = "● leaf_wmts ...";
+                    Application.DoEvents();
+                    if (PostgreSqlHelper.NonQuery("REINDEX TABLE leaf_wmts;", timeout: 0) == null)
+                        throw new Exception(PostgreSqlHelper.ErrorMessage);
+
+                    statusText.Text = "● leaf_age ...";
+                    Application.DoEvents();
+                    if (PostgreSqlHelper.NonQuery("REINDEX TABLE leaf_age;", timeout: 0) == null)
+                        throw new Exception(PostgreSqlHelper.ErrorMessage);
+
+                    statusText.Text = "● leaf_hits ...";
+                    Application.DoEvents();
+                    if (PostgreSqlHelper.NonQuery("REINDEX TABLE leaf_hits;", timeout: 0) == null)
+                        throw new Exception(PostgreSqlHelper.ErrorMessage);
+
+                    statusText.Text = "Reindex finished";
+                    Application.DoEvents();
+                }
+                catch (Exception error)
+                {
+                    statusText.Text = $"Reindex failed ({error.Message})";
+                    Application.DoEvents();
+                }
+                finally
+                {
+                    ogcCard.Enabled = true;
+                }
+            });
+            task.BeginInvoke(
+                (x) =>
+                {
+                    task.EndInvoke(x);
+                    Loading.run(false);
+                }, null
+            );
+        }
+
+        private void ReClean_Click(object sender, EventArgs e)
+        {
+            Loading.run();
+
+            var task = new Action(() =>
+            {
+                try
+                {
+                    ogcCard.Enabled = false;
+
+                    statusText.Text = "● forest ...";
+                    Application.DoEvents();
+                    if (PostgreSqlHelper.NonQuery("VACUUM ANALYZE forest;", timeout: 0) == null)
+                        throw new Exception(PostgreSqlHelper.ErrorMessage);
+                    statusText.Text = "● forest_relation ...";
+                    Application.DoEvents();
+                    if (PostgreSqlHelper.NonQuery("VACUUM ANALYZE forest_relation;", timeout: 0) == null)
+                        throw new Exception(PostgreSqlHelper.ErrorMessage);
+
+                    statusText.Text = "● tree ...";
+                    Application.DoEvents();
+                    if (PostgreSqlHelper.NonQuery("VACUUM ANALYZE tree;", timeout: 0) == null)
+                        throw new Exception(PostgreSqlHelper.ErrorMessage);
+                    statusText.Text = "● tree_relation ...";
+                    Application.DoEvents();
+                    if (PostgreSqlHelper.NonQuery("VACUUM ANALYZE tree_relation;", timeout: 0) == null)
+                        throw new Exception(PostgreSqlHelper.ErrorMessage);
+
+                    statusText.Text = "● branch ...";
+                    Application.DoEvents();
+                    if (PostgreSqlHelper.NonQuery("VACUUM ANALYZE branch;", timeout: 0) == null)
+                        throw new Exception(PostgreSqlHelper.ErrorMessage);
+                    statusText.Text = "● branch_relation ...";
+                    Application.DoEvents();
+                    if (PostgreSqlHelper.NonQuery("VACUUM ANALYZE branch_relation;", timeout: 0) == null)
+                        throw new Exception(PostgreSqlHelper.ErrorMessage);
+
+                    statusText.Text = "● leaf ...";
+                    Application.DoEvents();
+                    if (PostgreSqlHelper.NonQuery("VACUUM ANALYZE leaf;", timeout: 0) == null)
+                        throw new Exception(PostgreSqlHelper.ErrorMessage);
+                    statusText.Text = "● leaf_relation ...";
+                    Application.DoEvents();
+                    if (PostgreSqlHelper.NonQuery("VACUUM ANALYZE leaf_relation;", timeout: 0) == null)
+                        throw new Exception(PostgreSqlHelper.ErrorMessage);
+
+                    statusText.Text = "● leaf_route ...";
+                    Application.DoEvents();
+                    if (PostgreSqlHelper.NonQuery("VACUUM ANALYZE leaf_route;", timeout: 0) == null)
+                        throw new Exception(PostgreSqlHelper.ErrorMessage);
+
+                    statusText.Text = "● leaf_property ...";
+                    Application.DoEvents();
+                    if (PostgreSqlHelper.NonQuery("VACUUM ANALYZE leaf_property;", timeout: 0) == null)
+                        throw new Exception(PostgreSqlHelper.ErrorMessage);
+
+                    statusText.Text = "● leaf_style ...";
+                    Application.DoEvents();
+                    if (PostgreSqlHelper.NonQuery("VACUUM ANALYZE leaf_style;", timeout: 0) == null)
+                        throw new Exception(PostgreSqlHelper.ErrorMessage);
+
+                    statusText.Text = "● leaf_geometry ...";
+                    Application.DoEvents();
+                    if (PostgreSqlHelper.NonQuery("VACUUM ANALYZE leaf_geometry;", timeout: 0) == null)
+                        throw new Exception(PostgreSqlHelper.ErrorMessage);
+
+                    statusText.Text = "● leaf_tile ...";
+                    Application.DoEvents();
+                    if (PostgreSqlHelper.NonQuery("VACUUM ANALYZE leaf_tile;", timeout: 0) == null)
+                        throw new Exception(PostgreSqlHelper.ErrorMessage);
+
+                    statusText.Text = "● leaf_wmts ...";
+                    Application.DoEvents();
+                    if (PostgreSqlHelper.NonQuery("VACUUM ANALYZE leaf_wmts;", timeout: 0) == null)
+                        throw new Exception(PostgreSqlHelper.ErrorMessage);
+
+                    statusText.Text = "● leaf_age ...";
+                    Application.DoEvents();
+                    if (PostgreSqlHelper.NonQuery("VACUUM ANALYZE leaf_age;", timeout: 0) == null)
+                        throw new Exception(PostgreSqlHelper.ErrorMessage);
+
+                    statusText.Text = "● leaf_hits ...";
+                    Application.DoEvents();
+                    if (PostgreSqlHelper.NonQuery("VACUUM ANALYZE leaf_hits;", timeout: 0) == null)
+                        throw new Exception(PostgreSqlHelper.ErrorMessage);
+
+                    statusText.Text = "Reclean finished";
+                    Application.DoEvents();
+                }
+                catch (Exception error)
+                {
+                    statusText.Text = $"Reclean failed ({error.Message})";
+                    Application.DoEvents();
+                }
+                finally
+                {
+                    ogcCard.Enabled = true;
+                }
+            });
+            task.BeginInvoke(
+                (x) =>
+                {
+                    task.EndInvoke(x);
+                    Loading.run(false);
+                }, null
+            );
         }
 
         private void firstPage_Click(object sender, EventArgs e)
@@ -3344,7 +3574,7 @@ namespace Geosite
                                                                     );
 
                                                                     var scale10 =
-                                                                        (int)Math.Ceiling(10.0 * (++leafPointer) /
+                                                                        (int)Math.Ceiling(10.0 * ++leafPointer /
                                                                             RecordCount);
 
                                                                     if (scale10 > oldscale10)
@@ -3821,7 +4051,7 @@ namespace Geosite
                                                                 );
 
                                                                 var scale10 =
-                                                                    (int)Math.Ceiling(10.0 * (++leafPointer) /
+                                                                    (int)Math.Ceiling(10.0 * ++leafPointer /
                                                                         RecordCount);
 
                                                                 if (scale10 > oldscale10)
@@ -4307,7 +4537,7 @@ namespace Geosite
                                                                         );
 
                                                                         var scale10 =
-                                                                            (int)Math.Ceiling(10.0 * (++leafPointer) /
+                                                                            (int)Math.Ceiling(10.0 * ++leafPointer /
                                                                                 RecordCount);
 
                                                                         if (scale10 > oldscale10)
@@ -4544,7 +4774,7 @@ namespace Geosite
                                                         }
                                                         else
                                                         {
-                                                            var scale10 = (int)Math.Ceiling(10.0 * (++leafPointer) / leafCount);
+                                                            var scale10 = (int)Math.Ceiling(10.0 * ++leafPointer / leafCount);
 
                                                             if (scale10 > oldscale10)
                                                             {
@@ -4782,7 +5012,7 @@ namespace Geosite
                                                                 topology: doTopology
                                                             );
 
-                                                            var scale10 = (int)Math.Ceiling(10.0 * (++leafPointer) / leafCount);
+                                                            var scale10 = (int)Math.Ceiling(10.0 * ++leafPointer / leafCount);
 
                                                             if (scale10 > oldscale10)
                                                             {
@@ -5030,7 +5260,7 @@ namespace Geosite
                                                                 );
 
                                                                 var scale10 =
-                                                                    (int)Math.Ceiling(10.0 * (++leafPointer) /
+                                                                    (int)Math.Ceiling(10.0 * ++leafPointer /
                                                                         leafCount);
 
                                                                 if (scale10 > oldscale10)
@@ -5490,7 +5720,7 @@ namespace Geosite
             try
             {
                 PostgresRun.Enabled = dataCards.SelectedIndex == 0
-                    ? PostgreSqlConnection && !string.IsNullOrWhiteSpace(themeNameBox.Text) && (tilesource.SelectedIndex is >= 0 and <= 2)
+                    ? PostgreSqlConnection && !string.IsNullOrWhiteSpace(themeNameBox.Text) && tilesource.SelectedIndex is >= 0 and <= 2
                     : PostgreSqlConnection && vectorFilePool.Rows.Count > 0;
             }
             catch
@@ -5507,7 +5737,7 @@ namespace Geosite
 
         private void rasterTileSize_TextChanged(object sender, EventArgs e)
         {
-            rasterTileSize.Text = int.TryParse(rasterTileSize.Text, out var i) ? (i < 10 ? "10" : $"{i}") : "100";
+            rasterTileSize.Text = int.TryParse(rasterTileSize.Text, out var i) ? i < 10 ? "10" : $"{i}" : "100";
             FormEventChanged(sender);
         }
 
@@ -5909,7 +6139,7 @@ namespace Geosite
         {
             wmtsMinZoom.Enabled = wmtsMaxZoom.Enabled = !wmtsSpider.Checked;
             FormEventChanged(sender);
-        }
+        } 
 
         private void deleteForest_Click(object sender, EventArgs e)
         {
@@ -6033,11 +6263,11 @@ namespace Geosite
                         {
                             tileType = TileType.Standard;
                             typeCode = EPSG4326.Checked ? 11001 : 11002;
-                            if (!(from DIR
+                            if (!(from dir
                                         in Directory.GetDirectories(localTileFolder.Text)
-                                  where Regex.IsMatch(Path.GetFileName(DIR), @"^\d+$",
+                                  where Regex.IsMatch(Path.GetFileName(dir), @"^\d+$",
                                       RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Multiline)
-                                  select DIR
+                                  select dir
                                 ).Any())
                                 statusError = @"Folder does not meet the requirements";
                         }
@@ -6524,7 +6754,7 @@ namespace Geosite
                         rasterTileSize.Text = int.TryParse(rasterTileSize.Text, out var size)
                             ? size < 10
                                 ? @"10"
-                                : (size > 1024 ? "1024" : $"{size}")
+                                : size > 1024 ? "1024" : $"{size}"
                             : @"100";
                         tileType = TileType.Standard;
                         EPSG4326.Checked = true; //暂强行按4326对待
@@ -7065,6 +7295,5 @@ namespace Geosite
             Loading.run(false);
             ogcCard.Enabled = true;
         }
-
     }
 }
