@@ -44,7 +44,7 @@ namespace Geosite
                 var title =
                     $@" {applicationName} for {RuntimeInformation.OSDescription} / {RuntimeInformation.ProcessArchitecture} "; // /{RuntimeInformation.FrameworkDescription} 
                 var copyright =
-                    @" Copyright (C) 2019-2021 Geosite Development Team of CGS (R)";
+                    @" Copyright (C) Geosite Development Team of CGS (R)";
 
                 var splitLine = new string('*', Math.Max(title.Length, copyright.Length));
 
@@ -129,9 +129,7 @@ namespace Geosite
                                     }
                                 }
                                 else
-                                {
                                     throw new Exception("Input and output parameters do not match.");
-                                }
                             }
                             break;
                         case "mapgis":
@@ -214,9 +212,7 @@ namespace Geosite
                                     }
                                 }
                                 else
-                                {
                                     throw new Exception("Input and output parameters do not match.");
-                                }
                             }
                             break;
                         case "shp":
@@ -302,9 +298,7 @@ namespace Geosite
                                     }
                                 }
                                 else
-                                {
                                     throw new Exception("Input and output parameters do not match.");
-                                }
                             }
                             break;
                         case "txt":
@@ -404,9 +398,7 @@ namespace Geosite
                                     }
                                 }
                                 else
-                                {
                                     throw new Exception("Input and output parameters do not match.");
-                                }
                             }
                             break;
                         default:

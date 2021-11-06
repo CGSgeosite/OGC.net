@@ -1118,50 +1118,59 @@ namespace Geosite
             SaveAsFormat.Items.Clear();
             vectorTargetFile.Text = string.Empty;
             SaveAsFormat.Enabled = false;
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                RegEdit.setkey(key, $"{openFileDialog.FilterIndex}");
-                RegEdit.setkey(path, Path.GetDirectoryName(openFileDialog.FileName));
-                vectorSourceFile.Text = string.Join("|", openFileDialog.FileNames);
 
-                var vectorSourceFiles = Regex.Split(vectorSourceFile.Text.Trim(), @"[\s]*[|][\s]*").Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
-                var vectorSourceFileCount = vectorSourceFiles.Length; // >= 0 
-                if (vectorSourceFileCount > 1)
+            try
+            {
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    SaveAsFormat.Enabled = true;
-                    switch (openFileDialog.FilterIndex)
+                    RegEdit.setkey(key, $"{openFileDialog.FilterIndex}");
+                    RegEdit.setkey(path, Path.GetDirectoryName(openFileDialog.FileName));
+                    vectorSourceFile.Text = string.Join("|", openFileDialog.FileNames);
+
+                    var vectorSourceFiles = Regex.Split(vectorSourceFile.Text.Trim(), @"[\s]*[|][\s]*").Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
+                    var vectorSourceFileCount = vectorSourceFiles.Length; // >= 0 
+                    if (vectorSourceFileCount > 1)
                     {
-                        case 2: //MapGIS|*.mpj
-                            SaveAsFormat.Items.Add(@"JSON(*.json)");
-                            SaveAsFormat.SelectedIndex = 0;
-                            break;
-                        case 1: //MapGIS|*.wt;*.wl;*.wp
-                        case 3: //ShapeFile|*.shp
-                        case 4: //Excel Tab Delimited|*.txt
-                        case 5: //Excel Comma Delimited|*.csv
-                        case 7: //GeositeXML|*.xml
-                            SaveAsFormat.Items.Add(@"ESRI ShapeFile(*.shp)");
-                            SaveAsFormat.Items.Add(@"GeoJSON(*.geojson)");
-                            SaveAsFormat.Items.Add(@"GoogleEarth(*.kml)");
-                            SaveAsFormat.Items.Add(@"Gml(*.gml)");
-                            SaveAsFormat.Items.Add(@"GeositeXML(*.xml)");
-                            SaveAsFormat.SelectedIndex = 0;
-                            break;
-                        case 6: //GoogleEarth(*.kml)|*.kml
-                        case 8: //GeoJson|*.geojson
-                            SaveAsFormat.Items.Add(@"ESRI ShapeFile(*.shp)");
-                            SaveAsFormat.Items.Add(@"GeositeXML(*.xml)");
-                            SaveAsFormat.SelectedIndex = 0;
-                            break;
-                        default:
-                            vectorSourceFile.Text = string.Empty;
-                            break;
+                        SaveAsFormat.Enabled = true;
+                        switch (openFileDialog.FilterIndex)
+                        {
+                            case 2: //MapGIS|*.mpj
+                                SaveAsFormat.Items.Add(@"JSON(*.json)");
+                                SaveAsFormat.SelectedIndex = 0;
+                                break;
+                            case 1: //MapGIS|*.wt;*.wl;*.wp
+                            case 3: //ShapeFile|*.shp
+                            case 4: //Excel Tab Delimited|*.txt
+                            case 5: //Excel Comma Delimited|*.csv
+                            case 7: //GeositeXML|*.xml
+                                SaveAsFormat.Items.Add(@"ESRI ShapeFile(*.shp)");
+                                SaveAsFormat.Items.Add(@"GeoJSON(*.geojson)");
+                                SaveAsFormat.Items.Add(@"GoogleEarth(*.kml)");
+                                SaveAsFormat.Items.Add(@"Gml(*.gml)");
+                                SaveAsFormat.Items.Add(@"GeositeXML(*.xml)");
+                                SaveAsFormat.SelectedIndex = 0;
+                                break;
+                            case 6: //GoogleEarth(*.kml)|*.kml
+                            case 8: //GeoJson|*.geojson
+                                SaveAsFormat.Items.Add(@"ESRI ShapeFile(*.shp)");
+                                SaveAsFormat.Items.Add(@"GeositeXML(*.xml)");
+                                SaveAsFormat.SelectedIndex = 0;
+                                break;
+                            default:
+                                vectorSourceFile.Text = string.Empty;
+                                break;
+                        }
                     }
                 }
+                else
+                {
+                    vectorSourceFile.Text = string.Empty;
+                }
             }
-            else
+            catch (Exception error)
             {
                 vectorSourceFile.Text = string.Empty;
+                statusText.Text = error.Message;
             }
 
             FileCheck();
@@ -1276,39 +1285,47 @@ namespace Geosite
             SaveAsFormat.Items.Clear();
             SaveAsFormat.Enabled = false;
             vectorTargetFile.Text = string.Empty;
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            try
             {
-                RegEdit.setkey(key, $"{openFileDialog.FilterIndex}");
-                RegEdit.setkey(path, Path.GetDirectoryName(openFileDialog.FileName));
-                vectorSourceFile.Text = string.Join("|", openFileDialog.FileNames);
-                var vectorSourceFiles = Regex.Split(vectorSourceFile.Text.Trim(), @"[\s]*[|][\s]*").Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
-                var vectorSourceFileCount = vectorSourceFiles.Length; // >= 0
-                if (vectorSourceFileCount > 1)
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    SaveAsFormat.Enabled = true;
-                    switch (openFileDialog.FilterIndex)
+                    RegEdit.setkey(key, $"{openFileDialog.FilterIndex}");
+                    RegEdit.setkey(path, Path.GetDirectoryName(openFileDialog.FileName));
+                    vectorSourceFile.Text = string.Join("|", openFileDialog.FileNames);
+                    var vectorSourceFiles = Regex.Split(vectorSourceFile.Text.Trim(), @"[\s]*[|][\s]*").Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
+                    var vectorSourceFileCount = vectorSourceFiles.Length; // >= 0
+                    if (vectorSourceFileCount > 1)
                     {
-                        case 2: //MapGIS|*.mpj
-                            SaveAsFormat.Items.Add(@"JSON(*.json)");
-                            SaveAsFormat.SelectedIndex = 0;
-                            break;
-                        case 1: //MapGIS|*.wt;*.wl;*.wp
-                            SaveAsFormat.Items.Add(@"ESRI ShapeFile(*.shp)");
-                            SaveAsFormat.Items.Add(@"GeoJSON(*.geojson)");
-                            SaveAsFormat.Items.Add(@"GoogleEarth(*.kml)");
-                            SaveAsFormat.Items.Add(@"Gml(*.gml)");
-                            SaveAsFormat.Items.Add(@"GeositeXML(*.xml)");
-                            SaveAsFormat.SelectedIndex = 0;
-                            break;
-                        default:
-                            vectorSourceFile.Text = string.Empty;
-                            break;
+                        SaveAsFormat.Enabled = true;
+                        switch (openFileDialog.FilterIndex)
+                        {
+                            case 2: //MapGIS|*.mpj
+                                SaveAsFormat.Items.Add(@"JSON(*.json)");
+                                SaveAsFormat.SelectedIndex = 0;
+                                break;
+                            case 1: //MapGIS|*.wt;*.wl;*.wp
+                                SaveAsFormat.Items.Add(@"ESRI ShapeFile(*.shp)");
+                                SaveAsFormat.Items.Add(@"GeoJSON(*.geojson)");
+                                SaveAsFormat.Items.Add(@"GoogleEarth(*.kml)");
+                                SaveAsFormat.Items.Add(@"Gml(*.gml)");
+                                SaveAsFormat.Items.Add(@"GeositeXML(*.xml)");
+                                SaveAsFormat.SelectedIndex = 0;
+                                break;
+                            default:
+                                vectorSourceFile.Text = string.Empty;
+                                break;
+                        }
                     }
                 }
+                else
+                {
+                    vectorSourceFile.Text = string.Empty;
+                }
             }
-            else
+            catch (Exception error)
             {
                 vectorSourceFile.Text = string.Empty;
+                statusText.Text = error.Message;
             }
 
             FileCheck();
@@ -1335,34 +1352,43 @@ namespace Geosite
             SaveAsFormat.Text = string.Empty;
             SaveAsFormat.Items.Clear();
             SaveAsFormat.Enabled = false;
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
+
+            try
             {
-                RegEdit.setkey(path, Path.GetDirectoryName(openFileDialog.FileName));
-                vectorSourceFile.Text = string.Join("|", openFileDialog.FileNames);
-                var vectorSourceFiles = Regex.Split(vectorSourceFile.Text.Trim(), @"[\s]*[|][\s]*").Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
-                var vectorSourceFileCount = vectorSourceFiles.Length; // >= 0
-                if (vectorSourceFileCount > 1)
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    SaveAsFormat.Enabled = true;
-                    switch (openFileDialog.FilterIndex)
+                    RegEdit.setkey(path, Path.GetDirectoryName(openFileDialog.FileName));
+                    vectorSourceFile.Text = string.Join("|", openFileDialog.FileNames);
+                    var vectorSourceFiles = Regex.Split(vectorSourceFile.Text.Trim(), @"[\s]*[|][\s]*").Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
+                    var vectorSourceFileCount = vectorSourceFiles.Length; // >= 0
+                    if (vectorSourceFileCount > 1)
                     {
-                        case 1: //ShapeFile|*.shp
-                            SaveAsFormat.Items.Add(@"ESRI ShapeFile(*.shp)");
-                            SaveAsFormat.Items.Add(@"GeoJSON(*.geojson)");
-                            SaveAsFormat.Items.Add(@"GoogleEarth(*.kml)");
-                            SaveAsFormat.Items.Add(@"Gml(*.gml)");
-                            SaveAsFormat.Items.Add(@"GeositeXML(*.xml)");
-                            SaveAsFormat.SelectedIndex = 0;
-                            break;
-                        default:
-                            vectorSourceFile.Text = string.Empty;
-                            break;
+                        SaveAsFormat.Enabled = true;
+                        switch (openFileDialog.FilterIndex)
+                        {
+                            case 1: //ShapeFile|*.shp
+                                SaveAsFormat.Items.Add(@"ESRI ShapeFile(*.shp)");
+                                SaveAsFormat.Items.Add(@"GeoJSON(*.geojson)");
+                                SaveAsFormat.Items.Add(@"GoogleEarth(*.kml)");
+                                SaveAsFormat.Items.Add(@"Gml(*.gml)");
+                                SaveAsFormat.Items.Add(@"GeositeXML(*.xml)");
+                                SaveAsFormat.SelectedIndex = 0;
+                                break;
+                            default:
+                                vectorSourceFile.Text = string.Empty;
+                                break;
+                        }
                     }
                 }
+                else
+                {
+                    vectorSourceFile.Text = string.Empty;
+                }
             }
-            else
+            catch (Exception error)
             {
                 vectorSourceFile.Text = string.Empty;
+                statusText.Text = error.Message;
             }
 
             FileCheck();
@@ -1389,34 +1415,43 @@ namespace Geosite
             SaveAsFormat.Text = string.Empty;
             SaveAsFormat.Items.Clear();
             SaveAsFormat.Enabled = false;
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
+
+            try
             {
-                RegEdit.setkey(path, Path.GetDirectoryName(openFileDialog.FileName));
-                vectorSourceFile.Text = string.Join("|", openFileDialog.FileNames);
-                var vectorSourceFiles = Regex.Split(vectorSourceFile.Text.Trim(), @"[\s]*[|][\s]*").Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
-                var vectorSourceFileCount = vectorSourceFiles.Length; // >= 0
-                if (vectorSourceFileCount > 1)
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    SaveAsFormat.Enabled = true;
-                    switch (openFileDialog.FilterIndex)
+                    RegEdit.setkey(path, Path.GetDirectoryName(openFileDialog.FileName));
+                    vectorSourceFile.Text = string.Join("|", openFileDialog.FileNames);
+                    var vectorSourceFiles = Regex.Split(vectorSourceFile.Text.Trim(), @"[\s]*[|][\s]*").Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
+                    var vectorSourceFileCount = vectorSourceFiles.Length; // >= 0
+                    if (vectorSourceFileCount > 1)
                     {
-                        case 1: //Excel Tab Delimited|*.txt Excel Comma Delimited|*.csv
-                            SaveAsFormat.Items.Add(@"ESRI ShapeFile(*.shp)");
-                            SaveAsFormat.Items.Add(@"GeoJSON(*.geojson)");
-                            SaveAsFormat.Items.Add(@"GoogleEarth(*.kml)");
-                            SaveAsFormat.Items.Add(@"Gml(*.gml)");
-                            SaveAsFormat.Items.Add(@"GeositeXML(*.xml)");
-                            SaveAsFormat.SelectedIndex = 0;
-                            break;
-                        default:
-                            vectorSourceFile.Text = string.Empty;
-                            break;
+                        SaveAsFormat.Enabled = true;
+                        switch (openFileDialog.FilterIndex)
+                        {
+                            case 1: //Excel Tab Delimited|*.txt Excel Comma Delimited|*.csv
+                                SaveAsFormat.Items.Add(@"ESRI ShapeFile(*.shp)");
+                                SaveAsFormat.Items.Add(@"GeoJSON(*.geojson)");
+                                SaveAsFormat.Items.Add(@"GoogleEarth(*.kml)");
+                                SaveAsFormat.Items.Add(@"Gml(*.gml)");
+                                SaveAsFormat.Items.Add(@"GeositeXML(*.xml)");
+                                SaveAsFormat.SelectedIndex = 0;
+                                break;
+                            default:
+                                vectorSourceFile.Text = string.Empty;
+                                break;
+                        }
                     }
                 }
+                else
+                {
+                    vectorSourceFile.Text = string.Empty;
+                }
             }
-            else
+            catch (Exception error)
             {
                 vectorSourceFile.Text = string.Empty;
+                statusText.Text = error.Message;
             }
 
             FileCheck();
@@ -1443,31 +1478,40 @@ namespace Geosite
             SaveAsFormat.Text = string.Empty;
             SaveAsFormat.Items.Clear();
             SaveAsFormat.Enabled = false;
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
+
+            try
             {
-                RegEdit.setkey(path, Path.GetDirectoryName(openFileDialog.FileName));
-                vectorSourceFile.Text = string.Join("|", openFileDialog.FileNames);
-                var vectorSourceFiles = Regex.Split(vectorSourceFile.Text.Trim(), @"[\s]*[|][\s]*").Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
-                var vectorSourceFileCount = vectorSourceFiles.Length; // >= 0
-                if (vectorSourceFileCount > 1)
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    SaveAsFormat.Enabled = true;
-                    switch (openFileDialog.FilterIndex)
+                    RegEdit.setkey(path, Path.GetDirectoryName(openFileDialog.FileName));
+                    vectorSourceFile.Text = string.Join("|", openFileDialog.FileNames);
+                    var vectorSourceFiles = Regex.Split(vectorSourceFile.Text.Trim(), @"[\s]*[|][\s]*").Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
+                    var vectorSourceFileCount = vectorSourceFiles.Length; // >= 0
+                    if (vectorSourceFileCount > 1)
                     {
-                        case 1: //GeoJson|*.geojson
-                            SaveAsFormat.Items.Add(@"ESRI ShapeFile(*.shp)");
-                            SaveAsFormat.Items.Add(@"GeositeXML(*.xml)");
-                            SaveAsFormat.SelectedIndex = 0;
-                            break;
-                        default:
-                            vectorSourceFile.Text = string.Empty;
-                            break;
+                        SaveAsFormat.Enabled = true;
+                        switch (openFileDialog.FilterIndex)
+                        {
+                            case 1: //GeoJson|*.geojson
+                                SaveAsFormat.Items.Add(@"ESRI ShapeFile(*.shp)");
+                                SaveAsFormat.Items.Add(@"GeositeXML(*.xml)");
+                                SaveAsFormat.SelectedIndex = 0;
+                                break;
+                            default:
+                                vectorSourceFile.Text = string.Empty;
+                                break;
+                        }
                     }
                 }
+                else
+                {
+                    vectorSourceFile.Text = string.Empty;
+                }
             }
-            else
+            catch (Exception error)
             {
                 vectorSourceFile.Text = string.Empty;
+                statusText.Text = error.Message;
             }
 
             FileCheck();
@@ -1492,34 +1536,43 @@ namespace Geosite
             SaveAsFormat.Text = string.Empty;
             SaveAsFormat.Items.Clear();
             SaveAsFormat.Enabled = false;
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
+
+            try
             {
-                RegEdit.setkey(path, Path.GetDirectoryName(openFileDialog.FileName));
-                vectorSourceFile.Text = string.Join("|", openFileDialog.FileNames);
-                var vectorSourceFiles = Regex.Split(vectorSourceFile.Text.Trim(), @"[\s]*[|][\s]*").Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
-                var vectorSourceFileCount = vectorSourceFiles.Length; // >= 0
-                if (vectorSourceFileCount > 1)
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    SaveAsFormat.Enabled = true;
-                    switch (openFileDialog.FilterIndex)
+                    RegEdit.setkey(path, Path.GetDirectoryName(openFileDialog.FileName));
+                    vectorSourceFile.Text = string.Join("|", openFileDialog.FileNames);
+                    var vectorSourceFiles = Regex.Split(vectorSourceFile.Text.Trim(), @"[\s]*[|][\s]*").Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
+                    var vectorSourceFileCount = vectorSourceFiles.Length; // >= 0
+                    if (vectorSourceFileCount > 1)
                     {
-                        case 1: //GeositeXML|*.xml
-                            SaveAsFormat.Items.Add(@"ESRI ShapeFile(*.shp)");
-                            SaveAsFormat.Items.Add(@"GeoJSON(*.geojson)");
-                            SaveAsFormat.Items.Add(@"GoogleEarth(*.kml)");
-                            SaveAsFormat.Items.Add(@"Gml(*.gml)");
-                            SaveAsFormat.Items.Add(@"GeositeXML(*.xml)");
-                            SaveAsFormat.SelectedIndex = 0;
-                            break;
-                        default:
-                            vectorSourceFile.Text = string.Empty;
-                            break;
+                        SaveAsFormat.Enabled = true;
+                        switch (openFileDialog.FilterIndex)
+                        {
+                            case 1: //GeositeXML|*.xml
+                                SaveAsFormat.Items.Add(@"ESRI ShapeFile(*.shp)");
+                                SaveAsFormat.Items.Add(@"GeoJSON(*.geojson)");
+                                SaveAsFormat.Items.Add(@"GoogleEarth(*.kml)");
+                                SaveAsFormat.Items.Add(@"Gml(*.gml)");
+                                SaveAsFormat.Items.Add(@"GeositeXML(*.xml)");
+                                SaveAsFormat.SelectedIndex = 0;
+                                break;
+                            default:
+                                vectorSourceFile.Text = string.Empty;
+                                break;
+                        }
                     }
                 }
+                else
+                {
+                    vectorSourceFile.Text = string.Empty;
+                }
             }
-            else
+            catch (Exception error)
             {
                 vectorSourceFile.Text = string.Empty;
+                statusText.Text = error.Message;
             }
 
             FileCheck();
@@ -1544,31 +1597,40 @@ namespace Geosite
             SaveAsFormat.Text = string.Empty;
             SaveAsFormat.Items.Clear();
             SaveAsFormat.Enabled = false;
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
+
+            try
             {
-                RegEdit.setkey(path, Path.GetDirectoryName(openFileDialog.FileName));
-                vectorSourceFile.Text = string.Join("|", openFileDialog.FileNames);
-                var vectorSourceFiles = Regex.Split(vectorSourceFile.Text.Trim(), @"[\s]*[|][\s]*").Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
-                var vectorSourceFileCount = vectorSourceFiles.Length; // >= 0
-                if (vectorSourceFileCount > 1)
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    SaveAsFormat.Enabled = true;
-                    switch (openFileDialog.FilterIndex)
+                    RegEdit.setkey(path, Path.GetDirectoryName(openFileDialog.FileName));
+                    vectorSourceFile.Text = string.Join("|", openFileDialog.FileNames);
+                    var vectorSourceFiles = Regex.Split(vectorSourceFile.Text.Trim(), @"[\s]*[|][\s]*").Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
+                    var vectorSourceFileCount = vectorSourceFiles.Length; // >= 0
+                    if (vectorSourceFileCount > 1)
                     {
-                        case 1: //GoogleEarth(*.kml)|*.kml
-                            SaveAsFormat.Items.Add(@"ESRI ShapeFile(*.shp)");
-                            SaveAsFormat.Items.Add(@"GeositeXML(*.xml)");
-                            SaveAsFormat.SelectedIndex = 0;
-                            break;
-                        default:
-                            vectorSourceFile.Text = string.Empty;
-                            break;
+                        SaveAsFormat.Enabled = true;
+                        switch (openFileDialog.FilterIndex)
+                        {
+                            case 1: //GoogleEarth(*.kml)|*.kml
+                                SaveAsFormat.Items.Add(@"ESRI ShapeFile(*.shp)");
+                                SaveAsFormat.Items.Add(@"GeositeXML(*.xml)");
+                                SaveAsFormat.SelectedIndex = 0;
+                                break;
+                            default:
+                                vectorSourceFile.Text = string.Empty;
+                                break;
+                        }
                     }
                 }
+                else
+                {
+                    vectorSourceFile.Text = string.Empty;
+                }
             }
-            else
+            catch (Exception error)
             {
                 vectorSourceFile.Text = string.Empty;
+                statusText.Text = error.Message;
             }
 
             FileCheck();
@@ -5515,6 +5577,8 @@ namespace Geosite
                 RegEdit.setkey(path, openFolderDialog.SelectedPath);
                 localTileFolder.Text = openFolderDialog.SelectedPath;
             }
+            else
+                localTileFolder.Text = string.Empty;
         }
 
         private void ModelOpen_Click(object sender, EventArgs e)
@@ -5536,19 +5600,30 @@ namespace Geosite
             if (Directory.Exists(oldPath))
                 openFileDialog.InitialDirectory = oldPath;
 
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            try
             {
-                RegEdit.setkey(key, $"{openFileDialog.FilterIndex}");
-                RegEdit.setkey(path, Path.GetDirectoryName(openFileDialog.FileName));
-                ModelOpenTextBox.Text = string.Join("|", openFileDialog.FileNames);
-                var rasterSourceFiles = Regex.Split(ModelOpenTextBox.Text.Trim(), @"[\s]*[|][\s]*").Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
-                if (rasterSourceFiles.Length > 0)
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    themeNameBox.Text = string.Join(
-                        "|",
-                        rasterSourceFiles.Select(Path.GetFileNameWithoutExtension).ToArray()
-                    );
+                    RegEdit.setkey(key, $"{openFileDialog.FilterIndex}");
+                    RegEdit.setkey(path, Path.GetDirectoryName(openFileDialog.FileName));
+                    ModelOpenTextBox.Text = string.Join("|", openFileDialog.FileNames);
+                    var rasterSourceFiles = Regex.Split(ModelOpenTextBox.Text.Trim(), @"[\s]*[|][\s]*")
+                        .Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
+                    if (rasterSourceFiles.Length > 0)
+                    {
+                        themeNameBox.Text = string.Join(
+                            "|",
+                            rasterSourceFiles.Select(Path.GetFileNameWithoutExtension).ToArray()
+                        );
+                    }
                 }
+                else
+                    ModelOpenTextBox.Text = string.Empty;
+            }
+            catch (Exception error)
+            {
+                ModelOpenTextBox.Text = string.Empty;
+                statusText.Text = error.Message;
             }
         }
 
@@ -5759,11 +5834,21 @@ namespace Geosite
             };
             if (Directory.Exists(oldPath))
                 openFileDialog.InitialDirectory = oldPath;
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            try
             {
-                RegEdit.setkey(key, $"{openFileDialog.FilterIndex}");
-                RegEdit.setkey(path, Path.GetDirectoryName(openFileDialog.FileName));
-                DeepZoomOpenTextBox.Text = string.Join("|", openFileDialog.FileNames);
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    RegEdit.setkey(key, $"{openFileDialog.FilterIndex}");
+                    RegEdit.setkey(path, Path.GetDirectoryName(openFileDialog.FileName));
+                    DeepZoomOpenTextBox.Text = string.Join("|", openFileDialog.FileNames);
+                }
+                else
+                    DeepZoomOpenTextBox.Text = string.Empty;
+            }
+            catch (Exception error)
+            {
+                DeepZoomOpenTextBox.Text = string.Empty;
+                statusText.Text = error.Message;
             }
         }
 
@@ -5968,6 +6053,8 @@ namespace Geosite
                 RegEdit.setkey(path, openFolderDialog.SelectedPath);
                 TileFormatOpenBox.Text = openFolderDialog.SelectedPath;
             }
+            else
+                TileFormatOpenBox.Text = string.Empty;
         }
 
         private void TileFormatSave_Click(object sender, EventArgs e)
@@ -5992,6 +6079,8 @@ namespace Geosite
                 RegEdit.setkey(path, openFolderDialog.SelectedPath);
                 TileFormatSaveBox.Text = openFolderDialog.SelectedPath;
             }
+            else
+                TileFormatSaveBox.Text = string.Empty;
         }
 
         private void tileconvert_Click(object sender, EventArgs e)

@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OGCform));
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
             this.vectorSourceFile = new System.Windows.Forms.TextBox();
             this.vectorTargetFile = new System.Windows.Forms.TextBox();
             this.OGCtoolTip = new System.Windows.Forms.ToolTip(this.components);
@@ -66,6 +66,34 @@
             this.DeepZoomRun = new System.Windows.Forms.Button();
             this.tileconvert = new System.Windows.Forms.Button();
             this.SaveAsFormat = new System.Windows.Forms.ComboBox();
+            this.tabtextIcon = new System.Windows.Forms.Button();
+            this.arcgisIcon = new System.Windows.Forms.Button();
+            this.kmlIcon = new System.Windows.Forms.Button();
+            this.geositeIcon = new System.Windows.Forms.Button();
+            this.pictureBox13 = new System.Windows.Forms.PictureBox();
+            this.vectorSaveFile = new System.Windows.Forms.PictureBox();
+            this.vectorOpenFile = new System.Windows.Forms.PictureBox();
+            this.geojsonIcon = new System.Windows.Forms.Button();
+            this.gmlIcon = new System.Windows.Forms.Button();
+            this.mapgisIcon = new System.Windows.Forms.Button();
+            this.PostgresLight = new System.Windows.Forms.CheckBox();
+            this.UpdateBox = new System.Windows.Forms.CheckBox();
+            this.EPSG4326 = new System.Windows.Forms.CheckBox();
+            this.wmtsSpider = new System.Windows.Forms.CheckBox();
+            this.pictureBox7 = new System.Windows.Forms.PictureBox();
+            this.pictureBox5 = new System.Windows.Forms.PictureBox();
+            this.topologyCheckBox = new System.Windows.Forms.CheckBox();
+            this.VectorFileClear = new System.Windows.Forms.Button();
+            this.VectorOpen = new System.Windows.Forms.Button();
+            this.ReClean = new System.Windows.Forms.Button();
+            this.ReIndex = new System.Windows.Forms.Button();
+            this.GeositeServerLink = new System.Windows.Forms.Button();
+            this.pictureBox4 = new System.Windows.Forms.PictureBox();
+            this.pictureBox10 = new System.Windows.Forms.PictureBox();
+            this.pictureBox6 = new System.Windows.Forms.PictureBox();
+            this.pictureBox3 = new System.Windows.Forms.PictureBox();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.PostgresRun = new System.Windows.Forms.Button();
             this.tilewebapi = new System.Windows.Forms.TextBox();
             this.panel3 = new System.Windows.Forms.Panel();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
@@ -75,6 +103,7 @@
             this.box = new System.Windows.Forms.Panel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel5 = new System.Windows.Forms.Panel();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.ogcCard = new System.Windows.Forms.TabControl();
             this.fileCard = new System.Windows.Forms.TabPage();
             this.databaseCard = new System.Windows.Forms.TabPage();
@@ -111,6 +140,7 @@
             this.DeepZoomSaveTextBox = new System.Windows.Forms.TextBox();
             this.label34 = new System.Windows.Forms.Label();
             this.DeepZoomOpenTextBox = new System.Windows.Forms.TextBox();
+            this.pictureBox8 = new System.Windows.Forms.PictureBox();
             this.TileConvertPage = new System.Windows.Forms.TabPage();
             this.TileFormatSave = new System.Windows.Forms.Button();
             this.TileFormatOpen = new System.Windows.Forms.Button();
@@ -121,6 +151,7 @@
             this.ogctomaptiler = new System.Windows.Forms.RadioButton();
             this.TileFormatSaveBox = new System.Windows.Forms.TextBox();
             this.TileFormatOpenBox = new System.Windows.Forms.TextBox();
+            this.pictureBox9 = new System.Windows.Forms.PictureBox();
             this.VectorPage = new System.Windows.Forms.TabPage();
             this.panel9 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
@@ -142,57 +173,37 @@
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.panel10 = new System.Windows.Forms.Panel();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.pictureBox11 = new System.Windows.Forms.PictureBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.panel11 = new System.Windows.Forms.Panel();
             this.richTextBox2 = new System.Windows.Forms.RichTextBox();
             this.textBox2 = new System.Windows.Forms.TextBox();
+            this.pictureBox12 = new System.Windows.Forms.PictureBox();
             this.vectorWorker = new System.ComponentModel.BackgroundWorker();
             this.rasterWorker = new System.ComponentModel.BackgroundWorker();
             this.statusBar = new System.Windows.Forms.StatusStrip();
             this.statusProgress = new System.Windows.Forms.ToolStripProgressBar();
             this.statusText = new System.Windows.Forms.ToolStripStatusLabel();
-            this.tabtextIcon = new System.Windows.Forms.Button();
-            this.arcgisIcon = new System.Windows.Forms.Button();
-            this.kmlIcon = new System.Windows.Forms.Button();
-            this.geositeIcon = new System.Windows.Forms.Button();
-            this.pictureBox13 = new System.Windows.Forms.PictureBox();
-            this.vectorSaveFile = new System.Windows.Forms.PictureBox();
-            this.vectorOpenFile = new System.Windows.Forms.PictureBox();
-            this.geojsonIcon = new System.Windows.Forms.Button();
-            this.gmlIcon = new System.Windows.Forms.Button();
-            this.mapgisIcon = new System.Windows.Forms.Button();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.PostgresLight = new System.Windows.Forms.CheckBox();
-            this.UpdateBox = new System.Windows.Forms.CheckBox();
-            this.EPSG4326 = new System.Windows.Forms.CheckBox();
-            this.wmtsSpider = new System.Windows.Forms.CheckBox();
-            this.pictureBox7 = new System.Windows.Forms.PictureBox();
-            this.pictureBox5 = new System.Windows.Forms.PictureBox();
-            this.pictureBox8 = new System.Windows.Forms.PictureBox();
-            this.pictureBox9 = new System.Windows.Forms.PictureBox();
-            this.topologyCheckBox = new System.Windows.Forms.CheckBox();
-            this.VectorFileClear = new System.Windows.Forms.Button();
-            this.VectorOpen = new System.Windows.Forms.Button();
-            this.ReClean = new System.Windows.Forms.Button();
-            this.ReIndex = new System.Windows.Forms.Button();
-            this.GeositeServerLink = new System.Windows.Forms.Button();
-            this.pictureBox4 = new System.Windows.Forms.PictureBox();
-            this.pictureBox10 = new System.Windows.Forms.PictureBox();
-            this.pictureBox6 = new System.Windows.Forms.PictureBox();
-            this.pictureBox3 = new System.Windows.Forms.PictureBox();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.PostgresRun = new System.Windows.Forms.Button();
-            this.pictureBox11 = new System.Windows.Forms.PictureBox();
-            this.pictureBox12 = new System.Windows.Forms.PictureBox();
             this.dataGridViewImageColumn1 = new System.Windows.Forms.DataGridViewImageColumn();
             this.kmllogo = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox13)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.vectorSaveFile)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.vectorOpenFile)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox10)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.panel3.SuspendLayout();
             this.groupBox6.SuspendLayout();
             this.panel12.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.box.SuspendLayout();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.ogcCard.SuspendLayout();
             this.fileCard.SuspendLayout();
             this.databaseCard.SuspendLayout();
@@ -210,8 +221,10 @@
             this.groupBox3.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.DeepZoomPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox8)).BeginInit();
             this.TileConvertPage.SuspendLayout();
             this.panel6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox9)).BeginInit();
             this.VectorPage.SuspendLayout();
             this.panel9.SuspendLayout();
             this.panel4.SuspendLayout();
@@ -223,23 +236,10 @@
             this.helpCard.SuspendLayout();
             this.tabControl2.SuspendLayout();
             this.tabPage3.SuspendLayout();
-            this.tabPage4.SuspendLayout();
-            this.statusBar.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox13)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.vectorSaveFile)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.vectorOpenFile)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox8)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox9)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox10)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox11)).BeginInit();
+            this.tabPage4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox12)).BeginInit();
+            this.statusBar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.kmllogo)).BeginInit();
             this.SuspendLayout();
             // 
@@ -671,6 +671,403 @@
             this.SaveAsFormat.TabIndex = 0;
             this.OGCtoolTip.SetToolTip(this.SaveAsFormat, "Format");
             // 
+            // tabtextIcon
+            // 
+            this.tabtextIcon.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("tabtextIcon.BackgroundImage")));
+            this.tabtextIcon.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.tabtextIcon.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.tabtextIcon.FlatAppearance.BorderSize = 0;
+            this.tabtextIcon.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.tabtextIcon.Location = new System.Drawing.Point(355, 16);
+            this.tabtextIcon.Name = "tabtextIcon";
+            this.tabtextIcon.Size = new System.Drawing.Size(66, 60);
+            this.tabtextIcon.TabIndex = 15;
+            this.OGCtoolTip.SetToolTip(this.tabtextIcon, "TXT(tab delimited) or CSV(comma delimited)");
+            this.tabtextIcon.UseVisualStyleBackColor = true;
+            this.tabtextIcon.Click += new System.EventHandler(this.tabtextIcon_Click);
+            // 
+            // arcgisIcon
+            // 
+            this.arcgisIcon.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("arcgisIcon.BackgroundImage")));
+            this.arcgisIcon.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.arcgisIcon.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.arcgisIcon.FlatAppearance.BorderSize = 0;
+            this.arcgisIcon.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.arcgisIcon.Location = new System.Drawing.Point(238, 16);
+            this.arcgisIcon.Name = "arcgisIcon";
+            this.arcgisIcon.Size = new System.Drawing.Size(66, 60);
+            this.arcgisIcon.TabIndex = 15;
+            this.OGCtoolTip.SetToolTip(this.arcgisIcon, "ArcGIS(ShapeFile)");
+            this.arcgisIcon.UseVisualStyleBackColor = true;
+            this.arcgisIcon.Click += new System.EventHandler(this.arcgisIcon_Click);
+            // 
+            // kmlIcon
+            // 
+            this.kmlIcon.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("kmlIcon.BackgroundImage")));
+            this.kmlIcon.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.kmlIcon.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.kmlIcon.FlatAppearance.BorderSize = 0;
+            this.kmlIcon.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.kmlIcon.Location = new System.Drawing.Point(393, 148);
+            this.kmlIcon.Name = "kmlIcon";
+            this.kmlIcon.Size = new System.Drawing.Size(79, 71);
+            this.kmlIcon.TabIndex = 15;
+            this.OGCtoolTip.SetToolTip(this.kmlIcon, "GoogleEarth(KML)");
+            this.kmlIcon.UseVisualStyleBackColor = true;
+            this.kmlIcon.Click += new System.EventHandler(this.kmlIcon_Click);
+            // 
+            // geositeIcon
+            // 
+            this.geositeIcon.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("geositeIcon.BackgroundImage")));
+            this.geositeIcon.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.geositeIcon.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.geositeIcon.FlatAppearance.BorderSize = 0;
+            this.geositeIcon.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.geositeIcon.Location = new System.Drawing.Point(285, 148);
+            this.geositeIcon.Name = "geositeIcon";
+            this.geositeIcon.Size = new System.Drawing.Size(79, 71);
+            this.geositeIcon.TabIndex = 15;
+            this.OGCtoolTip.SetToolTip(this.geositeIcon, "Geosite(Xml)");
+            this.geositeIcon.UseVisualStyleBackColor = true;
+            this.geositeIcon.Click += new System.EventHandler(this.geositeIcon_Click);
+            // 
+            // pictureBox13
+            // 
+            this.pictureBox13.BackgroundImage = global::Geosite.Properties.Resources.fileformat;
+            this.pictureBox13.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.pictureBox13.Location = new System.Drawing.Point(266, 16);
+            this.pictureBox13.Name = "pictureBox13";
+            this.pictureBox13.Size = new System.Drawing.Size(23, 26);
+            this.pictureBox13.TabIndex = 14;
+            this.pictureBox13.TabStop = false;
+            this.OGCtoolTip.SetToolTip(this.pictureBox13, "Format");
+            // 
+            // vectorSaveFile
+            // 
+            this.vectorSaveFile.BackgroundImage = global::Geosite.Properties.Resources.saveas1;
+            this.vectorSaveFile.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.vectorSaveFile.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.vectorSaveFile.Location = new System.Drawing.Point(3, 16);
+            this.vectorSaveFile.Name = "vectorSaveFile";
+            this.vectorSaveFile.Size = new System.Drawing.Size(26, 26);
+            this.vectorSaveFile.TabIndex = 12;
+            this.vectorSaveFile.TabStop = false;
+            this.OGCtoolTip.SetToolTip(this.vectorSaveFile, "Save As");
+            this.vectorSaveFile.Click += new System.EventHandler(this.vectorSaveFile_Click);
+            // 
+            // vectorOpenFile
+            // 
+            this.vectorOpenFile.BackgroundImage = global::Geosite.Properties.Resources.open1;
+            this.vectorOpenFile.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.vectorOpenFile.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.vectorOpenFile.Location = new System.Drawing.Point(6, 16);
+            this.vectorOpenFile.Name = "vectorOpenFile";
+            this.vectorOpenFile.Size = new System.Drawing.Size(26, 26);
+            this.vectorOpenFile.TabIndex = 12;
+            this.vectorOpenFile.TabStop = false;
+            this.OGCtoolTip.SetToolTip(this.vectorOpenFile, "Open");
+            this.vectorOpenFile.Click += new System.EventHandler(this.vectorOpenFile_Click);
+            // 
+            // geojsonIcon
+            // 
+            this.geojsonIcon.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("geojsonIcon.BackgroundImage")));
+            this.geojsonIcon.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.geojsonIcon.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.geojsonIcon.FlatAppearance.BorderSize = 0;
+            this.geojsonIcon.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.geojsonIcon.Location = new System.Drawing.Point(177, 148);
+            this.geojsonIcon.Name = "geojsonIcon";
+            this.geojsonIcon.Size = new System.Drawing.Size(79, 71);
+            this.geojsonIcon.TabIndex = 15;
+            this.OGCtoolTip.SetToolTip(this.geojsonIcon, "GeoJSON(geojson)");
+            this.geojsonIcon.UseVisualStyleBackColor = true;
+            this.geojsonIcon.Click += new System.EventHandler(this.geojsonIcon_Click);
+            // 
+            // gmlIcon
+            // 
+            this.gmlIcon.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("gmlIcon.BackgroundImage")));
+            this.gmlIcon.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.gmlIcon.Cursor = System.Windows.Forms.Cursors.Default;
+            this.gmlIcon.FlatAppearance.BorderSize = 0;
+            this.gmlIcon.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.gmlIcon.Location = new System.Drawing.Point(68, 148);
+            this.gmlIcon.Name = "gmlIcon";
+            this.gmlIcon.Size = new System.Drawing.Size(79, 71);
+            this.gmlIcon.TabIndex = 15;
+            this.OGCtoolTip.SetToolTip(this.gmlIcon, "OGC-GML(GML)");
+            this.gmlIcon.UseVisualStyleBackColor = true;
+            // 
+            // mapgisIcon
+            // 
+            this.mapgisIcon.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("mapgisIcon.BackgroundImage")));
+            this.mapgisIcon.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.mapgisIcon.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.mapgisIcon.FlatAppearance.BorderSize = 0;
+            this.mapgisIcon.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.mapgisIcon.Location = new System.Drawing.Point(120, 16);
+            this.mapgisIcon.Name = "mapgisIcon";
+            this.mapgisIcon.Size = new System.Drawing.Size(66, 60);
+            this.mapgisIcon.TabIndex = 15;
+            this.OGCtoolTip.SetToolTip(this.mapgisIcon, "MapGIS(wt wl wp)");
+            this.mapgisIcon.UseVisualStyleBackColor = true;
+            this.mapgisIcon.Click += new System.EventHandler(this.mapgisIcon_Click);
+            // 
+            // PostgresLight
+            // 
+            this.PostgresLight.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("PostgresLight.BackgroundImage")));
+            this.PostgresLight.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.PostgresLight.Checked = true;
+            this.PostgresLight.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.PostgresLight.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.PostgresLight.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.PostgresLight.Location = new System.Drawing.Point(4, 3);
+            this.PostgresLight.Name = "PostgresLight";
+            this.PostgresLight.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.PostgresLight.Size = new System.Drawing.Size(44, 21);
+            this.PostgresLight.TabIndex = 18;
+            this.OGCtoolTip.SetToolTip(this.PostgresLight, "Open sharing permission?");
+            this.PostgresLight.UseVisualStyleBackColor = true;
+            this.PostgresLight.CheckedChanged += new System.EventHandler(this.PostgresLight_CheckedChanged);
+            // 
+            // UpdateBox
+            // 
+            this.UpdateBox.AutoSize = true;
+            this.UpdateBox.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("UpdateBox.BackgroundImage")));
+            this.UpdateBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.UpdateBox.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.UpdateBox.Checked = true;
+            this.UpdateBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.UpdateBox.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.UpdateBox.Location = new System.Drawing.Point(151, 17);
+            this.UpdateBox.Name = "UpdateBox";
+            this.UpdateBox.Size = new System.Drawing.Size(36, 16);
+            this.UpdateBox.TabIndex = 19;
+            this.UpdateBox.Text = "  ";
+            this.OGCtoolTip.SetToolTip(this.UpdateBox, "Update ?");
+            this.UpdateBox.UseVisualStyleBackColor = true;
+            this.UpdateBox.CheckedChanged += new System.EventHandler(this.FormEventChanged);
+            // 
+            // EPSG4326
+            // 
+            this.EPSG4326.AutoSize = true;
+            this.EPSG4326.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("EPSG4326.BackgroundImage")));
+            this.EPSG4326.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.EPSG4326.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.EPSG4326.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.EPSG4326.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.EPSG4326.Location = new System.Drawing.Point(101, 17);
+            this.EPSG4326.Name = "EPSG4326";
+            this.EPSG4326.Size = new System.Drawing.Size(36, 16);
+            this.EPSG4326.TabIndex = 14;
+            this.EPSG4326.Text = "  ";
+            this.EPSG4326.ThreeState = true;
+            this.OGCtoolTip.SetToolTip(this.EPSG4326, "EPSG:4326 ?\r\nGeographic coordinate system");
+            this.EPSG4326.UseVisualStyleBackColor = true;
+            this.EPSG4326.CheckedChanged += new System.EventHandler(this.FormEventChanged);
+            // 
+            // wmtsSpider
+            // 
+            this.wmtsSpider.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("wmtsSpider.BackgroundImage")));
+            this.wmtsSpider.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.wmtsSpider.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.wmtsSpider.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.wmtsSpider.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.wmtsSpider.Location = new System.Drawing.Point(89, 45);
+            this.wmtsSpider.Name = "wmtsSpider";
+            this.wmtsSpider.Size = new System.Drawing.Size(50, 24);
+            this.wmtsSpider.TabIndex = 18;
+            this.OGCtoolTip.SetToolTip(this.wmtsSpider, "Spider\r\nPush to database?");
+            this.wmtsSpider.UseVisualStyleBackColor = true;
+            this.wmtsSpider.CheckedChanged += new System.EventHandler(this.wmtsSpider_CheckedChanged);
+            // 
+            // pictureBox7
+            // 
+            this.pictureBox7.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox7.BackgroundImage")));
+            this.pictureBox7.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.pictureBox7.Location = new System.Drawing.Point(6, 6);
+            this.pictureBox7.Name = "pictureBox7";
+            this.pictureBox7.Size = new System.Drawing.Size(21, 21);
+            this.pictureBox7.TabIndex = 0;
+            this.pictureBox7.TabStop = false;
+            this.OGCtoolTip.SetToolTip(this.pictureBox7, "URI\r\nSubstitution: {s} {z} {x} {y} {BingMap} {ESRI}");
+            // 
+            // pictureBox5
+            // 
+            this.pictureBox5.BackgroundImage = global::Geosite.Properties.Resources.DOM;
+            this.pictureBox5.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.pictureBox5.Location = new System.Drawing.Point(8, 7);
+            this.pictureBox5.Name = "pictureBox5";
+            this.pictureBox5.Size = new System.Drawing.Size(70, 70);
+            this.pictureBox5.TabIndex = 25;
+            this.pictureBox5.TabStop = false;
+            this.OGCtoolTip.SetToolTip(this.pictureBox5, "Geographic Reference System");
+            // 
+            // topologyCheckBox
+            // 
+            this.topologyCheckBox.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("topologyCheckBox.BackgroundImage")));
+            this.topologyCheckBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.topologyCheckBox.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.topologyCheckBox.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.topologyCheckBox.Location = new System.Drawing.Point(4, 2);
+            this.topologyCheckBox.Name = "topologyCheckBox";
+            this.topologyCheckBox.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.topologyCheckBox.Size = new System.Drawing.Size(46, 23);
+            this.topologyCheckBox.TabIndex = 18;
+            this.topologyCheckBox.Text = "      ";
+            this.topologyCheckBox.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.OGCtoolTip.SetToolTip(this.topologyCheckBox, "Topology ? (line and polygon only)\r\nline + length\r\npolygon + perimeter&area");
+            this.topologyCheckBox.UseVisualStyleBackColor = true;
+            this.topologyCheckBox.CheckedChanged += new System.EventHandler(this.FormEventChanged);
+            // 
+            // VectorFileClear
+            // 
+            this.VectorFileClear.BackColor = System.Drawing.Color.White;
+            this.VectorFileClear.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("VectorFileClear.BackgroundImage")));
+            this.VectorFileClear.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.VectorFileClear.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.VectorFileClear.Enabled = false;
+            this.VectorFileClear.Font = new System.Drawing.Font("宋体", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.VectorFileClear.ForeColor = System.Drawing.Color.Black;
+            this.VectorFileClear.Location = new System.Drawing.Point(6, 77);
+            this.VectorFileClear.Name = "VectorFileClear";
+            this.VectorFileClear.Size = new System.Drawing.Size(55, 45);
+            this.VectorFileClear.TabIndex = 16;
+            this.OGCtoolTip.SetToolTip(this.VectorFileClear, "Clear selected");
+            this.VectorFileClear.UseVisualStyleBackColor = false;
+            this.VectorFileClear.Click += new System.EventHandler(this.VectorFileClear_Click);
+            // 
+            // VectorOpen
+            // 
+            this.VectorOpen.BackColor = System.Drawing.Color.White;
+            this.VectorOpen.BackgroundImage = global::Geosite.Properties.Resources.open;
+            this.VectorOpen.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.VectorOpen.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.VectorOpen.Location = new System.Drawing.Point(6, 6);
+            this.VectorOpen.Name = "VectorOpen";
+            this.VectorOpen.Size = new System.Drawing.Size(55, 67);
+            this.VectorOpen.TabIndex = 15;
+            this.OGCtoolTip.SetToolTip(this.VectorOpen, "Open vector files");
+            this.VectorOpen.UseVisualStyleBackColor = false;
+            this.VectorOpen.Click += new System.EventHandler(this.VectorOpen_Click);
+            // 
+            // ReClean
+            // 
+            this.ReClean.BackColor = System.Drawing.Color.White;
+            this.ReClean.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.ReClean.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.ReClean.Enabled = false;
+            this.ReClean.Image = global::Geosite.Properties.Resources.reclean;
+            this.ReClean.Location = new System.Drawing.Point(167, 117);
+            this.ReClean.Margin = new System.Windows.Forms.Padding(0);
+            this.ReClean.Name = "ReClean";
+            this.ReClean.Size = new System.Drawing.Size(45, 28);
+            this.ReClean.TabIndex = 24;
+            this.OGCtoolTip.SetToolTip(this.ReClean, "ReClean");
+            this.ReClean.UseVisualStyleBackColor = false;
+            this.ReClean.Click += new System.EventHandler(this.ReClean_Click);
+            // 
+            // ReIndex
+            // 
+            this.ReIndex.BackColor = System.Drawing.Color.White;
+            this.ReIndex.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.ReIndex.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.ReIndex.Enabled = false;
+            this.ReIndex.Image = global::Geosite.Properties.Resources.reindex;
+            this.ReIndex.Location = new System.Drawing.Point(167, 86);
+            this.ReIndex.Margin = new System.Windows.Forms.Padding(0);
+            this.ReIndex.Name = "ReIndex";
+            this.ReIndex.Size = new System.Drawing.Size(45, 28);
+            this.ReIndex.TabIndex = 24;
+            this.OGCtoolTip.SetToolTip(this.ReIndex, "ReIndex");
+            this.ReIndex.UseVisualStyleBackColor = false;
+            this.ReIndex.Click += new System.EventHandler(this.ReIndex_Click);
+            // 
+            // GeositeServerLink
+            // 
+            this.GeositeServerLink.BackColor = System.Drawing.Color.White;
+            this.GeositeServerLink.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("GeositeServerLink.BackgroundImage")));
+            this.GeositeServerLink.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.GeositeServerLink.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.GeositeServerLink.Location = new System.Drawing.Point(167, 31);
+            this.GeositeServerLink.Name = "GeositeServerLink";
+            this.GeositeServerLink.Size = new System.Drawing.Size(45, 51);
+            this.GeositeServerLink.TabIndex = 2;
+            this.OGCtoolTip.SetToolTip(this.GeositeServerLink, "Connect to GeositeServer");
+            this.GeositeServerLink.UseVisualStyleBackColor = false;
+            this.GeositeServerLink.Click += new System.EventHandler(this.GeositeServerLink_Click);
+            // 
+            // pictureBox4
+            // 
+            this.pictureBox4.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox4.BackgroundImage")));
+            this.pictureBox4.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.pictureBox4.Location = new System.Drawing.Point(-1, 62);
+            this.pictureBox4.Name = "pictureBox4";
+            this.pictureBox4.Size = new System.Drawing.Size(21, 21);
+            this.pictureBox4.TabIndex = 0;
+            this.pictureBox4.TabStop = false;
+            this.OGCtoolTip.SetToolTip(this.pictureBox4, "GeositeServer Password");
+            // 
+            // pictureBox10
+            // 
+            this.pictureBox10.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox10.BackgroundImage")));
+            this.pictureBox10.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.pictureBox10.Location = new System.Drawing.Point(-1, 123);
+            this.pictureBox10.Name = "pictureBox10";
+            this.pictureBox10.Size = new System.Drawing.Size(21, 21);
+            this.pictureBox10.TabIndex = 0;
+            this.pictureBox10.TabStop = false;
+            this.OGCtoolTip.SetToolTip(this.pictureBox10, "Port");
+            // 
+            // pictureBox6
+            // 
+            this.pictureBox6.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox6.BackgroundImage")));
+            this.pictureBox6.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.pictureBox6.Location = new System.Drawing.Point(-1, 92);
+            this.pictureBox6.Name = "pictureBox6";
+            this.pictureBox6.Size = new System.Drawing.Size(21, 21);
+            this.pictureBox6.TabIndex = 0;
+            this.pictureBox6.TabStop = false;
+            this.OGCtoolTip.SetToolTip(this.pictureBox6, "Server");
+            // 
+            // pictureBox3
+            // 
+            this.pictureBox3.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox3.BackgroundImage")));
+            this.pictureBox3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.pictureBox3.Location = new System.Drawing.Point(-1, 32);
+            this.pictureBox3.Name = "pictureBox3";
+            this.pictureBox3.Size = new System.Drawing.Size(21, 21);
+            this.pictureBox3.TabIndex = 0;
+            this.pictureBox3.TabStop = false;
+            this.OGCtoolTip.SetToolTip(this.pictureBox3, "GeositeServer User");
+            // 
+            // pictureBox2
+            // 
+            this.pictureBox2.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox2.BackgroundImage")));
+            this.pictureBox2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.pictureBox2.Location = new System.Drawing.Point(-1, 4);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(21, 21);
+            this.pictureBox2.TabIndex = 0;
+            this.pictureBox2.TabStop = false;
+            this.OGCtoolTip.SetToolTip(this.pictureBox2, "GeositeServer URL");
+            // 
+            // PostgresRun
+            // 
+            this.PostgresRun.BackColor = System.Drawing.Color.White;
+            this.PostgresRun.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("PostgresRun.BackgroundImage")));
+            this.PostgresRun.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.PostgresRun.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.PostgresRun.Enabled = false;
+            this.PostgresRun.Font = new System.Drawing.Font("Arial", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.PostgresRun.ForeColor = System.Drawing.Color.Black;
+            this.PostgresRun.Location = new System.Drawing.Point(464, 211);
+            this.PostgresRun.Name = "PostgresRun";
+            this.PostgresRun.Size = new System.Drawing.Size(55, 134);
+            this.PostgresRun.TabIndex = 14;
+            this.OGCtoolTip.SetToolTip(this.PostgresRun, "Start");
+            this.PostgresRun.UseVisualStyleBackColor = false;
+            this.PostgresRun.Click += new System.EventHandler(this.PostgresRun_Click);
+            // 
             // tilewebapi
             // 
             this.tilewebapi.BackColor = System.Drawing.Color.White;
@@ -767,6 +1164,21 @@
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(518, 1);
             this.panel5.TabIndex = 16;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            this.pictureBox1.Location = new System.Drawing.Point(35, 0);
+            this.pictureBox1.Margin = new System.Windows.Forms.Padding(0);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(445, 244);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox1.TabIndex = 12;
+            this.pictureBox1.TabStop = false;
             // 
             // ogcCard
             // 
@@ -1392,6 +1804,16 @@
             this.DeepZoomOpenTextBox.TextChanged += new System.EventHandler(this.DeepZoomChanged);
             this.DeepZoomOpenTextBox.DoubleClick += new System.EventHandler(this.DeepZoomOpen_Click);
             // 
+            // pictureBox8
+            // 
+            this.pictureBox8.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox8.BackgroundImage")));
+            this.pictureBox8.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.pictureBox8.Location = new System.Drawing.Point(8, 7);
+            this.pictureBox8.Name = "pictureBox8";
+            this.pictureBox8.Size = new System.Drawing.Size(70, 70);
+            this.pictureBox8.TabIndex = 24;
+            this.pictureBox8.TabStop = false;
+            // 
             // TileConvertPage
             // 
             this.TileConvertPage.Controls.Add(this.TileFormatSave);
@@ -1521,6 +1943,16 @@
             this.TileFormatOpenBox.TextChanged += new System.EventHandler(this.TileFormatChanged);
             this.TileFormatOpenBox.DoubleClick += new System.EventHandler(this.TileFormatOpen_Click);
             // 
+            // pictureBox9
+            // 
+            this.pictureBox9.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox9.BackgroundImage")));
+            this.pictureBox9.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.pictureBox9.Location = new System.Drawing.Point(8, 11);
+            this.pictureBox9.Name = "pictureBox9";
+            this.pictureBox9.Size = new System.Drawing.Size(62, 62);
+            this.pictureBox9.TabIndex = 25;
+            this.pictureBox9.TabStop = false;
+            // 
             // VectorPage
             // 
             this.VectorPage.Controls.Add(this.panel9);
@@ -1590,8 +2022,8 @@
             // 
             // VectorStatus
             // 
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.VectorStatus.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.VectorStatus.DefaultCellStyle = dataGridViewCellStyle11;
             this.VectorStatus.HeaderText = "※";
             this.VectorStatus.Name = "VectorStatus";
             this.VectorStatus.ReadOnly = true;
@@ -1650,13 +2082,13 @@
             this.clusterDataPool.AllowUserToAddRows = false;
             this.clusterDataPool.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
             this.clusterDataPool.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.clusterDataPool.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle12.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle12.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle12.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.clusterDataPool.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle12;
             this.clusterDataPool.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.clusterDataPool.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.ThemeName,
@@ -1781,6 +2213,16 @@
     "em into GML, GeoJSON, ShapeFile, KML and GeositeXML, and pushing vector/raster t" +
     "o PostgreSQL database.";
             // 
+            // pictureBox11
+            // 
+            this.pictureBox11.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox11.BackgroundImage")));
+            this.pictureBox11.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.pictureBox11.Location = new System.Drawing.Point(6, 0);
+            this.pictureBox11.Name = "pictureBox11";
+            this.pictureBox11.Size = new System.Drawing.Size(75, 75);
+            this.pictureBox11.TabIndex = 2;
+            this.pictureBox11.TabStop = false;
+            // 
             // textBox1
             // 
             this.textBox1.BackColor = System.Drawing.Color.White;
@@ -1844,6 +2286,16 @@
             this.textBox2.TabIndex = 0;
             this.textBox2.Text = resources.GetString("textBox2.Text");
             // 
+            // pictureBox12
+            // 
+            this.pictureBox12.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox12.BackgroundImage")));
+            this.pictureBox12.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.pictureBox12.Location = new System.Drawing.Point(6, 6);
+            this.pictureBox12.Name = "pictureBox12";
+            this.pictureBox12.Size = new System.Drawing.Size(61, 52);
+            this.pictureBox12.TabIndex = 3;
+            this.pictureBox12.TabStop = false;
+            // 
             // vectorWorker
             // 
             this.vectorWorker.WorkerReportsProgress = true;
@@ -1885,454 +2337,6 @@
             this.statusText.ToolTipText = "Dblclick to clipboard";
             this.statusText.DoubleClick += new System.EventHandler(this.statusText_DoubleClick);
             // 
-            // tabtextIcon
-            // 
-            this.tabtextIcon.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("tabtextIcon.BackgroundImage")));
-            this.tabtextIcon.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.tabtextIcon.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.tabtextIcon.FlatAppearance.BorderSize = 0;
-            this.tabtextIcon.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.tabtextIcon.Location = new System.Drawing.Point(355, 16);
-            this.tabtextIcon.Name = "tabtextIcon";
-            this.tabtextIcon.Size = new System.Drawing.Size(66, 60);
-            this.tabtextIcon.TabIndex = 15;
-            this.OGCtoolTip.SetToolTip(this.tabtextIcon, "TXT(tab delimited) or CSV(comma delimited)");
-            this.tabtextIcon.UseVisualStyleBackColor = true;
-            this.tabtextIcon.Click += new System.EventHandler(this.tabtextIcon_Click);
-            // 
-            // arcgisIcon
-            // 
-            this.arcgisIcon.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("arcgisIcon.BackgroundImage")));
-            this.arcgisIcon.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.arcgisIcon.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.arcgisIcon.FlatAppearance.BorderSize = 0;
-            this.arcgisIcon.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.arcgisIcon.Location = new System.Drawing.Point(238, 16);
-            this.arcgisIcon.Name = "arcgisIcon";
-            this.arcgisIcon.Size = new System.Drawing.Size(66, 60);
-            this.arcgisIcon.TabIndex = 15;
-            this.OGCtoolTip.SetToolTip(this.arcgisIcon, "ArcGIS(ShapeFile)");
-            this.arcgisIcon.UseVisualStyleBackColor = true;
-            this.arcgisIcon.Click += new System.EventHandler(this.arcgisIcon_Click);
-            // 
-            // kmlIcon
-            // 
-            this.kmlIcon.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("kmlIcon.BackgroundImage")));
-            this.kmlIcon.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.kmlIcon.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.kmlIcon.FlatAppearance.BorderSize = 0;
-            this.kmlIcon.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.kmlIcon.Location = new System.Drawing.Point(393, 148);
-            this.kmlIcon.Name = "kmlIcon";
-            this.kmlIcon.Size = new System.Drawing.Size(79, 71);
-            this.kmlIcon.TabIndex = 15;
-            this.OGCtoolTip.SetToolTip(this.kmlIcon, "GoogleEarth(KML)");
-            this.kmlIcon.UseVisualStyleBackColor = true;
-            this.kmlIcon.Click += new System.EventHandler(this.kmlIcon_Click);
-            // 
-            // geositeIcon
-            // 
-            this.geositeIcon.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("geositeIcon.BackgroundImage")));
-            this.geositeIcon.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.geositeIcon.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.geositeIcon.FlatAppearance.BorderSize = 0;
-            this.geositeIcon.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.geositeIcon.Location = new System.Drawing.Point(285, 148);
-            this.geositeIcon.Name = "geositeIcon";
-            this.geositeIcon.Size = new System.Drawing.Size(79, 71);
-            this.geositeIcon.TabIndex = 15;
-            this.OGCtoolTip.SetToolTip(this.geositeIcon, "Geosite(Xml)");
-            this.geositeIcon.UseVisualStyleBackColor = true;
-            this.geositeIcon.Click += new System.EventHandler(this.geositeIcon_Click);
-            // 
-            // pictureBox13
-            // 
-            this.pictureBox13.BackgroundImage = global::Geosite.Properties.Resources.fileformat;
-            this.pictureBox13.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pictureBox13.Location = new System.Drawing.Point(266, 16);
-            this.pictureBox13.Name = "pictureBox13";
-            this.pictureBox13.Size = new System.Drawing.Size(23, 26);
-            this.pictureBox13.TabIndex = 14;
-            this.pictureBox13.TabStop = false;
-            this.OGCtoolTip.SetToolTip(this.pictureBox13, "Format");
-            // 
-            // vectorSaveFile
-            // 
-            this.vectorSaveFile.BackgroundImage = global::Geosite.Properties.Resources.saveas1;
-            this.vectorSaveFile.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.vectorSaveFile.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.vectorSaveFile.Location = new System.Drawing.Point(3, 16);
-            this.vectorSaveFile.Name = "vectorSaveFile";
-            this.vectorSaveFile.Size = new System.Drawing.Size(26, 26);
-            this.vectorSaveFile.TabIndex = 12;
-            this.vectorSaveFile.TabStop = false;
-            this.OGCtoolTip.SetToolTip(this.vectorSaveFile, "Save As");
-            this.vectorSaveFile.Click += new System.EventHandler(this.vectorSaveFile_Click);
-            // 
-            // vectorOpenFile
-            // 
-            this.vectorOpenFile.BackgroundImage = global::Geosite.Properties.Resources.open1;
-            this.vectorOpenFile.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.vectorOpenFile.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.vectorOpenFile.Location = new System.Drawing.Point(6, 16);
-            this.vectorOpenFile.Name = "vectorOpenFile";
-            this.vectorOpenFile.Size = new System.Drawing.Size(26, 26);
-            this.vectorOpenFile.TabIndex = 12;
-            this.vectorOpenFile.TabStop = false;
-            this.OGCtoolTip.SetToolTip(this.vectorOpenFile, "Open");
-            this.vectorOpenFile.Click += new System.EventHandler(this.vectorOpenFile_Click);
-            // 
-            // geojsonIcon
-            // 
-            this.geojsonIcon.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("geojsonIcon.BackgroundImage")));
-            this.geojsonIcon.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.geojsonIcon.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.geojsonIcon.FlatAppearance.BorderSize = 0;
-            this.geojsonIcon.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.geojsonIcon.Location = new System.Drawing.Point(177, 148);
-            this.geojsonIcon.Name = "geojsonIcon";
-            this.geojsonIcon.Size = new System.Drawing.Size(79, 71);
-            this.geojsonIcon.TabIndex = 15;
-            this.OGCtoolTip.SetToolTip(this.geojsonIcon, "GeoJSON(geojson)");
-            this.geojsonIcon.UseVisualStyleBackColor = true;
-            this.geojsonIcon.Click += new System.EventHandler(this.geojsonIcon_Click);
-            // 
-            // gmlIcon
-            // 
-            this.gmlIcon.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("gmlIcon.BackgroundImage")));
-            this.gmlIcon.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.gmlIcon.Cursor = System.Windows.Forms.Cursors.Default;
-            this.gmlIcon.FlatAppearance.BorderSize = 0;
-            this.gmlIcon.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.gmlIcon.Location = new System.Drawing.Point(68, 148);
-            this.gmlIcon.Name = "gmlIcon";
-            this.gmlIcon.Size = new System.Drawing.Size(79, 71);
-            this.gmlIcon.TabIndex = 15;
-            this.OGCtoolTip.SetToolTip(this.gmlIcon, "OGC-GML(GML)");
-            this.gmlIcon.UseVisualStyleBackColor = true;
-            // 
-            // mapgisIcon
-            // 
-            this.mapgisIcon.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("mapgisIcon.BackgroundImage")));
-            this.mapgisIcon.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.mapgisIcon.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.mapgisIcon.FlatAppearance.BorderSize = 0;
-            this.mapgisIcon.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.mapgisIcon.Location = new System.Drawing.Point(120, 16);
-            this.mapgisIcon.Name = "mapgisIcon";
-            this.mapgisIcon.Size = new System.Drawing.Size(66, 60);
-            this.mapgisIcon.TabIndex = 15;
-            this.OGCtoolTip.SetToolTip(this.mapgisIcon, "MapGIS(wt wl wp)");
-            this.mapgisIcon.UseVisualStyleBackColor = true;
-            this.mapgisIcon.Click += new System.EventHandler(this.mapgisIcon_Click);
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(35, 0);
-            this.pictureBox1.Margin = new System.Windows.Forms.Padding(0);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(445, 244);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox1.TabIndex = 12;
-            this.pictureBox1.TabStop = false;
-            // 
-            // PostgresLight
-            // 
-            this.PostgresLight.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("PostgresLight.BackgroundImage")));
-            this.PostgresLight.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.PostgresLight.Checked = true;
-            this.PostgresLight.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.PostgresLight.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.PostgresLight.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.PostgresLight.Location = new System.Drawing.Point(4, 3);
-            this.PostgresLight.Name = "PostgresLight";
-            this.PostgresLight.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.PostgresLight.Size = new System.Drawing.Size(44, 21);
-            this.PostgresLight.TabIndex = 18;
-            this.OGCtoolTip.SetToolTip(this.PostgresLight, "Open sharing permission?");
-            this.PostgresLight.UseVisualStyleBackColor = true;
-            this.PostgresLight.CheckedChanged += new System.EventHandler(this.PostgresLight_CheckedChanged);
-            // 
-            // UpdateBox
-            // 
-            this.UpdateBox.AutoSize = true;
-            this.UpdateBox.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("UpdateBox.BackgroundImage")));
-            this.UpdateBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.UpdateBox.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.UpdateBox.Checked = true;
-            this.UpdateBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.UpdateBox.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.UpdateBox.Location = new System.Drawing.Point(151, 17);
-            this.UpdateBox.Name = "UpdateBox";
-            this.UpdateBox.Size = new System.Drawing.Size(36, 16);
-            this.UpdateBox.TabIndex = 19;
-            this.UpdateBox.Text = "  ";
-            this.OGCtoolTip.SetToolTip(this.UpdateBox, "Update ?");
-            this.UpdateBox.UseVisualStyleBackColor = true;
-            this.UpdateBox.CheckedChanged += new System.EventHandler(this.FormEventChanged);
-            // 
-            // EPSG4326
-            // 
-            this.EPSG4326.AutoSize = true;
-            this.EPSG4326.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("EPSG4326.BackgroundImage")));
-            this.EPSG4326.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.EPSG4326.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.EPSG4326.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.EPSG4326.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.EPSG4326.Location = new System.Drawing.Point(101, 17);
-            this.EPSG4326.Name = "EPSG4326";
-            this.EPSG4326.Size = new System.Drawing.Size(36, 16);
-            this.EPSG4326.TabIndex = 14;
-            this.EPSG4326.Text = "  ";
-            this.EPSG4326.ThreeState = true;
-            this.OGCtoolTip.SetToolTip(this.EPSG4326, "EPSG:4326 ?\r\nGeographic coordinate system");
-            this.EPSG4326.UseVisualStyleBackColor = true;
-            this.EPSG4326.CheckedChanged += new System.EventHandler(this.FormEventChanged);
-            // 
-            // wmtsSpider
-            // 
-            this.wmtsSpider.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("wmtsSpider.BackgroundImage")));
-            this.wmtsSpider.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.wmtsSpider.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.wmtsSpider.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.wmtsSpider.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.wmtsSpider.Location = new System.Drawing.Point(89, 45);
-            this.wmtsSpider.Name = "wmtsSpider";
-            this.wmtsSpider.Size = new System.Drawing.Size(50, 24);
-            this.wmtsSpider.TabIndex = 18;
-            this.OGCtoolTip.SetToolTip(this.wmtsSpider, "Spider\r\nPush to database?");
-            this.wmtsSpider.UseVisualStyleBackColor = true;
-            this.wmtsSpider.CheckedChanged += new System.EventHandler(this.wmtsSpider_CheckedChanged);
-            // 
-            // pictureBox7
-            // 
-            this.pictureBox7.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox7.BackgroundImage")));
-            this.pictureBox7.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.pictureBox7.Location = new System.Drawing.Point(6, 6);
-            this.pictureBox7.Name = "pictureBox7";
-            this.pictureBox7.Size = new System.Drawing.Size(21, 21);
-            this.pictureBox7.TabIndex = 0;
-            this.pictureBox7.TabStop = false;
-            this.OGCtoolTip.SetToolTip(this.pictureBox7, "URI\r\nSubstitution: {s} {z} {x} {y} {BingMap} {ESRI}");
-            // 
-            // pictureBox5
-            // 
-            this.pictureBox5.BackgroundImage = global::Geosite.Properties.Resources.DOM;
-            this.pictureBox5.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.pictureBox5.Location = new System.Drawing.Point(8, 7);
-            this.pictureBox5.Name = "pictureBox5";
-            this.pictureBox5.Size = new System.Drawing.Size(70, 70);
-            this.pictureBox5.TabIndex = 25;
-            this.pictureBox5.TabStop = false;
-            this.OGCtoolTip.SetToolTip(this.pictureBox5, "Geographic Reference System");
-            // 
-            // pictureBox8
-            // 
-            this.pictureBox8.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox8.BackgroundImage")));
-            this.pictureBox8.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.pictureBox8.Location = new System.Drawing.Point(8, 7);
-            this.pictureBox8.Name = "pictureBox8";
-            this.pictureBox8.Size = new System.Drawing.Size(70, 70);
-            this.pictureBox8.TabIndex = 24;
-            this.pictureBox8.TabStop = false;
-            // 
-            // pictureBox9
-            // 
-            this.pictureBox9.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox9.BackgroundImage")));
-            this.pictureBox9.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.pictureBox9.Location = new System.Drawing.Point(8, 11);
-            this.pictureBox9.Name = "pictureBox9";
-            this.pictureBox9.Size = new System.Drawing.Size(62, 62);
-            this.pictureBox9.TabIndex = 25;
-            this.pictureBox9.TabStop = false;
-            // 
-            // topologyCheckBox
-            // 
-            this.topologyCheckBox.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("topologyCheckBox.BackgroundImage")));
-            this.topologyCheckBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.topologyCheckBox.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.topologyCheckBox.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.topologyCheckBox.Location = new System.Drawing.Point(4, 2);
-            this.topologyCheckBox.Name = "topologyCheckBox";
-            this.topologyCheckBox.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.topologyCheckBox.Size = new System.Drawing.Size(46, 23);
-            this.topologyCheckBox.TabIndex = 18;
-            this.topologyCheckBox.Text = "      ";
-            this.topologyCheckBox.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.OGCtoolTip.SetToolTip(this.topologyCheckBox, "Topology ? (line and polygon only)\r\nline + length\r\npolygon + perimeter&area");
-            this.topologyCheckBox.UseVisualStyleBackColor = true;
-            this.topologyCheckBox.CheckedChanged += new System.EventHandler(this.FormEventChanged);
-            // 
-            // VectorFileClear
-            // 
-            this.VectorFileClear.BackColor = System.Drawing.Color.White;
-            this.VectorFileClear.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("VectorFileClear.BackgroundImage")));
-            this.VectorFileClear.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.VectorFileClear.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.VectorFileClear.Enabled = false;
-            this.VectorFileClear.Font = new System.Drawing.Font("宋体", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.VectorFileClear.ForeColor = System.Drawing.Color.Black;
-            this.VectorFileClear.Location = new System.Drawing.Point(6, 77);
-            this.VectorFileClear.Name = "VectorFileClear";
-            this.VectorFileClear.Size = new System.Drawing.Size(55, 45);
-            this.VectorFileClear.TabIndex = 16;
-            this.OGCtoolTip.SetToolTip(this.VectorFileClear, "Clear selected");
-            this.VectorFileClear.UseVisualStyleBackColor = false;
-            this.VectorFileClear.Click += new System.EventHandler(this.VectorFileClear_Click);
-            // 
-            // VectorOpen
-            // 
-            this.VectorOpen.BackColor = System.Drawing.Color.White;
-            this.VectorOpen.BackgroundImage = global::Geosite.Properties.Resources.open;
-            this.VectorOpen.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.VectorOpen.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.VectorOpen.Location = new System.Drawing.Point(6, 6);
-            this.VectorOpen.Name = "VectorOpen";
-            this.VectorOpen.Size = new System.Drawing.Size(55, 67);
-            this.VectorOpen.TabIndex = 15;
-            this.OGCtoolTip.SetToolTip(this.VectorOpen, "Open vector files");
-            this.VectorOpen.UseVisualStyleBackColor = false;
-            this.VectorOpen.Click += new System.EventHandler(this.VectorOpen_Click);
-            // 
-            // ReClean
-            // 
-            this.ReClean.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.ReClean.Enabled = false;
-            this.ReClean.Image = global::Geosite.Properties.Resources.reclean;
-            this.ReClean.Location = new System.Drawing.Point(167, 117);
-            this.ReClean.Margin = new System.Windows.Forms.Padding(0);
-            this.ReClean.Name = "ReClean";
-            this.ReClean.Size = new System.Drawing.Size(45, 28);
-            this.ReClean.TabIndex = 24;
-            this.OGCtoolTip.SetToolTip(this.ReClean, "ReClean");
-            this.ReClean.UseVisualStyleBackColor = true;
-            this.ReClean.Click += new System.EventHandler(this.ReClean_Click);
-            // 
-            // ReIndex
-            // 
-            this.ReIndex.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.ReIndex.Enabled = false;
-            this.ReIndex.Image = global::Geosite.Properties.Resources.reindex;
-            this.ReIndex.Location = new System.Drawing.Point(167, 86);
-            this.ReIndex.Margin = new System.Windows.Forms.Padding(0);
-            this.ReIndex.Name = "ReIndex";
-            this.ReIndex.Size = new System.Drawing.Size(45, 28);
-            this.ReIndex.TabIndex = 24;
-            this.OGCtoolTip.SetToolTip(this.ReIndex, "ReIndex");
-            this.ReIndex.UseVisualStyleBackColor = true;
-            this.ReIndex.Click += new System.EventHandler(this.ReIndex_Click);
-            // 
-            // GeositeServerLink
-            // 
-            this.GeositeServerLink.BackColor = System.Drawing.Color.White;
-            this.GeositeServerLink.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("GeositeServerLink.BackgroundImage")));
-            this.GeositeServerLink.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.GeositeServerLink.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.GeositeServerLink.Location = new System.Drawing.Point(167, 31);
-            this.GeositeServerLink.Name = "GeositeServerLink";
-            this.GeositeServerLink.Size = new System.Drawing.Size(45, 51);
-            this.GeositeServerLink.TabIndex = 2;
-            this.OGCtoolTip.SetToolTip(this.GeositeServerLink, "Connect to GeositeServer");
-            this.GeositeServerLink.UseVisualStyleBackColor = false;
-            this.GeositeServerLink.Click += new System.EventHandler(this.GeositeServerLink_Click);
-            // 
-            // pictureBox4
-            // 
-            this.pictureBox4.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox4.BackgroundImage")));
-            this.pictureBox4.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.pictureBox4.Location = new System.Drawing.Point(-1, 62);
-            this.pictureBox4.Name = "pictureBox4";
-            this.pictureBox4.Size = new System.Drawing.Size(21, 21);
-            this.pictureBox4.TabIndex = 0;
-            this.pictureBox4.TabStop = false;
-            this.OGCtoolTip.SetToolTip(this.pictureBox4, "GeositeServer Password");
-            // 
-            // pictureBox10
-            // 
-            this.pictureBox10.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox10.BackgroundImage")));
-            this.pictureBox10.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.pictureBox10.Location = new System.Drawing.Point(-1, 123);
-            this.pictureBox10.Name = "pictureBox10";
-            this.pictureBox10.Size = new System.Drawing.Size(21, 21);
-            this.pictureBox10.TabIndex = 0;
-            this.pictureBox10.TabStop = false;
-            this.OGCtoolTip.SetToolTip(this.pictureBox10, "Port");
-            // 
-            // pictureBox6
-            // 
-            this.pictureBox6.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox6.BackgroundImage")));
-            this.pictureBox6.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.pictureBox6.Location = new System.Drawing.Point(-1, 92);
-            this.pictureBox6.Name = "pictureBox6";
-            this.pictureBox6.Size = new System.Drawing.Size(21, 21);
-            this.pictureBox6.TabIndex = 0;
-            this.pictureBox6.TabStop = false;
-            this.OGCtoolTip.SetToolTip(this.pictureBox6, "Server");
-            // 
-            // pictureBox3
-            // 
-            this.pictureBox3.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox3.BackgroundImage")));
-            this.pictureBox3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.pictureBox3.Location = new System.Drawing.Point(-1, 32);
-            this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(21, 21);
-            this.pictureBox3.TabIndex = 0;
-            this.pictureBox3.TabStop = false;
-            this.OGCtoolTip.SetToolTip(this.pictureBox3, "GeositeServer User");
-            // 
-            // pictureBox2
-            // 
-            this.pictureBox2.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox2.BackgroundImage")));
-            this.pictureBox2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.pictureBox2.Location = new System.Drawing.Point(-1, 4);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(21, 21);
-            this.pictureBox2.TabIndex = 0;
-            this.pictureBox2.TabStop = false;
-            this.OGCtoolTip.SetToolTip(this.pictureBox2, "GeositeServer URL");
-            // 
-            // PostgresRun
-            // 
-            this.PostgresRun.BackColor = System.Drawing.Color.White;
-            this.PostgresRun.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("PostgresRun.BackgroundImage")));
-            this.PostgresRun.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.PostgresRun.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.PostgresRun.Enabled = false;
-            this.PostgresRun.Font = new System.Drawing.Font("Arial", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.PostgresRun.ForeColor = System.Drawing.Color.Black;
-            this.PostgresRun.Location = new System.Drawing.Point(464, 211);
-            this.PostgresRun.Name = "PostgresRun";
-            this.PostgresRun.Size = new System.Drawing.Size(55, 134);
-            this.PostgresRun.TabIndex = 14;
-            this.OGCtoolTip.SetToolTip(this.PostgresRun, "Start");
-            this.PostgresRun.UseVisualStyleBackColor = false;
-            this.PostgresRun.Click += new System.EventHandler(this.PostgresRun_Click);
-            // 
-            // pictureBox11
-            // 
-            this.pictureBox11.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox11.BackgroundImage")));
-            this.pictureBox11.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.pictureBox11.Location = new System.Drawing.Point(6, 0);
-            this.pictureBox11.Name = "pictureBox11";
-            this.pictureBox11.Size = new System.Drawing.Size(75, 75);
-            this.pictureBox11.TabIndex = 2;
-            this.pictureBox11.TabStop = false;
-            // 
-            // pictureBox12
-            // 
-            this.pictureBox12.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox12.BackgroundImage")));
-            this.pictureBox12.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.pictureBox12.Location = new System.Drawing.Point(6, 6);
-            this.pictureBox12.Name = "pictureBox12";
-            this.pictureBox12.Size = new System.Drawing.Size(61, 52);
-            this.pictureBox12.TabIndex = 3;
-            this.pictureBox12.TabStop = false;
-            // 
             // dataGridViewImageColumn1
             // 
             this.dataGridViewImageColumn1.HeaderText = "Column1";
@@ -2366,6 +2370,16 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OGCform_Closing);
             this.Load += new System.EventHandler(this.OGCform_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox13)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.vectorSaveFile)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.vectorOpenFile)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox10)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.panel3.ResumeLayout(false);
             this.groupBox6.ResumeLayout(false);
             this.groupBox6.PerformLayout();
@@ -2375,6 +2389,7 @@
             this.box.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ogcCard.ResumeLayout(false);
             this.fileCard.ResumeLayout(false);
             this.fileCard.PerformLayout();
@@ -2402,10 +2417,12 @@
             this.groupBox2.PerformLayout();
             this.DeepZoomPage.ResumeLayout(false);
             this.DeepZoomPage.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox8)).EndInit();
             this.TileConvertPage.ResumeLayout(false);
             this.TileConvertPage.PerformLayout();
             this.panel6.ResumeLayout(false);
             this.panel6.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox9)).EndInit();
             this.VectorPage.ResumeLayout(false);
             this.panel9.ResumeLayout(false);
             this.panel4.ResumeLayout(false);
@@ -2420,25 +2437,12 @@
             this.tabControl2.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox11)).EndInit();
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox12)).EndInit();
             this.statusBar.ResumeLayout(false);
             this.statusBar.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox13)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.vectorSaveFile)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.vectorOpenFile)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox8)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox9)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox10)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox11)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox12)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.kmllogo)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
