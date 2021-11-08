@@ -51,9 +51,6 @@ namespace Geosite
         {
             //-----test----
 
-
-
-
             //-------------
 
             this.Opacity = 0;
