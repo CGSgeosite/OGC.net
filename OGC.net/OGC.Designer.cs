@@ -30,8 +30,8 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OGCform));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.vectorSourceFile = new System.Windows.Forms.TextBox();
             this.vectorTargetFile = new System.Windows.Forms.TextBox();
             this.OGCtoolTip = new System.Windows.Forms.ToolTip(this.components);
@@ -733,7 +733,7 @@
             // 
             // pictureBox13
             // 
-            this.pictureBox13.BackgroundImage = global::Geosite.Properties.Resources.fileformat;
+            this.pictureBox13.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox13.BackgroundImage")));
             this.pictureBox13.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.pictureBox13.Location = new System.Drawing.Point(266, 16);
             this.pictureBox13.Name = "pictureBox13";
@@ -744,7 +744,7 @@
             // 
             // vectorSaveFile
             // 
-            this.vectorSaveFile.BackgroundImage = global::Geosite.Properties.Resources.saveas1;
+            this.vectorSaveFile.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("vectorSaveFile.BackgroundImage")));
             this.vectorSaveFile.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.vectorSaveFile.Cursor = System.Windows.Forms.Cursors.Hand;
             this.vectorSaveFile.Location = new System.Drawing.Point(3, 16);
@@ -757,7 +757,7 @@
             // 
             // vectorOpenFile
             // 
-            this.vectorOpenFile.BackgroundImage = global::Geosite.Properties.Resources.open1;
+            this.vectorOpenFile.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("vectorOpenFile.BackgroundImage")));
             this.vectorOpenFile.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.vectorOpenFile.Cursor = System.Windows.Forms.Cursors.Hand;
             this.vectorOpenFile.Location = new System.Drawing.Point(6, 16);
@@ -893,7 +893,7 @@
             // 
             // pictureBox5
             // 
-            this.pictureBox5.BackgroundImage = global::Geosite.Properties.Resources.DOM;
+            this.pictureBox5.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox5.BackgroundImage")));
             this.pictureBox5.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.pictureBox5.Location = new System.Drawing.Point(8, 7);
             this.pictureBox5.Name = "pictureBox5";
@@ -939,7 +939,7 @@
             // VectorOpen
             // 
             this.VectorOpen.BackColor = System.Drawing.Color.White;
-            this.VectorOpen.BackgroundImage = global::Geosite.Properties.Resources.open;
+            this.VectorOpen.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("VectorOpen.BackgroundImage")));
             this.VectorOpen.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.VectorOpen.Cursor = System.Windows.Forms.Cursors.Hand;
             this.VectorOpen.Location = new System.Drawing.Point(6, 6);
@@ -953,10 +953,10 @@
             // ReClean
             // 
             this.ReClean.BackColor = System.Drawing.Color.White;
+            this.ReClean.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("ReClean.BackgroundImage")));
             this.ReClean.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.ReClean.Cursor = System.Windows.Forms.Cursors.Hand;
             this.ReClean.Enabled = false;
-            this.ReClean.Image = global::Geosite.Properties.Resources.reclean;
             this.ReClean.Location = new System.Drawing.Point(167, 117);
             this.ReClean.Margin = new System.Windows.Forms.Padding(0);
             this.ReClean.Name = "ReClean";
@@ -969,10 +969,10 @@
             // ReIndex
             // 
             this.ReIndex.BackColor = System.Drawing.Color.White;
+            this.ReIndex.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("ReIndex.BackgroundImage")));
             this.ReIndex.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.ReIndex.Cursor = System.Windows.Forms.Cursors.Hand;
             this.ReIndex.Enabled = false;
-            this.ReIndex.Image = global::Geosite.Properties.Resources.reindex;
             this.ReIndex.Location = new System.Drawing.Point(167, 86);
             this.ReIndex.Margin = new System.Windows.Forms.Padding(0);
             this.ReIndex.Name = "ReIndex";
@@ -2022,8 +2022,8 @@
             // 
             // VectorStatus
             // 
-            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.VectorStatus.DefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.VectorStatus.DefaultCellStyle = dataGridViewCellStyle3;
             this.VectorStatus.HeaderText = "※";
             this.VectorStatus.Name = "VectorStatus";
             this.VectorStatus.ReadOnly = true;
@@ -2082,13 +2082,13 @@
             this.clusterDataPool.AllowUserToAddRows = false;
             this.clusterDataPool.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
             this.clusterDataPool.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            dataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle12.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            dataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle12.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle12.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.clusterDataPool.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle12;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.clusterDataPool.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
             this.clusterDataPool.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.clusterDataPool.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.ThemeName,
