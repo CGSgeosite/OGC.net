@@ -42,18 +42,19 @@ namespace Geosite
             TreePathString = treePathBox.Text.Trim();
             if (!string.IsNullOrWhiteSpace(TreePathString))
             {
-                var levels = new List<string>();
-                foreach (var thisLevel in Regex.Split(
+                var layers = new List<string>();
+                foreach (var layer in Regex.Split(
                         TreePathString,
                         @"[/\\]+", //约定为正斜杠【/】或者反斜杠【\】分隔
                         RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Multiline)
-                    .Select(level => level.Trim())
-                    .Where(thisLevel => thisLevel.Length > 0)
+                    .Select(layer => layer.Trim())
+                    .Where(layer => layer.Length > 0)
                 )
                 {
                     try
                     {
-                        levels.Add(new XElement(thisLevel).Name.LocalName);
+                        //GML-layer名称需符合xml元素命名规则，至少不能出现特殊字符、括号、纯数字 ...
+                        layers.Add(new XElement(layer).Name.LocalName);
                     }
                     catch (Exception error)
                     {
@@ -63,14 +64,14 @@ namespace Geosite
                     }
                 }
 
-                if (levels.Count == 0)
+                if (layers.Count == 0)
                 {
                     canExit = false;
                     tipsBox.Text = @"Incorrect input";
                 }
                 else
                 {
-                    TreePathString = treePathBox.Text = string.Join("/", levels);
+                    TreePathString = string.Join("/", layers);
                 }
             }
 
@@ -133,6 +134,11 @@ namespace Geosite
         private void donotPrompt_CheckedChanged(object sender, EventArgs e)
         {
             DonotPrompt = donotPrompt.Checked;
+        }
+
+        private void treePathBox_TextChanged(object sender, EventArgs e)
+        {
+            tipsBox.Text = string.Empty;
         }
     }
 }

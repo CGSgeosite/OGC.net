@@ -3028,8 +3028,7 @@ namespace Geosite
                 {
                     try
                     {
-                        var x = new XElement(newName);
-                        newName = x.Name.LocalName;
+                        newName = new XElement(newName).Name.LocalName;
                     }
                     catch
                     {
@@ -3130,8 +3129,7 @@ namespace Geosite
                 var theme = Path.GetFileNameWithoutExtension(path);
                 try
                 {
-                    var x = new XElement(theme);
-                    vectorFilePool.Rows.Add(x.Name.LocalName, path);
+                    vectorFilePool.Rows.Add(new XElement(theme).Name.LocalName, path);
                 }
                 catch
                 {
@@ -5532,8 +5530,7 @@ namespace Geosite
                 {
                     try
                     {
-                        var x = new XElement(newName);
-                        col.Value = x.Name.LocalName;
+                        col.Value = new XElement(newName).Name.LocalName;
                     }
                     catch
                     {

@@ -1724,7 +1724,7 @@
   <data name="pictureBox13.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABgAAAAaCAYAAACtv5zzAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
-        EQAACxEBf2RfkQAAAQ1JREFUSEvtk70NwjAQRq+kpAwdTfp0tGnTMQItHSMwQkbIBgREhUCi4icRbIBA
+        DAAACwwBP0AiyAAAAQ1JREFUSEvtk70NwjAQRq+kpAwdTfp0tGnTMQItHSMwQkbIBgREhUCi4icRbIBA
         wABsYO5DgCx0EbmAqSieYp9P37Nsh4wx5Pu++QI0m04oWy/psN/ReDSk9XJBt3BIqhJFEX+em3QnAMjK
         s1XNmQAg73w6NpwJADJHw0HLmQAgd7vJux8LACQSyP6KoAiVwPO8gOkxHaYu9bxSWnAPTZjwPjZMW+q1
         0QjmTN+ax0xq90hoBDiepjVPmYvdI1FaYMPBbQZHlEjrNmoBh+L8Lwhn3l50FQHuoiOtSVQSSPUiqghi
@@ -1735,7 +1735,7 @@
   <data name="vectorSaveFile.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
-        EQAACxEBf2RfkQAAAclJREFUWEfVlctqwkAYhbPpvi/TQou0tEgfQJeCa4MuvCBSEFcBV+rb6Rt42ZWC
+        DAAACwwBP0AiyAAAAclJREFUWEfVlctqwkAYhbPpvi/TQou0tEgfQJeCa4MuvCBSEFcBV+rb6Rt42ZWC
         Ld10es6YSSeTiREnU+mBz3+SfybnOCYxEEIEED+8Qy8TCjXbqNfrAiTHpsy+jt7TxxBKeq71JNEXElNm
         X0fvmfMglN+5mRMKc6HJsb7es83TPS8SgCjfiwUg9D47AInnZIh7+pzMWuIUgL08VD+ufgIQ9vPQ5vgL
         cAr/OoBa7Iq8ls3jlAClYfM4GoDYLnQOtmuTwgBlsN1uq/P5/HMymYjlcvmi97wH2Gw21eFw+IGxVLvd
@@ -1749,7 +1749,7 @@
   <data name="vectorOpenFile.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
-        EQAACxEBf2RfkQAAARJJREFUWEftkMEOwUAQhpumCRGaXhsHj+FVvIo38AgexQGJg4MLKs5uBBFUxEHT
+        DAAACwwBP0AiyAAAARJJREFUWEftkMEOwUAQhpumCRGaXhsHj+FVvIo38AgexQGJg4MLKs5uBBFUxEHT
         rM7Y3ZSMdKkVh53k+zfpzD/zYzHGkKRAVJG+vNwFH2bF/aqNb8+3BVG35lw7ngPfBTDPTbnhe+C4j8dV
         4PWVELgDfinVzAK8KERPFfTHw/rDX6xKtGg74P+Uy7xVTF7YRR/Igi/CovpZgI17mXXezUun7awcbgI3
         3EwTJm64HruH1cjbL0de2ggIM9RzTxWwCvkEWdRyFcDK/fTAK9JF9VUBuxQoaohCFNV7B1jB99ADujEB
@@ -3333,7 +3333,7 @@
   <data name="pictureBox5.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAEYAAABGCAYAAABxLuKEAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
-        EQAACxEBf2RfkQAACV5JREFUeF7tmgnILlUZx6+7pWaaXvcsNQ0zwa1FM1K0G1ZqkloRcj9NW8gkkWgB
+        DAAACwwBP0AiyAAACV5JREFUeF7tmgnILlUZx6+7pWaaXvcsNQ0zwa1FM1K0G1ZqkloRcj9NW8gkkWgB
         N6zENOsi4nKL0qJF1AItQooWLQUtF9RMUxS1wlxyKdPU/r/DeYbnPfPMfDPvzPt9IPfC786Z/3me55zz
         fPPOzDlnlszNzS06y5cvf2k+9G8JqLwghOIiUA28CWwKn5kSiouAxh4nxMAG2+iKmwVlBxcLjT1OiIEN
         ttEgZkHZwcVCY48TYmBT+MyUUFwENPY4IQY2hc9MCcU2ostuKIqrsccJMbDx/Zg1odhGNLChKC6DbsUl
@@ -3392,38 +3392,20 @@
   </data>
   <data name="VectorFileClear.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
-        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
+        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
 </value>
   </data>
   <data name="VectorOpen.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
-        EQAACxEBf2RfkQAAARJJREFUWEftkMEOwUAQhpumCRGaXhsHj+FVvIo38AgexQGJg4MLKs5uBBFUxEHT
+        DAAACwwBP0AiyAAAARJJREFUWEftkMEOwUAQhpumCRGaXhsHj+FVvIo38AgexQGJg4MLKs5uBBFUxEHT
         rM7Y3ZSMdKkVh53k+zfpzD/zYzHGkKRAVJG+vNwFH2bF/aqNb8+3BVG35lw7ngPfBTDPTbnhe+C4j8dV
         4PWVELgDfinVzAK8KERPFfTHw/rDX6xKtGg74P+Uy7xVTF7YRR/Igi/CovpZgI17mXXezUun7awcbgI3
         3EwTJm64HruH1cjbL0de2ggIM9RzTxWwCvkEWdRyFcDK/fTAK9JF9VUBuxQoaohCFNV7B1jB99ADujEB
@@ -3434,7 +3416,7 @@
   <data name="ReClean.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACUAAAAWCAYAAABHcFUAAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
-        EQAACxEBf2RfkQAAAQpJREFUSEvtk0sOgjAURR84cCGAGIMahyp/i8IOTFyEO3DmHtxtbZ9CDD60BGIZ
+        DAAACwwBP0AiyAAAAQpJREFUSEvtk0sOgjAURR84cCGAGIMahyp/i8IOTFyEO3DmHtxtbZ9CDD60BGIZ
         ODh9yQ3knvQDnPPBQYZtOB5PvE79m7aQoSpNAl3FyFCFb8VdxMhQhb9UG5qKuwhJyFCFxcIbyykF6jxz
         8j8VyFAFy7Kw+BPUfyqQoW7IUDe4MBabWZaM5NzvU4OxxLBt+yaO4O2+9IXrTi55zoxHH/ZXDiiVpiEE
         wVrMCHxfzhCSxCfvSZ/EsQ9huBFdAc4o2kJRZAM+PmFNbrEOKqmhQYa6wUXeeEH5CmA2m4Lj2Fdqe/ti
@@ -3444,7 +3426,7 @@
   <data name="ReIndex.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACUAAAAWCAYAAABHcFUAAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
-        EQAACxEBf2RfkQAAAXNJREFUSEvNk2tKxEAQhKMiCAoiiA/84+smXmLB+x9DYvUwNVvd6ZlNQIg/vmS6
+        DAAACwwBP0AiyAAAAXNJREFUSEvNk2tKxEAQhKMiCAoiiA/84+smXmLB+x9DYvUwNVvd6ZlNQIg/vmS6
         +lXZbKbD4Xua5/nfYH7KZSP3tXlewRe4AHHGkFSMyFO0hdSoa0xq7U+934E2c0QqBj7AwojSy0E/kzMf
         iHO7pKKhw+r9kVqENZE4q2q4HXMZqWhwQOWZOuES1mlMoL+D66C1Xx33FBckzbdydrUBlPklnKNYHXN2
         Ft3hAikqDVFjXUKrH+D6Zear6oYLgL2mxYIVC89B99Pv9Ysxp7ugV6RDVxhUbNZinnAJMNLP1OANlIJs
@@ -7108,15 +7090,6 @@
   <metadata name="fileCard.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
-  <metadata name="tilesource.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="label1.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="tileLevels.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
   <metadata name="label1.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
@@ -7133,18 +7106,6 @@
     <value>True</value>
   </metadata>
   <metadata name="localTileFolder.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="localTileOpen.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="groupBox5.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="localTileFolder.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="pictureBox8.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
   <metadata name="pictureBox8.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -7589,9 +7550,6 @@
   <metadata name="pictureBox9.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
-  <metadata name="pictureBox9.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
   <data name="pictureBox9.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAYAAABV7bNHAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
@@ -7662,15 +7620,6 @@
         tnmnCFbLeluLC5S10EN5UMpYe/JxB0uK0dLWTKArhAl6XsGIWv0fro9/sfirzRMAAAAASUVORK5CYII=
 </value>
   </data>
-  <metadata name="VectorTheme.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="VectorURI.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="VectorStatus.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
   <metadata name="VectorTheme.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
@@ -10145,20 +10094,23 @@
 
 ⦁ 数据库（PostgreSQL）连接说明：
   可在服务器端部署：
-  1）PostgreSQL（容器地址：https://hub.docker.com/r/geosite/postgresqlx13）
+  1）PostgreSQL（容器地址：https://hub.docker.com/r/geosite/postgresqlx14）
   2）GeositeServer（容器地址：https://hub.docker.com/r/geosite/geositeserver）
-  系统管理员可在【appsettings.json】文档中创建集群用户信息，形如：
+  系统管理员可修改【appsettings.json】文档中的【connectionString】连接PostgreSQL数据库，并可通过【clusterUser】创建集群用户信息，形如：
   {
-        "appSettings": {
-            "connectionString": { "服务器名称或IP": "Password=postgres账户对应的密码;Username=postgres账户名称;Port=端口号;Database=数据库名称;" },
-            "clusterUser": [
-                {
-                    "name": "集群用户名",
-                    "forest": "群号（负值，比如：-1）"
-                }
-            ]
-        },
-        "AllowedHosts": "*"
+    "appSettings": 
+    {
+      "connectionString": { "服务器名称或IP": "Password=postgres账户对应的密码;Username=postgres账户名称;Port=端口号;Database=数据库名称;" },
+      "clusterUser": 
+      [
+        {
+          "name": "集群用户名",
+          "forest": "群号（负值，比如：-1）",
+          "administrator": false
+      }
+    ]
+  },
+    "AllowedHosts": "*"
   }
   之后，OGC.net可在局域网里连接GeositeServer并可推送矢量或栅格数据。
 
