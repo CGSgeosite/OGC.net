@@ -19,7 +19,7 @@
 		<action remarks="可选项，事务活动容器"></action>
 		<detail remarks="可选项，关系描述容器"></detail>
 	</relation>
-	<layer remarks="层级分类标签（默认：layer），支持多级嵌套，每级类别必须具有name元素！">
+	<layer remarks="矢量要素层，主要面向【OGC-WFS】服务，分类标签（默认：layer）支持多级嵌套，每级类别必须具有name元素！">
 		<name remarks="类别名称（必选项，不应出现特殊字符【诸如：( )@,】，亦不可为数字）">名称</name>
 		<property remarks="属性描述（可选项）">【文本或xml】描述</property>
 		<relation remarks="关系描述（可选项）">
@@ -31,9 +31,9 @@
         id属性：实体标识码，在文档内具有唯一性，入库时将重新赋值，忽略此处定义！
         frequency属性：访问频度，省略时默认为：0，此值将影响检索排序；
         rank属性：要素权限，可供后续处理软件识别利用 -->
-		<member remarks="实体要素标签（默认：member，亦可为：featureMember）" type="Point" id="要素标识码" rank="访问级别号(0：可编辑; 1：可查看属性; 2：可浏览提示）" timeStamp="时间戳" frequency="0">
+		<member remarks="实体要素标签（默认：member，亦可为：featureMember）" type="Point" id="要素标识码" rank="访问级别号(0：可编辑; 1：可查看属性; 2：可浏览提示）" timeStamp="时间戳" age="年龄" frequency="0">
 			<name>实体要素名称（可选项）</name>
-      <!-- 几何坐标节，此标签可具有多个 -->
+			<!-- 几何坐标节，此标签可具有多个 -->
 			<geometry remarks="几何坐标(geometry/geometryProperty)标签（支持wkt、json或gml标签）">
 				单点（wkt）：
 				(十进制经度 十进制纬度 [高程]) 或者 POINT(十进制经度 十进制纬度 [高程])
@@ -89,9 +89,9 @@
 				<detail remarks="可选项，关系描述容器"></detail>
 			</relation>
 		</member>
-		<member type="Line" id="要素标识码" rank="访问级别号(0：可编辑; 1：可查看属性; 2：可浏览提示）" timeStamp="时间戳" frequency="0">
+		<member type="Line" id="要素标识码" rank="访问级别号(0：可编辑; 1：可查看属性; 2：可浏览提示）" timeStamp="时间戳" age="年龄" frequency="0">
 			<name>实体要素名称（可选项）</name>
-      <!-- 几何坐标节，此标签可具有多个 -->
+			<!-- 几何坐标节，此标签可具有多个 -->
 			<geometry>
 				单线（wkt）：
 				(十进制经度 十进制纬度 [高程],十进制经度 十进制纬度 [高程],...) 或者 LINESTRING(十进制经度 十进制纬度 [高程],十进制经度 十进制纬度 [高程],...)
@@ -154,9 +154,9 @@
 				<detail remarks="可选项，关系描述容器"></detail>
 			</relation>
 		</member>
-		<member type="Polygon" id="要素标识码" rank="访问级别号(0：可编辑; 1：可查看属性; 2：可浏览提示）" timeStamp="时间戳" frequency="0">
+		<member type="Polygon" id="要素标识码" rank="访问级别号(0：可编辑; 1：可查看属性; 2：可浏览提示）" timeStamp="时间戳" age="年龄" frequency="0">
 			<name>实体要素名称（可选项）</name>
-      <!-- 几何坐标节，此标签可具有多个 -->
+			<!-- 几何坐标节，此标签可具有多个 -->
 			<geometry>
 				单面（wkt）：
 				((起点经度 起点纬度,经度 纬度,经度 纬度,...,起点经度 起点纬度)) 或者 POLYGON((起点经度 起点纬度,经度 纬度,经度 纬度,...,起点经度 起点纬度))
@@ -234,7 +234,7 @@
 				<detail remarks="可选项，关系描述容器"></detail>
 			</relation>
 		</member>
-		<member remarks="贴图要素" type="Image" id="要素标识码" rank="访问级别号(0：可编辑; 1：可查看属性; 2：可浏览提示）" timeStamp="时间戳" frequency="0">
+		<member remarks="贴图要素" type="Image" id="要素标识码" rank="访问级别号(0：可编辑; 1：可查看属性; 2：可浏览提示）" timeStamp="时间戳" age="年龄" frequency="0">
 			<name>实体要素名称（可选项）</name>
 			<Image remarks="贴图访问地址标签（支持Image或者Icon大小写）">
 				<href remarks="形如：http://www.?.com/?.jpg，建议的格式为：jpg png gif"></href>
@@ -264,7 +264,7 @@
 				<detail remarks="可选项，关系描述容器"></detail>
 			</relation>
 		</member>
-		<member remarks="当type省略或者并非点线面贴图和栅格时，便按非空间要素对待" id="要素标识码" rank="访问级别号(0：可编辑; 1：可查看属性; 2：可浏览提示）" timeStamp="时间戳" frequency="0">
+		<member remarks="当type省略或者并非点线面贴图和栅格时，便按非空间要素对待" id="要素标识码" rank="访问级别号(0：可编辑; 1：可查看属性; 2：可浏览提示）" timeStamp="时间戳" age="年龄" frequency="0">
 			<name>实体要素名称（可选项）</name>
 			<property>
 				<字段名称 remarks="内容型">字段内容</字段名称>
@@ -283,9 +283,9 @@
 			</relation>
 		</member>
 	</layer>
-	<layer>
+	<layer remarks="四叉树金字塔式瓦片服务层，主要面向【OGC-WMS】服务，分类标签（默认：layer）支持多级嵌套，每级类别必须具有name元素！">
 		<name>名称</name>
-    <property remarks="注意：瓦片层的元数据信息应在member父级（最近容器）的property中表述">
+		<property remarks="注意：瓦片服务层的元数据信息应在member父级（最近容器）的property中表述">
 			<minZoom remarks="最小缩放级，默认0">0</minZoom>
 			<maxZoom remarks="最大缩放级，默认18" >18</maxZoom>
 			<tileSize remarks="瓦片像素尺寸，默认256">256</tileSize>
@@ -300,44 +300,12 @@
 			<action remarks="可选项，事务活动容器"></action>
 			<detail remarks="可选项，关系描述容器"></detail>
 		</relation>
-		<member remarks="四叉树金字塔式瓦片" type="Tile" id="要素标识码" timeStamp="时间戳" frequency="0">
+		<member remarks="四叉树金字塔瓦片服务" type="Tile" id="要素标识码" timeStamp="时间戳" age="年龄" frequency="0">
 			<name>实体要素名称（可选项）</name>
-			<wmts srid="3857" remarks="瓦片服务访问地址模板（暂支持【OGC-EPSG:3857】、【BingMap-EPSG:3857】、【DeepZoom-EPSG:0】和【ESRI-EPSG:3857】瓦片编码类型）,此标签具有唯一性。另外，URL模板子域（单字符）替换符需用{s}进行表达"></wmts>
-      <property srid="3857" subdomains="" remarks="瓦片的srid既可在property节的属性中（中优先权）表述，亦可在tile节的srid属性中（高优先权）表述。如果wmts中的路径存在单字符{s}占位符，必须以属性或元素的方式提供subdomains">
+			<wms srid="3857" remarks="瓦片服务访问地址模板（暂支持【OGC-EPSG:3857】、【BingMap-EPSG:3857】、【DeepZoom-EPSG:0】和【ESRI-EPSG:3857】瓦片编码类型）,此标签具有唯一性。另外，URL模板子域（单字符）替换符需用{s}进行表达"></wms>
+			<property srid="3857" subdomains="" remarks="瓦片的srid既可在property节的属性中（中优先权）表述，亦可在tile节的srid属性中（高优先权）表述。如果wms中的路径存在单字符{s}占位符，必须以属性或元素的方式提供subdomains">
 				<srid remarks="瓦片的srid还可在这里（低优先权）表述，坐标投影参照系（coordinate reference systems），支持 EPSG:3857/4326/0 三者之一">3857</srid>
 				<subdomains remarks="URL模板子域（单字符）替换符（目的是便于实施负载均衡访问策略），比如：01234567、abc"></subdomains>
-      </property>
-			<style/>
-			<relation>
-				<action remarks="可选项，事务活动容器"></action>
-				<detail remarks="可选项，关系描述容器"></detail>
-			</relation>
-		</member>
-	</layer>
-	<layer>
-		<name>名称</name>
-    <property remarks="注意：瓦片层的元数据信息应在member父级（最近容器）的property中表述">
-			<minZoom remarks="最小缩放级，默认0">0</minZoom>
-			<maxZoom remarks="最大缩放级，默认18" >18</maxZoom>
-			<tileSize remarks="瓦片像素尺寸，默认256">256</tileSize>
-			<boundary remarks="边框范围">
-				<north remarks="上北，比如：85.0511287798066">85.0511287798066</north>
-				<south remarks="下南，比如：-85.0511287798066">-85.0511287798066</south>
-				<west remarks="左西，比如：-180">-180.0</west>
-				<east remarks="右东,比如：180">180.0</east>
-			</boundary>
-		</property>
-		<relation>
-			<action remarks="可选项，事务活动容器"></action>
-			<detail remarks="可选项，关系描述容器"></detail>
-		</relation>
-		<member remarks="四叉树金字塔式瓦片" type="Tile" id="要素标识码" timeStamp="时间戳" frequency="0">
-			<name>实体要素名称（可选项）</name>
-			<!-- 瓦片实际内容，此标签通常具有多个。srid 属性暂支持【3857】（默认）、【4326】、【0】。注：为便于高速提取瓦片，应将某专题不同缩放级的全部瓦片所属的member个数不超过24个（每个member可对应一个缩放级），亦可仅归入一个member内 -->
-			<tile srid="3857" x="图块横向索引" y="图块纵向索引" z="缩放级" remarks="【四叉树金字塔式瓦片】影像wkb编码字符串，必须保证zxy的联合唯一性！"></tile>
-			<property srid="3857" remarks="瓦片的srid既可在property节的属性中（中优先权）表述，亦可在tile节的srid属性中（高优先权）表述">
-				<srid remarks="瓦片的srid还可在这里（低优先权）表述，坐标投影参照系（coordinate reference systems），支持【3857】（默认）、【4326】、【0】三者之一">3857</srid>
-        <bands remarks="波段/通道数">4</bands>
 			</property>
 			<style/>
 			<relation>
@@ -346,9 +314,9 @@
 			</relation>
 		</member>
 	</layer>
-	<layer>
+	<layer remarks="四叉树金字塔式瓦片层，主要面向【OGC-WMTS】服务，分类标签（默认：layer）支持多级嵌套，每级类别必须具有name元素！">
 		<name>名称</name>
-    <property remarks="注意：瓦片层的元数据信息应在member父级（最近容器）的property中表述">
+		<property remarks="注意：瓦片层的元数据信息应在member父级（最近容器）的property中表述">
 			<minZoom remarks="最小缩放级，默认0">0</minZoom>
 			<maxZoom remarks="最大缩放级，默认18" >18</maxZoom>
 			<tileSize remarks="瓦片像素尺寸，默认256">256</tileSize>
@@ -363,15 +331,46 @@
 			<action remarks="可选项，事务活动容器"></action>
 			<detail remarks="可选项，关系描述容器"></detail>
 		</relation>
-		<member type="Tile" id="要素标识码" timeStamp="时间戳" frequency="0">
-			<!--【平铺式地图瓦片】-->
+		<member remarks="四叉树金字塔式瓦片" type="Tile" id="要素标识码" timeStamp="时间戳" age="年龄" frequency="0">
 			<name>实体要素名称（可选项）</name>
-			<!-- 瓦片实际内容，此标签应具有多个。srid 属性暂支持【3857】（默认）、【4326】、【0】；平铺式瓦片通常将srid设定为4326。注：为便于高速提取瓦片，应将某专题不同缩放级的全部瓦片所属的member个数不超过24个（每个member可对应一个缩放级），亦可仅归入一个member内 -->
+			<!-- 瓦片实际内容，此标签通常具有多个。srid 属性暂支持【3857】（默认）、【4326】、【0】。注：为便于高速提取瓦片，应将某专题不同缩放级的全部瓦片所属的member个数不超过24个（每个member可对应一个缩放级），亦可仅归入一个member内 -->
+			<tile srid="3857" x="图块横向索引" y="图块纵向索引" z="缩放级" remarks="【四叉树金字塔式瓦片】影像wkb编码字符串，必须保证zxy的联合唯一性！"></tile>
+			<property srid="3857" remarks="瓦片的srid既可在property节的属性中（中优先权）表述，亦可在tile节的srid属性中（高优先权）表述">
+				<srid remarks="瓦片的srid还可在这里（低优先权）表述，坐标投影参照系（coordinate reference systems），支持【3857】（默认）、【4326】、【0】三者之一">3857</srid>
+				<bands remarks="波段/通道数">4</bands>
+			</property>
+			<style/>
+			<relation>
+				<action remarks="可选项，事务活动容器"></action>
+				<detail remarks="可选项，关系描述容器"></detail>
+			</relation>
+		</member>
+	</layer>
+	<layer remarks="平铺式栅格瓦片层，主要面向【OGC-WPS】服务，分类标签（默认：layer）支持多级嵌套，每级类别必须具有name元素！">
+		<name>名称</name>
+		<property remarks="注意：栅格瓦片层的元数据信息应在member父级（最近容器）的property中表述">
+			<minZoom remarks="最小缩放级，默认0">0</minZoom>
+			<maxZoom remarks="最大缩放级，默认18" >18</maxZoom>
+			<tileSize remarks="瓦片像素尺寸，默认256">256</tileSize>
+			<boundary remarks="边框范围">
+				<north remarks="上北，比如：85.0511287798066">85.0511287798066</north>
+				<south remarks="下南，比如：-85.0511287798066">-85.0511287798066</south>
+				<west remarks="左西，比如：-180">-180.0</west>
+				<east remarks="右东,比如：180">180.0</east>
+			</boundary>
+		</property>
+		<relation>
+			<action remarks="可选项，事务活动容器"></action>
+			<detail remarks="可选项，关系描述容器"></detail>
+		</relation>
+		<member type="Tile" id="要素标识码" timeStamp="时间戳" age="年龄" frequency="0">
+			<name>实体要素名称（可选项）</name>
+			<!-- 栅格瓦片实际内容，此标签应具有多个。srid 属性暂支持【3857】（默认）、【4326】、【0】；平铺式瓦片通常将srid设定为4326。注：为便于高速提取瓦片，应将某专题不同缩放级的全部瓦片所属的member个数不超过24个（每个member可对应一个缩放级），亦可仅归入一个member内 -->
 			<tile srid="4326" x="图块横向索引" y="图块纵向索引" remarks="【平铺式地图瓦片】影像wkb编码字符串，必须保证zxy的联合唯一性！"></tile>
 			<!-- 瓦片的srid既可在property节中表述，亦可在tile节的srid属性中表述 -->
-      <property srid="4326">
+			<property srid="4326">
 				<srid remarks="坐标投影参照系（coordinate reference systems），支持【3857】（默认）、【4326】、【0】三者之一">4326</srid>
-        <bands remarks="波段/通道数">4</bands>
+				<bands remarks="波段/通道数">4</bands>
 			</property>
 			<style/>
 			<relation>
