@@ -3393,7 +3393,7 @@
   <data name="VectorFileClear.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAdCAYAAADLnm6HAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
-        DgAACw4BQL7hQQAAAYBJREFUSEvFkuttwzAMhDNHRuhEATpMs2TmyAiuTtAJxxMlx4Dd/vhgPo482slt
+        DQAACw0B7QfALAAAAYBJREFUSEvFkuttwzAMhDNHRuhEATpMs2TmyAiuTtAJxxMlx4Dd/vhgPo482slt
         27Z/JS1ezePxvRVqPDTPBkYCjKs5nuinQ2fSzPSAHqOfDp2JGkpcc/TToTNRQ4/RV+Eb2FCA2iO02eHt
         8USfomrMuInAs1Fzao7QZoe3B+hTdOUB6dsD9FV41U+Qvj1An6KP0MUZRQMDR3eEHDMcdO4FfHoMvFp8
         VzOnaX2PMvQxx2EHhj+Frwbipxoqpbc0bxpQdTqrTQVvDWPmiF8TLc3xHAxI06i+1r1JPj2gL7NaVlf6
@@ -10593,7 +10593,7 @@ public (bool Success, string Message, int TypeCode)? leaf_tile();
 /// &lt;param name="propertyX"&gt;叶子属性，通常源自Leaf函数的返回值。默认值：null（自动从叶子对象中提取属性）&lt;/param&gt;
 /// &lt;param name="update"&gt;当记录已存在时是否更新？默认：true&lt;/param&gt;
 /// &lt;returns&gt;返回三元组对象：记录插入是否成功、异常信息、类型代码：10000：Wmts栅格金字塔瓦片服务类型[epsg:0 - 无投影瓦片]；10001：Wmts瓦片服务类型[epsg:4326 - 地理坐标系瓦片]；10002：Wmts栅格金字塔瓦片服务类型[epsg:3857 - 球体墨卡托瓦片]&lt;/returns&gt;
-public (bool Success, string Message, int TypeCode)? leaf_wmts();
+public (bool Success, string Message, int TypeCode)? leaf_wms();
 
 8、瓦片类型枚举
 public enum TileType{

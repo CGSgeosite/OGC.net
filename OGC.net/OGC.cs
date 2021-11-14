@@ -51,6 +51,8 @@ namespace Geosite
         {
             //-----test----
 
+
+
             //-------------
 
             this.Opacity = 0;
@@ -1909,7 +1911,7 @@ namespace Geosite
                                                             "COMMENT ON COLUMN tree.property IS '文档树根节点属性描述信息，通常放置根节点辅助说明信息';" +
                                                             "COMMENT ON COLUMN tree.uri IS '文档树数据来源（存放路径及文件名）';" +
                                                             "COMMENT ON COLUMN tree.timestamp IS '文档树编码印章，采用[节点森林序号,文档树序号,年月日（yyyyMMdd）,时分秒（HHmmss）]四元整型数组编码方式';" +
-                                                            "COMMENT ON COLUMN tree.type IS '文档树要素类型码构成的数组（类型码约定：0：非空间数据【默认】、1：Point点、2：Line线、3：Polygon面、4：Image地理贴图、10000：Wmts栅格金字塔瓦片服务类型[epsg:0 - 无投影瓦片]、10001：Wmts瓦片服务类型[epsg:4326 - 地理坐标系瓦片]、10002：Wmts栅格金字塔瓦片服务类型[epsg:3857 - 球体墨卡托瓦片]、11000：Tile栅格金字塔瓦片类型[epsg:0 - 无投影瓦片]、11001：Tile栅格金字塔瓦片类型[epsg:4326 - 地理坐标系瓦片]、11002：Tile栅格金字塔瓦片类型[epsg:3857 - 球体墨卡托瓦片]、12000：Tile栅格平铺式瓦片类型[epsg:0 - 无投影瓦片]、12001：Tile栅格平铺式瓦片类型[epsg:4326 - 地理坐标系瓦片]、12002：Tile栅格平铺式瓦片类型[epsg:3857 - 球体墨卡托瓦片]）';" +
+                                                            "COMMENT ON COLUMN tree.type IS '文档树要素类型码构成的数组（类型码约定：0：非空间数据【默认】、1：Point点、2：Line线、3：Polygon面、4：Image地理贴图、10000：Wms栅格金字塔瓦片服务类型[epsg:0 - 无投影瓦片]、10001：Wms瓦片服务类型[epsg:4326 - 地理坐标系瓦片]、10002：Wms栅格金字塔瓦片服务类型[epsg:3857 - 球体墨卡托瓦片]、11000：Wmts栅格金字塔瓦片类型[epsg:0 - 无投影瓦片]、11001：Wmts栅格金字塔瓦片类型[epsg:4326 - 地理坐标系瓦片]、11002：Wmts栅格金字塔瓦片类型[epsg:3857 - 球体墨卡托瓦片]、12000：WPS栅格平铺式瓦片类型[epsg:0 - 无投影瓦片]、12001：WPS栅格平铺式瓦片类型[epsg:4326 - 地理坐标系瓦片]、12002：WPS栅格平铺式瓦片类型[epsg:3857 - 球体墨卡托瓦片]）';" +
                                                             "COMMENT ON COLUMN tree.status IS '文档树状态码（介于0～7之间），继承自[forest.status]';";
 
                                                         /*  
@@ -2056,17 +2058,15 @@ namespace Geosite
                                                                             4	贴图  
 
                                                                             // 栅格类： >=10000 <=19999
-                                                                            10000	Wmts栅格金字塔瓦片服务类型（epsg:0 - 无投影瓦片）
-                                                                            10001	Wmts栅格金字塔瓦片服务类型（epsg:4326 - 地理坐标系瓦片）
-                                                                            10002	Wmts栅格金字塔瓦片服务类型（epsg:3857 - 球体墨卡托瓦片）
-
-                                                                            11000	Tile栅格金字塔瓦片类型（epsg:0 - 无投影瓦片）
-                                                                            11001	Tile栅格金字塔瓦片类型（epsg:4326 - 地理坐标系瓦片）
-                                                                            11002	Tile栅格金字塔瓦片类型（epsg:3857 - 球体墨卡托瓦片）
-
-                                                                            12000	Tile栅格平铺式瓦片类型（epsg:0 - 无投影瓦片）
-                                                                            12001	Tile栅格平铺式瓦片类型（epsg:4326 - 地理坐标系瓦片）
-                                                                            12002	Tile栅格平铺式瓦片类型（epsg:3857 - 球体墨卡托瓦片）
+                                                                            //10000：Tile栅格  金字塔瓦片     wms服务类型     [epsg:0       无投影瓦片]
+                                                                            //10001：Tile栅格  金字塔瓦片     wms服务类型     [epsg:4326    地理坐标系瓦片]
+                                                                            //10002：Tile栅格  金字塔瓦片     wms服务类型     [epsg:3857    球体墨卡托瓦片]
+                                                                            //11000：Tile栅格  金字塔瓦片     wmts服务类型    [epsg:0       无投影瓦片]
+                                                                            //11001：Tile栅格  金字塔瓦片     wmts服务类型    [epsg:4326    地理坐标系瓦片]
+                                                                            //11002：Tile栅格  金字塔瓦片     wmts服务类型    [epsg:3857    球体墨卡托瓦片]
+                                                                            //12000：Tile栅格  平铺式瓦片     wps服务类型     [epsg:0       无投影瓦片]
+                                                                            //12001：Tile栅格  平铺式瓦片     wps服务类型     [epsg:4326    地理坐标系瓦片]
+                                                                            //12002：Tile栅格  平铺式瓦片     wps服务类型     [epsg:3857    球体墨卡托瓦片]
                                                                         */
 
                                                                         /*  									
@@ -2328,33 +2328,33 @@ namespace Geosite
                                                                                                                             new Action(
                                                                                                                                 () =>
                                                                                                                                 {
-                                                                                                                                    statusText.Text = @"Create leaf table（leaf_wmts）...";
+                                                                                                                                    statusText.Text = @"Create leaf table（leaf_wms）...";
                                                                                                                                 }
                                                                                                                             )
                                                                                                                         );
 
                                                                                                                         SQLstring =
-                                                                                                                            "CREATE TABLE leaf_wmts " +
+                                                                                                                            "CREATE TABLE leaf_wms " +
                                                                                                                             "(" +
-                                                                                                                            "leaf BigInt, wmts TEXT, boundary geometry" +
-                                                                                                                            ",CONSTRAINT leaf_wmts_pkey PRIMARY KEY (leaf)" +
-                                                                                                                            ",CONSTRAINT leaf_wmts_cascade FOREIGN KEY (leaf) REFERENCES leaf (id) MATCH SIMPLE ON DELETE CASCADE NOT VALID" +
+                                                                                                                            "leaf BigInt, wms TEXT, boundary geometry" +
+                                                                                                                            ",CONSTRAINT leaf_wms_pkey PRIMARY KEY (leaf)" +
+                                                                                                                            ",CONSTRAINT leaf_wms_cascade FOREIGN KEY (leaf) REFERENCES leaf (id) MATCH SIMPLE ON DELETE CASCADE NOT VALID" +
                                                                                                                             ") PARTITION BY HASH (leaf);" +
-                                                                                                                            "COMMENT ON TABLE leaf_wmts IS '叶子要素表（leaf）的瓦片服务子表，元数据信息需在叶子表中的property中进行表述';" +
-                                                                                                                            "COMMENT ON COLUMN leaf_wmts.leaf IS '叶子要素的标识码';" + //leaf表中的id
-                                                                                                                            "COMMENT ON COLUMN leaf_wmts.wmts IS '叶子要素服务地址模板，暂支持【OGC】、【BingMap】、【DeepZoom】和【ESRI】瓦片编码类型';" +
-                                                                                                                            "COMMENT ON COLUMN leaf_wmts.boundary IS '叶子要素几何边框（EPSG:4326）';"; //经纬度
+                                                                                                                            "COMMENT ON TABLE leaf_wms IS '叶子要素表（leaf）的瓦片服务子表，元数据信息需在叶子表中的property中进行表述';" +
+                                                                                                                            "COMMENT ON COLUMN leaf_wms.leaf IS '叶子要素的标识码';" + //leaf表中的id
+                                                                                                                            "COMMENT ON COLUMN leaf_wms.wms IS '叶子要素服务地址模板，暂支持【OGC】、【BingMap】、【DeepZoom】和【ESRI】瓦片编码类型';" +
+                                                                                                                            "COMMENT ON COLUMN leaf_wms.boundary IS '叶子要素几何边框（EPSG:4326）';"; //经纬度
                                                                                                                         if (PostgreSqlHelper.NonQuery(SQLstring) != null)
                                                                                                                         {
                                                                                                                             //暂采用CPU核数充当分区个数 当采用多列哈希分区表的分区时，无论使用多少列，都只需要指定一个界限即可
                                                                                                                             for (var i = 0; i < processorCount; i++)
                                                                                                                             {
-                                                                                                                                SQLstring = $"CREATE TABLE leaf_wmts_{i} PARTITION OF leaf_wmts FOR VALUES WITH (MODULUS {processorCount}, REMAINDER {i});";
+                                                                                                                                SQLstring = $"CREATE TABLE leaf_wms_{i} PARTITION OF leaf_wms FOR VALUES WITH (MODULUS {processorCount}, REMAINDER {i});";
                                                                                                                                 PostgreSqlHelper.NonQuery(SQLstring);
                                                                                                                             }
 
                                                                                                                             SQLstring =
-                                                                                                                                "CREATE INDEX leaf_wmts_boundary ON leaf_wmts USING gist(boundary);" //需要postgis扩展
+                                                                                                                                "CREATE INDEX leaf_wms_boundary ON leaf_wms USING gist(boundary);" //需要postgis扩展
                                                                                                                                 ;
                                                                                                                             if (PostgreSqlHelper.NonQuery(SQLstring) != null)
                                                                                                                             {
@@ -2401,13 +2401,13 @@ namespace Geosite
                                                                                                                                     SQLstring =
                                                                                                                                         "CREATE TABLE leaf_age " +
                                                                                                                                         "(" +
-                                                                                                                                        "leaf BigInt, geotime BigInt[]" + //DDE 深时数字地球计划 -- 地质年龄表
+                                                                                                                                        "leaf BigInt, age BigInt[]" + //DDE 深时数字地球计划 -- 地质年龄表
                                                                                                                                         ",CONSTRAINT leaf_age_pkey PRIMARY KEY (leaf)" +
                                                                                                                                         ",CONSTRAINT leaf_age_cascade FOREIGN KEY (leaf) REFERENCES leaf (id) MATCH SIMPLE ON DELETE CASCADE NOT VALID" +
                                                                                                                                         ") PARTITION BY HASH (leaf);" +
                                                                                                                                         "COMMENT ON TABLE leaf_age IS '叶子要素表（leaf）的年龄子表';" +
                                                                                                                                         "COMMENT ON COLUMN leaf_age.leaf IS '叶子要素的标识码';" + //leaf表中的id
-                                                                                                                                        "COMMENT ON COLUMN leaf_age.geotime IS '叶子要素的年龄（通常为地质年龄）';";
+                                                                                                                                        "COMMENT ON COLUMN leaf_age.age IS '叶子要素的年龄（通常为地质年龄，由【年月日、时分秒】构成）';";
                                                                                                                                     if (PostgreSqlHelper.NonQuery(SQLstring) != null)
                                                                                                                                     {
                                                                                                                                         for (var i = 0; i < processorCount; i++)
@@ -2416,8 +2416,8 @@ namespace Geosite
                                                                                                                                             PostgreSqlHelper.NonQuery(SQLstring);
                                                                                                                                         }
                                                                                                                                         SQLstring =
-                                                                                                                                            "CREATE INDEX leaf_age_geotime_yearmmdd ON leaf_age USING BTREE ((geotime[1]));" +
-                                                                                                                                            "CREATE INDEX leaf_age_geotime_hhmmss ON leaf_age USING BTREE ((geotime[2]));";
+                                                                                                                                            "CREATE INDEX leaf_age_yearmmdd ON leaf_age USING BTREE ((age[1]));" +
+                                                                                                                                            "CREATE INDEX leaf_age_hhmmss ON leaf_age USING BTREE ((age[2]));";
                                                                                                                                         if (PostgreSqlHelper.NonQuery(SQLstring) != null)
                                                                                                                                         {
                                                                                                                                             //嵌入式自定义SQL函数/////////////////////////////////////////////////////////////
@@ -2432,21 +2432,22 @@ namespace Geosite
                                                                                                                                             {
                                                                                                                                                 //Geosite_Count函数用法：SELECT Geosite_Count('SELECT * FROM 表名 WHERE 约束条件'); 
                                                                                                                                                 PostgreSqlHelper
-                                                                                                                                                    .NonQuery(
-                                                                                                                                                        $@"
-                                                                                                                                                CREATE FUNCTION {Geosite_Count}(query text) RETURNS INTEGER AS
-                                                                                                                                                $func$
-                                                                                                                                                DECLARE
-                                                                                                                                                    rec record;
-                                                                                                                                                    ROWS INTEGER;
-                                                                                                                                                BEGIN
-                                                                                                                                                    FOR rec IN EXECUTE 'EXPLAIN ' || query LOOP
-                                                                                                                                                        ROWS := SUBSTRING(rec.""QUERY PLAN"" FROM ' rows=([[:digit:]]+)');
-                                                                                                                                                        EXIT WHEN ROWS IS NOT NULL;
-                                                                                                                                                    END LOOP; 
-                                                                                                                                                    RETURN ROWS;
-                                                                                                                                                END
-                                                                                                                                                $func$ LANGUAGE plpgsql;"
+                                                                                                                                                    .NonQuery
+                                                                                                                                                    (
+$@"
+CREATE FUNCTION {Geosite_Count}(query text) RETURNS INTEGER AS
+$func$
+DECLARE
+    rec record;
+    ROWS INTEGER;
+BEGIN
+    FOR rec IN EXECUTE 'EXPLAIN ' || query LOOP
+        ROWS := SUBSTRING(rec.""QUERY PLAN"" FROM ' rows=([[:digit:]]+)');
+        EXIT WHEN ROWS IS NOT NULL;
+    END LOOP; 
+    RETURN ROWS;
+END
+$func$ LANGUAGE plpgsql;"
                                                                                                                                                     );
                                                                                                                                             }
                                                                                                                                             ClusterUser.status = true;
@@ -2461,10 +2462,10 @@ namespace Geosite
                                                                                                                                     errorMessage = $"Failed to create leaf_hits - {PostgreSqlHelper.ErrorMessage}";
                                                                                                                             }
                                                                                                                             else
-                                                                                                                                errorMessage = $"Failed to create some indexes of leaf_wmts - {PostgreSqlHelper.ErrorMessage}";
+                                                                                                                                errorMessage = $"Failed to create some indexes of leaf_wms - {PostgreSqlHelper.ErrorMessage}";
                                                                                                                         }
                                                                                                                         else
-                                                                                                                            errorMessage = $"Failed to create leaf_wmts - {PostgreSqlHelper.ErrorMessage}";
+                                                                                                                            errorMessage = $"Failed to create leaf_wms - {PostgreSqlHelper.ErrorMessage}";
                                                                                                                     }
                                                                                                                     else
                                                                                                                         errorMessage = $"Failed to create some indexes of leaf_tile - {PostgreSqlHelper.ErrorMessage}";
@@ -2688,9 +2689,9 @@ namespace Geosite
                     if (PostgreSqlHelper.NonQuery("REINDEX TABLE leaf_tile;", timeout: 0) == null)
                         throw new Exception(PostgreSqlHelper.ErrorMessage);
 
-                    statusText.Text = "● leaf_wmts ...";
+                    statusText.Text = "● leaf_wms ...";
                     Application.DoEvents();
-                    if (PostgreSqlHelper.NonQuery("REINDEX TABLE leaf_wmts;", timeout: 0) == null)
+                    if (PostgreSqlHelper.NonQuery("REINDEX TABLE leaf_wms;", timeout: 0) == null)
                         throw new Exception(PostgreSqlHelper.ErrorMessage);
 
                     statusText.Text = "● leaf_age ...";
@@ -2796,9 +2797,9 @@ namespace Geosite
                     if (PostgreSqlHelper.NonQuery("VACUUM ANALYZE leaf_tile;", timeout: 0) == null)
                         throw new Exception(PostgreSqlHelper.ErrorMessage);
 
-                    statusText.Text = "● leaf_wmts ...";
+                    statusText.Text = "● leaf_wms ...";
                     Application.DoEvents();
-                    if (PostgreSqlHelper.NonQuery("VACUUM ANALYZE leaf_wmts;", timeout: 0) == null)
+                    if (PostgreSqlHelper.NonQuery("VACUUM ANALYZE leaf_wms;", timeout: 0) == null)
                         throw new Exception(PostgreSqlHelper.ErrorMessage);
 
                     statusText.Text = "● leaf_age ...";
@@ -3700,8 +3701,17 @@ namespace Geosite
 
                                                 if (isOK)
                                                 {
-                                                    //（0：非空间数据【默认】、1：Point点、2：Line线、3：Polygon面、4：Image地理贴图、10000：Wmts栅格金字塔瓦片服务类型[epsg:0 - 无投影瓦片]、10001：Wmts瓦片服务类型[epsg:4326 - 地理坐标系瓦片]、10002：Wmts栅格金字塔瓦片服务类型[epsg:3857 - 球体墨卡托瓦片]、11000：Tile栅格金字塔瓦片类型[epsg:0 - 无投影瓦片]、11001：Tile栅格金字塔瓦片类型[epsg:4326 - 地理坐标系瓦片]、11002：Tile栅格金字塔瓦片类型[epsg:3857 - 球体墨卡托瓦片]、12000：Tile栅格平铺式瓦片类型[epsg:0 - 无投影瓦片]、12001：Tile栅格平铺式瓦片类型[epsg:4326 - 地理坐标系瓦片]、12002：Tile栅格平铺式瓦片类型[epsg:3857 - 球体墨卡托瓦片]）
-
+                                                    //（0：非空间数据【默认】
+                                                    //1：Point点、2：Line线、3：Polygon面、4：Image地理贴图
+                                                    //10000：Tile栅格  金字塔瓦片     wms服务类型     [epsg:0       无投影瓦片]
+                                                    //10001：Tile栅格  金字塔瓦片     wms服务类型     [epsg:4326    地理坐标系瓦片]
+                                                    //10002：Tile栅格  金字塔瓦片     wms服务类型     [epsg:3857    球体墨卡托瓦片]
+                                                    //11000：Tile栅格  金字塔瓦片     wmts服务类型    [epsg:0       无投影瓦片]
+                                                    //11001：Tile栅格  金字塔瓦片     wmts服务类型    [epsg:4326    地理坐标系瓦片]
+                                                    //11002：Tile栅格  金字塔瓦片     wmts服务类型    [epsg:3857    球体墨卡托瓦片]
+                                                    //12000：Tile栅格  平铺式瓦片     wps服务类型     [epsg:0       无投影瓦片]
+                                                    //12001：Tile栅格  平铺式瓦片     wps服务类型     [epsg:4326    地理坐标系瓦片]
+                                                    //12002：Tile栅格  平铺式瓦片     wps服务类型     [epsg:3857    球体墨卡托瓦片]
                                                     oneForest.Tree(enclosure: (treeId,
                                                         treeType)); //向树记录写入完整性标志以及类型数组
 
@@ -4178,8 +4188,6 @@ namespace Geosite
 
                                             if (isOK)
                                             {
-                                                //（0：非空间数据【默认】、1：Point点、2：Line线、3：Polygon面、4：Image地理贴图、10000：Wmts栅格金字塔瓦片服务类型[epsg:0 - 无投影瓦片]、10001：Wmts瓦片服务类型[epsg:4326 - 地理坐标系瓦片]、10002：Wmts栅格金字塔瓦片服务类型[epsg:3857 - 球体墨卡托瓦片]、11000：Tile栅格金字塔瓦片类型[epsg:0 - 无投影瓦片]、11001：Tile栅格金字塔瓦片类型[epsg:4326 - 地理坐标系瓦片]、11002：Tile栅格金字塔瓦片类型[epsg:3857 - 球体墨卡托瓦片]、12000：Tile栅格平铺式瓦片类型[epsg:0 - 无投影瓦片]、12001：Tile栅格平铺式瓦片类型[epsg:4326 - 地理坐标系瓦片]、12002：Tile栅格平铺式瓦片类型[epsg:3857 - 球体墨卡托瓦片]）
-
                                                 oneForest.Tree(enclosure: (treeId,
                                                     treeType)); //向树记录写入完整性标志以及类型数组
                                                 this.Invoke(
@@ -4663,8 +4671,6 @@ namespace Geosite
 
                                                     if (isOK)
                                                     {
-                                                        //（0：非空间数据【默认】、1：Point点、2：Line线、3：Polygon面、4：Image地理贴图、10000：Wmts栅格金字塔瓦片服务类型[epsg:0 - 无投影瓦片]、10001：Wmts瓦片服务类型[epsg:4326 - 地理坐标系瓦片]、10002：Wmts栅格金字塔瓦片服务类型[epsg:3857 - 球体墨卡托瓦片]、11000：Tile栅格金字塔瓦片类型[epsg:0 - 无投影瓦片]、11001：Tile栅格金字塔瓦片类型[epsg:4326 - 地理坐标系瓦片]、11002：Tile栅格金字塔瓦片类型[epsg:3857 - 球体墨卡托瓦片]、12000：Tile栅格平铺式瓦片类型[epsg:0 - 无投影瓦片]、12001：Tile栅格平铺式瓦片类型[epsg:4326 - 地理坐标系瓦片]、12002：Tile栅格平铺式瓦片类型[epsg:3857 - 球体墨卡托瓦片]）
-
                                                         oneForest.Tree(enclosure: (treeId,
                                                             treeType)); //向树记录写入完整性标志以及类型数组
                                                         this.Invoke(
@@ -4895,8 +4901,6 @@ namespace Geosite
 
                                             if (isOK)
                                             {
-                                                //（0：非空间数据【默认】、1：Point点、2：Line线、3：Polygon面、4：Image地理贴图、10000：Wmts栅格金字塔瓦片服务类型[epsg:0 - 无投影瓦片]、10001：Wmts瓦片服务类型[epsg:4326 - 地理坐标系瓦片]、10002：Wmts栅格金字塔瓦片服务类型[epsg:3857 - 球体墨卡托瓦片]、11000：Tile栅格金字塔瓦片类型[epsg:0 - 无投影瓦片]、11001：Tile栅格金字塔瓦片类型[epsg:4326 - 地理坐标系瓦片]、11002：Tile栅格金字塔瓦片类型[epsg:3857 - 球体墨卡托瓦片]、12000：Tile栅格平铺式瓦片类型[epsg:0 - 无投影瓦片]、12001：Tile栅格平铺式瓦片类型[epsg:4326 - 地理坐标系瓦片]、12002：Tile栅格平铺式瓦片类型[epsg:3857 - 球体墨卡托瓦片]）
-
                                                 oneForest.Tree(enclosure: (treeId,
                                                     treeType)); //向树记录写入完整性标志以及类型数组
                                                 this.Invoke(
@@ -5124,8 +5128,6 @@ namespace Geosite
 
                                             if (isOK)
                                             {
-                                                //（0：非空间数据【默认】、1：Point点、2：Line线、3：Polygon面、4：Image地理贴图、10000：Wmts栅格金字塔瓦片服务类型[epsg:0 - 无投影瓦片]、10001：Wmts瓦片服务类型[epsg:4326 - 地理坐标系瓦片]、10002：Wmts栅格金字塔瓦片服务类型[epsg:3857 - 球体墨卡托瓦片]、11000：Tile栅格金字塔瓦片类型[epsg:0 - 无投影瓦片]、11001：Tile栅格金字塔瓦片类型[epsg:4326 - 地理坐标系瓦片]、11002：Tile栅格金字塔瓦片类型[epsg:3857 - 球体墨卡托瓦片]、12000：Tile栅格平铺式瓦片类型[epsg:0 - 无投影瓦片]、12001：Tile栅格平铺式瓦片类型[epsg:4326 - 地理坐标系瓦片]、12002：Tile栅格平铺式瓦片类型[epsg:3857 - 球体墨卡托瓦片]）
-
                                                 oneForest.Tree(enclosure: (treeId,
                                                     treeType)); //向树记录写入完整性标志以及类型数组
 
@@ -5373,8 +5375,6 @@ namespace Geosite
 
                                                 if (isOK)
                                                 {
-                                                    //（0：非空间数据【默认】、1：Point点、2：Line线、3：Polygon面、4：Image地理贴图、10000：Wmts栅格金字塔瓦片服务类型[epsg:0 - 无投影瓦片]、10001：Wmts瓦片服务类型[epsg:4326 - 地理坐标系瓦片]、10002：Wmts栅格金字塔瓦片服务类型[epsg:3857 - 球体墨卡托瓦片]、11000：Tile栅格金字塔瓦片类型[epsg:0 - 无投影瓦片]、11001：Tile栅格金字塔瓦片类型[epsg:4326 - 地理坐标系瓦片]、11002：Tile栅格金字塔瓦片类型[epsg:3857 - 球体墨卡托瓦片]、12000：Tile栅格平铺式瓦片类型[epsg:0 - 无投影瓦片]、12001：Tile栅格平铺式瓦片类型[epsg:4326 - 地理坐标系瓦片]、12002：Tile栅格平铺式瓦片类型[epsg:3857 - 球体墨卡托瓦片]）
-
                                                     oneForest.Tree(enclosure: (treeId,
                                                         treeType)); //向树记录写入完整性标志以及类型数组
                                                     this.Invoke(
@@ -6965,17 +6965,15 @@ namespace Geosite
                     //3：Polygon面、
                     //4：Image地理贴图、
 
-                    //10000：Wmts栅格金字塔瓦片服务类型[epsg:0 - 无投影瓦片]、
-                    //10001：Wmts瓦片服务类型[epsg:4326 - 地理坐标系瓦片]、
-                    //10002：Wmts栅格金字塔瓦片服务类型[epsg:3857 - 球体墨卡托瓦片]、
-
-                    //11000：Tile栅格金字塔瓦片类型[epsg:0 - 无投影瓦片]、
-                    //11001：Tile栅格金字塔瓦片类型[epsg:4326 - 地理坐标系瓦片]、
-                    //11002：Tile栅格金字塔瓦片类型[epsg:3857 - 球体墨卡托瓦片]、
-
-                    //12000：Tile栅格平铺式瓦片类型[epsg:0 - 无投影瓦片]、
-                    //12001：Tile栅格平铺式瓦片类型[epsg:4326 - 地理坐标系瓦片]、
-                    //12002：Tile栅格平铺式瓦片类型[epsg:3857 - 球体墨卡托瓦片]）
+                    //10000：Tile栅格  金字塔瓦片     wms服务类型     [epsg:0       无投影瓦片]
+                    //10001：Tile栅格  金字塔瓦片     wms服务类型     [epsg:4326    地理坐标系瓦片]
+                    //10002：Tile栅格  金字塔瓦片     wms服务类型     [epsg:3857    球体墨卡托瓦片]
+                    //11000：Tile栅格  金字塔瓦片     wmts服务类型    [epsg:0       无投影瓦片]
+                    //11001：Tile栅格  金字塔瓦片     wmts服务类型    [epsg:4326    地理坐标系瓦片]
+                    //11002：Tile栅格  金字塔瓦片     wmts服务类型    [epsg:3857    球体墨卡托瓦片]
+                    //12000：Tile栅格  平铺式瓦片     wps服务类型     [epsg:0       无投影瓦片]
+                    //12001：Tile栅格  平铺式瓦片     wps服务类型     [epsg:4326    地理坐标系瓦片]
+                    //12002：Tile栅格  平铺式瓦片     wps服务类型     [epsg:3857    球体墨卡托瓦片]
 
                     if (oldTreeType.GetType().Name != "DBNull")
                     {
@@ -7180,7 +7178,7 @@ namespace Geosite
                                         new XElement("name", themeName),
                                         new XElement("property",
                                             new XElement("srid", parameter.srid),
-                                            //针对WMTS服务路径，若存在子域占位符{s}，必须携带子域替换符，以便实施负载均衡策略
+                                            //针对WMS服务路径，若存在子域占位符{s}，必须携带子域替换符，以便实施负载均衡策略
                                             tabIndex == 1 && !string.IsNullOrWhiteSpace(subdomainsBox.Text)
                                                 ? new XElement("subdomains", subdomainsBox.Text)
                                                 : null
@@ -7299,7 +7297,7 @@ namespace Geosite
                         }
 
                         break;
-                    case 1: //远程wmts服务地址（金字塔存储）
+                    case 1: //远程wms服务地址（金字塔存储）
                         try
                         {
                             var result1 = geositeTilePush.TilePush(
