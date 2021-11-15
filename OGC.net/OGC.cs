@@ -2407,7 +2407,7 @@ namespace Geosite
                                                                                                                                         ") PARTITION BY HASH (leaf);" +
                                                                                                                                         "COMMENT ON TABLE leaf_age IS '叶子要素表（leaf）的年龄子表';" +
                                                                                                                                         "COMMENT ON COLUMN leaf_age.leaf IS '叶子要素的标识码';" + //leaf表中的id
-                                                                                                                                        "COMMENT ON COLUMN leaf_age.age IS '叶子要素的年龄（通常为地质年龄，由【年月日、时分秒】构成）';";
+                                                                                                                                        "COMMENT ON COLUMN leaf_age.age IS '叶子要素的年龄（通常为地质年龄，由【±年月日、时分秒】构成）';";
                                                                                                                                     if (PostgreSqlHelper.NonQuery(SQLstring) != null)
                                                                                                                                     {
                                                                                                                                         for (var i = 0; i < processorCount; i++)
@@ -4862,8 +4862,7 @@ $func$ LANGUAGE plpgsql;"
                                                             var createLeaf = oneForest.Leaf(
                                                                 route: createRoute.Route,
                                                                 leafX: leafX,
-                                                                timestamp:
-                                                                $"{DateTime.Parse(leafX.Attribute("timeStamp").Value): yyyyMMdd,HHmmss}",
+                                                                timestamp: $"{DateTime.Parse(leafX.Attribute("timeStamp").Value): yyyyMMdd,HHmmss}",
                                                                 topology: doTopology
                                                             );
 
