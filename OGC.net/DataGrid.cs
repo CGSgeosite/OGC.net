@@ -140,7 +140,18 @@ namespace Geosite
                     // name：文档树根节点简要名称，通常是入库文件基本名
                     // uri：文档树数据来源（存放路径及文件名）
                     // timestamp：文档树编码印章，采用[节点森林序号,文档树序号,年月日（yyyyMMdd）,时分秒（HHmmss）]四元整型数组编码方式
-                    // type：文档树要素类型码（0：非空间数据【默认】、1：Point点、2：Line线、3：Polygon面、4：Image地理贴图、10000：Wmts栅格金字塔瓦片服务类型[epsg:0 - 无投影瓦片]、10001：Wmts瓦片服务类型[epsg:4326 - 地理坐标系瓦片]、10002：Wmts栅格金字塔瓦片服务类型[epsg:3857 - 球体墨卡托瓦片]、11000：Tile栅格金字塔瓦片类型[epsg:0 - 无投影瓦片]、11001：Tile栅格金字塔瓦片类型[epsg:4326 - 地理坐标系瓦片]、11002：Tile栅格金字塔瓦片类型[epsg:3857 - 球体墨卡托瓦片]、12000：Tile栅格平铺式瓦片类型[epsg:0 - 无投影瓦片]、12001：Tile栅格平铺式瓦片类型[epsg:4326 - 地理坐标系瓦片]、12002：Tile栅格平铺式瓦片类型[epsg:3857 - 球体墨卡托瓦片]）构成的数组
+                    // type：文档树要素类型码
+                    //（0：非空间数据【默认】
+                    //1：Point点、2：Line线、3：Polygon面、4：Image地理贴图
+                    //10000：Tile栅格  金字塔瓦片     wms服务类型     [epsg:0       无投影瓦片]
+                    //10001：Tile栅格  金字塔瓦片     wms服务类型     [epsg:4326    地理坐标系瓦片]
+                    //10002：Tile栅格  金字塔瓦片     wms服务类型     [epsg:3857    球体墨卡托瓦片]
+                    //11000：Tile栅格  金字塔瓦片     wmts服务类型    [epsg:0       无投影瓦片]
+                    //11001：Tile栅格  金字塔瓦片     wmts服务类型    [epsg:4326    地理坐标系瓦片]
+                    //11002：Tile栅格  金字塔瓦片     wmts服务类型    [epsg:3857    球体墨卡托瓦片]
+                    //12000：Tile栅格  平铺式瓦片     wps服务类型     [epsg:0       无投影瓦片]
+                    //12001：Tile栅格  平铺式瓦片     wps服务类型     [epsg:4326    地理坐标系瓦片]
+                    //12002：Tile栅格  平铺式瓦片     wps服务类型     [epsg:3857    球体墨卡托瓦片]
                     // status：文档树状态码（介于0～7之间），继承自[forest.status]
 
                     var typeArray = Regex.Split(type, @"[\s,]+",
@@ -166,12 +177,12 @@ namespace Geosite
                             case "10000":
                             case "10001":
                             case "10002":
-                                typeBitmap = Properties.Resources.wmts;
+                                typeBitmap = Properties.Resources.wms;
                                 break;
                             case "11000":
                             case "11001":
                             case "11002":
-                                typeBitmap = Properties.Resources.wms;
+                                typeBitmap = Properties.Resources.wmts;
                                 break;
                             case "12000":
                             case "12001":
