@@ -3699,6 +3699,9 @@ $func$ LANGUAGE plpgsql;"
                                                         $" [{valid} feature{(valid > 1 ? "s" : "")}]", 200);
                                                 }
 
+                                                oneForest.Tree(enclosure: (treeId,
+                                                    treeType, isOK)); //向树记录写入完整性标志以及类型数组
+
                                                 if (isOK)
                                                 {
                                                     //（0：非空间数据【默认】
@@ -3712,8 +3715,6 @@ $func$ LANGUAGE plpgsql;"
                                                     //12000：Tile栅格  平铺式瓦片     wps服务类型     [epsg:0       无投影瓦片]
                                                     //12001：Tile栅格  平铺式瓦片     wps服务类型     [epsg:4326    地理坐标系瓦片]
                                                     //12002：Tile栅格  平铺式瓦片     wps服务类型     [epsg:3857    球体墨卡托瓦片]
-                                                    oneForest.Tree(enclosure: (treeId,
-                                                        treeType)); //向树记录写入完整性标志以及类型数组
 
                                                     this.Invoke(
                                                         new Action(
@@ -4186,10 +4187,11 @@ $func$ LANGUAGE plpgsql;"
                                                     $" [{valid} feature{(valid > 1 ? "s" : "")}]", 200);
                                             }
 
+                                            oneForest.Tree(enclosure: (treeId,
+                                                treeType, isOK)); //向树记录写入完整性标志以及类型数组
+
                                             if (isOK)
                                             {
-                                                oneForest.Tree(enclosure: (treeId,
-                                                    treeType)); //向树记录写入完整性标志以及类型数组
                                                 this.Invoke(
                                                     new Action(
                                                         () =>
@@ -4669,10 +4671,10 @@ $func$ LANGUAGE plpgsql;"
                                                             $" [{valid} feature{(valid > 1 ? "s" : "")}]", 200);
                                                     }
 
+                                                    oneForest.Tree(enclosure: (treeId, treeType, isOK)); //向树记录写入完整性标志以及类型数组
+
                                                     if (isOK)
                                                     {
-                                                        oneForest.Tree(enclosure: (treeId,
-                                                            treeType)); //向树记录写入完整性标志以及类型数组
                                                         this.Invoke(
                                                             new Action(
                                                                 () =>
@@ -4898,10 +4900,11 @@ $func$ LANGUAGE plpgsql;"
                                                 break;
                                             }
 
+                                            oneForest.Tree(enclosure: (treeId,
+                                                treeType, isOK)); //向树记录写入完整性标志以及类型数组
+
                                             if (isOK)
                                             {
-                                                oneForest.Tree(enclosure: (treeId,
-                                                    treeType)); //向树记录写入完整性标志以及类型数组
                                                 this.Invoke(
                                                     new Action(
                                                         () =>
@@ -5125,11 +5128,11 @@ $func$ LANGUAGE plpgsql;"
                                                 break;
                                             }
 
+                                            oneForest.Tree(enclosure: (treeId,
+                                                treeType, isOK)); //向树记录写入完整性标志以及类型数组
+
                                             if (isOK)
                                             {
-                                                oneForest.Tree(enclosure: (treeId,
-                                                    treeType)); //向树记录写入完整性标志以及类型数组
-
                                                 this.Invoke(
                                                     new Action(
                                                         () =>
@@ -5372,10 +5375,11 @@ $func$ LANGUAGE plpgsql;"
                                                     break;
                                                 }
 
+                                                oneForest.Tree(enclosure: (treeId,
+                                                    treeType, isOK)); //向树记录写入完整性标志以及类型数组
+
                                                 if (isOK)
                                                 {
-                                                    oneForest.Tree(enclosure: (treeId,
-                                                        treeType)); //向树记录写入完整性标志以及类型数组
                                                     this.Invoke(
                                                         new Action(
                                                             () =>
@@ -5474,10 +5478,10 @@ $func$ LANGUAGE plpgsql;"
         {
             //e.code 状态码（0/null=预处理阶段；1=正在处理阶段；200=收尾阶段；400=异常信息）
             //e.ProgressPercentage 进度值（介于0~100之间，仅当code=1时有效）
-            var UserState = (string)e.UserState;
-            var ProgressPercentage = e.ProgressPercentage;
-            var pv = statusProgress.Value = ProgressPercentage is >= 0 and <= 100 ? ProgressPercentage : 0;
-            statusText.Text = UserState;
+            var userState = (string)e.UserState;
+            var progressPercentage = e.ProgressPercentage;
+            var pv = statusProgress.Value = progressPercentage is >= 0 and <= 100 ? progressPercentage : 0;
+            statusText.Text = userState;
             //实时刷新界面进度杆会明显降低执行速度！下面采取每10个要素刷新一次 
             if (pv % 10 == 0)
                 statusBar.Refresh();
