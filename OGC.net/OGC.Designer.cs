@@ -30,8 +30,8 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OGCform));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
             this.vectorSourceFile = new System.Windows.Forms.TextBox();
             this.vectorTargetFile = new System.Windows.Forms.TextBox();
             this.OGCtoolTip = new System.Windows.Forms.ToolTip(this.components);
@@ -187,6 +187,7 @@
             this.statusText = new System.Windows.Forms.ToolStripStatusLabel();
             this.dataGridViewImageColumn1 = new System.Windows.Forms.DataGridViewImageColumn();
             this.kmllogo = new System.Windows.Forms.PictureBox();
+            this.panel7 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox13)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.vectorSaveFile)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.vectorOpenFile)).BeginInit();
@@ -250,7 +251,7 @@
             this.vectorSourceFile.Location = new System.Drawing.Point(38, 19);
             this.vectorSourceFile.Name = "vectorSourceFile";
             this.vectorSourceFile.ReadOnly = true;
-            this.vectorSourceFile.Size = new System.Drawing.Size(411, 21);
+            this.vectorSourceFile.Size = new System.Drawing.Size(453, 21);
             this.vectorSourceFile.TabIndex = 0;
             this.vectorSourceFile.TextChanged += new System.EventHandler(this.vectorSourceFile_TextChanged);
             this.vectorSourceFile.DoubleClick += new System.EventHandler(this.vectorOpenFile_Click);
@@ -259,10 +260,10 @@
             // 
             this.vectorTargetFile.BackColor = System.Drawing.Color.White;
             this.vectorTargetFile.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.vectorTargetFile.Location = new System.Drawing.Point(38, 18);
+            this.vectorTargetFile.Location = new System.Drawing.Point(38, 20);
             this.vectorTargetFile.Name = "vectorTargetFile";
             this.vectorTargetFile.ReadOnly = true;
-            this.vectorTargetFile.Size = new System.Drawing.Size(213, 21);
+            this.vectorTargetFile.Size = new System.Drawing.Size(228, 21);
             this.vectorTargetFile.TabIndex = 1;
             this.vectorTargetFile.DoubleClick += new System.EventHandler(this.vectorSaveFile_Click);
             // 
@@ -273,9 +274,9 @@
             this.deleteTree.Enabled = false;
             this.deleteTree.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.deleteTree.ForeColor = System.Drawing.Color.Black;
-            this.deleteTree.Location = new System.Drawing.Point(269, 119);
+            this.deleteTree.Location = new System.Drawing.Point(269, 135);
             this.deleteTree.Name = "deleteTree";
-            this.deleteTree.Size = new System.Drawing.Size(30, 21);
+            this.deleteTree.Size = new System.Drawing.Size(34, 29);
             this.deleteTree.TabIndex = 3;
             this.deleteTree.Text = "×";
             this.OGCtoolTip.SetToolTip(this.deleteTree, "Delete selected themes");
@@ -288,9 +289,9 @@
             this.lastPage.Cursor = System.Windows.Forms.Cursors.Hand;
             this.lastPage.Enabled = false;
             this.lastPage.Font = new System.Drawing.Font("宋体", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.lastPage.Location = new System.Drawing.Point(132, 119);
+            this.lastPage.Location = new System.Drawing.Point(132, 135);
             this.lastPage.Name = "lastPage";
-            this.lastPage.Size = new System.Drawing.Size(40, 21);
+            this.lastPage.Size = new System.Drawing.Size(40, 29);
             this.lastPage.TabIndex = 3;
             this.lastPage.Text = ">|";
             this.OGCtoolTip.SetToolTip(this.lastPage, "Last Page");
@@ -303,9 +304,9 @@
             this.nextPage.Cursor = System.Windows.Forms.Cursors.Hand;
             this.nextPage.Enabled = false;
             this.nextPage.Font = new System.Drawing.Font("宋体", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.nextPage.Location = new System.Drawing.Point(88, 119);
+            this.nextPage.Location = new System.Drawing.Point(88, 135);
             this.nextPage.Name = "nextPage";
-            this.nextPage.Size = new System.Drawing.Size(40, 21);
+            this.nextPage.Size = new System.Drawing.Size(40, 29);
             this.nextPage.TabIndex = 3;
             this.nextPage.Text = ">";
             this.OGCtoolTip.SetToolTip(this.nextPage, "Next Page");
@@ -318,9 +319,9 @@
             this.previousPage.Cursor = System.Windows.Forms.Cursors.Hand;
             this.previousPage.Enabled = false;
             this.previousPage.Font = new System.Drawing.Font("宋体", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.previousPage.Location = new System.Drawing.Point(44, 119);
+            this.previousPage.Location = new System.Drawing.Point(44, 135);
             this.previousPage.Name = "previousPage";
-            this.previousPage.Size = new System.Drawing.Size(40, 21);
+            this.previousPage.Size = new System.Drawing.Size(40, 29);
             this.previousPage.TabIndex = 3;
             this.previousPage.Text = "<";
             this.OGCtoolTip.SetToolTip(this.previousPage, "Previous Page");
@@ -333,9 +334,9 @@
             this.firstPage.Cursor = System.Windows.Forms.Cursors.Hand;
             this.firstPage.Enabled = false;
             this.firstPage.Font = new System.Drawing.Font("宋体", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.firstPage.Location = new System.Drawing.Point(0, 119);
+            this.firstPage.Location = new System.Drawing.Point(0, 135);
             this.firstPage.Name = "firstPage";
-            this.firstPage.Size = new System.Drawing.Size(40, 21);
+            this.firstPage.Size = new System.Drawing.Size(40, 29);
             this.firstPage.TabIndex = 3;
             this.firstPage.Text = "|<";
             this.OGCtoolTip.SetToolTip(this.firstPage, "First Page");
@@ -346,7 +347,7 @@
             // 
             this.pagesBox.BackColor = System.Drawing.Color.WhiteSmoke;
             this.pagesBox.Enabled = false;
-            this.pagesBox.Location = new System.Drawing.Point(176, 119);
+            this.pagesBox.Location = new System.Drawing.Point(176, 140);
             this.pagesBox.Name = "pagesBox";
             this.pagesBox.ReadOnly = true;
             this.pagesBox.Size = new System.Drawing.Size(89, 21);
@@ -358,14 +359,14 @@
             // 
             this.GeositeServerUrl.Location = new System.Drawing.Point(23, 4);
             this.GeositeServerUrl.Name = "GeositeServerUrl";
-            this.GeositeServerUrl.Size = new System.Drawing.Size(189, 21);
+            this.GeositeServerUrl.Size = new System.Drawing.Size(230, 21);
             this.GeositeServerUrl.TabIndex = 1;
             this.OGCtoolTip.SetToolTip(this.GeositeServerUrl, "GeositeServer Url");
             this.GeositeServerUrl.TextChanged += new System.EventHandler(this.GeositeServer_LinkChanged);
             // 
             // wmtsSouth
             // 
-            this.wmtsSouth.Location = new System.Drawing.Point(310, 58);
+            this.wmtsSouth.Location = new System.Drawing.Point(333, 71);
             this.wmtsSouth.Name = "wmtsSouth";
             this.wmtsSouth.Size = new System.Drawing.Size(61, 21);
             this.wmtsSouth.TabIndex = 34;
@@ -376,7 +377,7 @@
             // 
             // wmtsWest
             // 
-            this.wmtsWest.Location = new System.Drawing.Point(245, 45);
+            this.wmtsWest.Location = new System.Drawing.Point(266, 55);
             this.wmtsWest.Name = "wmtsWest";
             this.wmtsWest.Size = new System.Drawing.Size(61, 21);
             this.wmtsWest.TabIndex = 32;
@@ -387,7 +388,7 @@
             // 
             // wmtsEast
             // 
-            this.wmtsEast.Location = new System.Drawing.Point(375, 45);
+            this.wmtsEast.Location = new System.Drawing.Point(399, 55);
             this.wmtsEast.Name = "wmtsEast";
             this.wmtsEast.Size = new System.Drawing.Size(61, 21);
             this.wmtsEast.TabIndex = 33;
@@ -398,7 +399,7 @@
             // 
             // wmtsNorth
             // 
-            this.wmtsNorth.Location = new System.Drawing.Point(310, 30);
+            this.wmtsNorth.Location = new System.Drawing.Point(333, 36);
             this.wmtsNorth.Name = "wmtsNorth";
             this.wmtsNorth.Size = new System.Drawing.Size(61, 21);
             this.wmtsNorth.TabIndex = 31;
@@ -411,11 +412,11 @@
             // 
             this.textBox4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textBox4.Enabled = false;
-            this.textBox4.Location = new System.Drawing.Point(275, 39);
+            this.textBox4.Location = new System.Drawing.Point(296, 46);
             this.textBox4.Multiline = true;
             this.textBox4.Name = "textBox4";
             this.textBox4.ReadOnly = true;
-            this.textBox4.Size = new System.Drawing.Size(130, 33);
+            this.textBox4.Size = new System.Drawing.Size(130, 42);
             this.textBox4.TabIndex = 19;
             this.OGCtoolTip.SetToolTip(this.textBox4, "Boundary");
             // 
@@ -434,7 +435,7 @@
             // 
             this.wmtsSize.BackColor = System.Drawing.Color.WhiteSmoke;
             this.wmtsSize.Enabled = false;
-            this.wmtsSize.Location = new System.Drawing.Point(33, 58);
+            this.wmtsSize.Location = new System.Drawing.Point(33, 71);
             this.wmtsSize.Name = "wmtsSize";
             this.wmtsSize.ReadOnly = true;
             this.wmtsSize.Size = new System.Drawing.Size(52, 21);
@@ -449,9 +450,9 @@
             this.deleteForest.Enabled = false;
             this.deleteForest.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.deleteForest.ForeColor = System.Drawing.Color.Black;
-            this.deleteForest.Location = new System.Drawing.Point(135, 92);
+            this.deleteForest.Location = new System.Drawing.Point(155, 109);
             this.deleteForest.Name = "deleteForest";
-            this.deleteForest.Size = new System.Drawing.Size(27, 52);
+            this.deleteForest.Size = new System.Drawing.Size(42, 59);
             this.deleteForest.TabIndex = 20;
             this.deleteForest.Text = "×";
             this.OGCtoolTip.SetToolTip(this.deleteForest, "Delete user data");
@@ -462,7 +463,7 @@
             // 
             this.FormatRaster.AutoSize = true;
             this.FormatRaster.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.FormatRaster.Location = new System.Drawing.Point(364, 19);
+            this.FormatRaster.Location = new System.Drawing.Point(392, 19);
             this.FormatRaster.Name = "FormatRaster";
             this.FormatRaster.Size = new System.Drawing.Size(59, 16);
             this.FormatRaster.TabIndex = 11;
@@ -476,7 +477,7 @@
             this.FormatStandard.AutoSize = true;
             this.FormatStandard.Checked = true;
             this.FormatStandard.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.FormatStandard.Location = new System.Drawing.Point(3, 19);
+            this.FormatStandard.Location = new System.Drawing.Point(6, 19);
             this.FormatStandard.Name = "FormatStandard";
             this.FormatStandard.Size = new System.Drawing.Size(71, 16);
             this.FormatStandard.TabIndex = 6;
@@ -490,7 +491,7 @@
             // 
             this.FormatDeepZoom.AutoSize = true;
             this.FormatDeepZoom.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.FormatDeepZoom.Location = new System.Drawing.Point(287, 19);
+            this.FormatDeepZoom.Location = new System.Drawing.Point(310, 19);
             this.FormatDeepZoom.Name = "FormatDeepZoom";
             this.FormatDeepZoom.Size = new System.Drawing.Size(71, 16);
             this.FormatDeepZoom.TabIndex = 10;
@@ -503,7 +504,7 @@
             // 
             this.FormatTMS.AutoSize = true;
             this.FormatTMS.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.FormatTMS.Location = new System.Drawing.Point(80, 19);
+            this.FormatTMS.Location = new System.Drawing.Point(88, 19);
             this.FormatTMS.Name = "FormatTMS";
             this.FormatTMS.Size = new System.Drawing.Size(41, 16);
             this.FormatTMS.TabIndex = 7;
@@ -516,7 +517,7 @@
             // 
             this.FormatArcGIS.AutoSize = true;
             this.FormatArcGIS.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.FormatArcGIS.Location = new System.Drawing.Point(222, 19);
+            this.FormatArcGIS.Location = new System.Drawing.Point(240, 19);
             this.FormatArcGIS.Name = "FormatArcGIS";
             this.FormatArcGIS.Size = new System.Drawing.Size(59, 16);
             this.FormatArcGIS.TabIndex = 9;
@@ -529,7 +530,7 @@
             // 
             this.FormatMapcruncher.AutoSize = true;
             this.FormatMapcruncher.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.FormatMapcruncher.Location = new System.Drawing.Point(127, 19);
+            this.FormatMapcruncher.Location = new System.Drawing.Point(140, 19);
             this.FormatMapcruncher.Name = "FormatMapcruncher";
             this.FormatMapcruncher.Size = new System.Drawing.Size(89, 16);
             this.FormatMapcruncher.TabIndex = 8;
@@ -541,7 +542,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(5, 37);
+            this.label6.Location = new System.Drawing.Point(5, 43);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(23, 12);
             this.label6.TabIndex = 35;
@@ -551,7 +552,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(2, 63);
+            this.label7.Location = new System.Drawing.Point(2, 76);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(29, 12);
             this.label7.TabIndex = 35;
@@ -560,18 +561,18 @@
             // 
             // GeositeServerUser
             // 
-            this.GeositeServerUser.Location = new System.Drawing.Point(23, 32);
+            this.GeositeServerUser.Location = new System.Drawing.Point(23, 37);
             this.GeositeServerUser.Name = "GeositeServerUser";
-            this.GeositeServerUser.Size = new System.Drawing.Size(139, 21);
+            this.GeositeServerUser.Size = new System.Drawing.Size(174, 21);
             this.GeositeServerUser.TabIndex = 1;
             this.OGCtoolTip.SetToolTip(this.GeositeServerUser, "GeositeServer user name");
             this.GeositeServerUser.TextChanged += new System.EventHandler(this.GeositeServer_LinkChanged);
             // 
             // GeositeServerPassword
             // 
-            this.GeositeServerPassword.Location = new System.Drawing.Point(23, 62);
+            this.GeositeServerPassword.Location = new System.Drawing.Point(23, 72);
             this.GeositeServerPassword.Name = "GeositeServerPassword";
-            this.GeositeServerPassword.Size = new System.Drawing.Size(139, 21);
+            this.GeositeServerPassword.Size = new System.Drawing.Size(174, 21);
             this.GeositeServerPassword.TabIndex = 1;
             this.OGCtoolTip.SetToolTip(this.GeositeServerPassword, "GeositeServer user password");
             this.GeositeServerPassword.UseSystemPasswordChar = true;
@@ -585,9 +586,9 @@
             this.FileRun.Enabled = false;
             this.FileRun.Font = new System.Drawing.Font("Arial", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.FileRun.ForeColor = System.Drawing.Color.Black;
-            this.FileRun.Location = new System.Drawing.Point(471, 7);
+            this.FileRun.Location = new System.Drawing.Point(509, 8);
             this.FileRun.Name = "FileRun";
-            this.FileRun.Size = new System.Drawing.Size(45, 94);
+            this.FileRun.Size = new System.Drawing.Size(46, 95);
             this.FileRun.TabIndex = 13;
             this.FileRun.Text = ">";
             this.OGCtoolTip.SetToolTip(this.FileRun, "Run");
@@ -601,10 +602,10 @@
             this.ModelSave.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.ModelSave.Cursor = System.Windows.Forms.Cursors.Hand;
             this.ModelSave.Enabled = false;
-            this.ModelSave.Location = new System.Drawing.Point(85, 46);
+            this.ModelSave.Location = new System.Drawing.Point(98, 53);
             this.ModelSave.Margin = new System.Windows.Forms.Padding(0);
             this.ModelSave.Name = "ModelSave";
-            this.ModelSave.Size = new System.Drawing.Size(61, 23);
+            this.ModelSave.Size = new System.Drawing.Size(61, 38);
             this.ModelSave.TabIndex = 11;
             this.ModelSave.Text = "SaveAs";
             this.OGCtoolTip.SetToolTip(this.ModelSave, "Can be saved as GeoTIFF");
@@ -617,10 +618,10 @@
             this.ModelOpen.BackColor = System.Drawing.Color.Transparent;
             this.ModelOpen.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.ModelOpen.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.ModelOpen.Location = new System.Drawing.Point(85, 7);
+            this.ModelOpen.Location = new System.Drawing.Point(98, 7);
             this.ModelOpen.Margin = new System.Windows.Forms.Padding(0);
             this.ModelOpen.Name = "ModelOpen";
-            this.ModelOpen.Size = new System.Drawing.Size(61, 23);
+            this.ModelOpen.Size = new System.Drawing.Size(61, 40);
             this.ModelOpen.TabIndex = 11;
             this.ModelOpen.Text = "Open";
             this.OGCtoolTip.SetToolTip(this.ModelOpen, "Only geographic coordinate systems are supported");
@@ -634,9 +635,9 @@
             this.DeepZoomRun.Enabled = false;
             this.DeepZoomRun.Font = new System.Drawing.Font("宋体", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.DeepZoomRun.ForeColor = System.Drawing.Color.Black;
-            this.DeepZoomRun.Location = new System.Drawing.Point(401, 3);
+            this.DeepZoomRun.Location = new System.Drawing.Point(414, 6);
             this.DeepZoomRun.Name = "DeepZoomRun";
-            this.DeepZoomRun.Size = new System.Drawing.Size(36, 77);
+            this.DeepZoomRun.Size = new System.Drawing.Size(45, 88);
             this.DeepZoomRun.TabIndex = 23;
             this.DeepZoomRun.Text = ">";
             this.OGCtoolTip.SetToolTip(this.DeepZoomRun, "Run");
@@ -650,9 +651,9 @@
             this.tileconvert.Enabled = false;
             this.tileconvert.Font = new System.Drawing.Font("宋体", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.tileconvert.ForeColor = System.Drawing.Color.Black;
-            this.tileconvert.Location = new System.Drawing.Point(401, 3);
+            this.tileconvert.Location = new System.Drawing.Point(423, 10);
             this.tileconvert.Name = "tileconvert";
-            this.tileconvert.Size = new System.Drawing.Size(36, 77);
+            this.tileconvert.Size = new System.Drawing.Size(36, 83);
             this.tileconvert.TabIndex = 20;
             this.tileconvert.Text = ">";
             this.OGCtoolTip.SetToolTip(this.tileconvert, "Run");
@@ -667,7 +668,7 @@
             this.SaveAsFormat.FormattingEnabled = true;
             this.SaveAsFormat.Location = new System.Drawing.Point(0, 0);
             this.SaveAsFormat.Name = "SaveAsFormat";
-            this.SaveAsFormat.Size = new System.Drawing.Size(157, 20);
+            this.SaveAsFormat.Size = new System.Drawing.Size(188, 20);
             this.SaveAsFormat.TabIndex = 0;
             this.OGCtoolTip.SetToolTip(this.SaveAsFormat, "Format");
             // 
@@ -678,9 +679,9 @@
             this.tabtextIcon.Cursor = System.Windows.Forms.Cursors.Hand;
             this.tabtextIcon.FlatAppearance.BorderSize = 0;
             this.tabtextIcon.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.tabtextIcon.Location = new System.Drawing.Point(355, 16);
+            this.tabtextIcon.Location = new System.Drawing.Point(383, 32);
             this.tabtextIcon.Name = "tabtextIcon";
-            this.tabtextIcon.Size = new System.Drawing.Size(66, 60);
+            this.tabtextIcon.Size = new System.Drawing.Size(73, 66);
             this.tabtextIcon.TabIndex = 15;
             this.OGCtoolTip.SetToolTip(this.tabtextIcon, "TXT(tab delimited) or CSV(comma delimited)");
             this.tabtextIcon.UseVisualStyleBackColor = true;
@@ -693,9 +694,9 @@
             this.arcgisIcon.Cursor = System.Windows.Forms.Cursors.Hand;
             this.arcgisIcon.FlatAppearance.BorderSize = 0;
             this.arcgisIcon.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.arcgisIcon.Location = new System.Drawing.Point(238, 16);
+            this.arcgisIcon.Location = new System.Drawing.Point(257, 32);
             this.arcgisIcon.Name = "arcgisIcon";
-            this.arcgisIcon.Size = new System.Drawing.Size(66, 60);
+            this.arcgisIcon.Size = new System.Drawing.Size(73, 66);
             this.arcgisIcon.TabIndex = 15;
             this.OGCtoolTip.SetToolTip(this.arcgisIcon, "ArcGIS(ShapeFile)");
             this.arcgisIcon.UseVisualStyleBackColor = true;
@@ -708,9 +709,9 @@
             this.kmlIcon.Cursor = System.Windows.Forms.Cursors.Hand;
             this.kmlIcon.FlatAppearance.BorderSize = 0;
             this.kmlIcon.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.kmlIcon.Location = new System.Drawing.Point(393, 148);
+            this.kmlIcon.Location = new System.Drawing.Point(426, 177);
             this.kmlIcon.Name = "kmlIcon";
-            this.kmlIcon.Size = new System.Drawing.Size(79, 71);
+            this.kmlIcon.Size = new System.Drawing.Size(86, 77);
             this.kmlIcon.TabIndex = 15;
             this.OGCtoolTip.SetToolTip(this.kmlIcon, "GoogleEarth(KML)");
             this.kmlIcon.UseVisualStyleBackColor = true;
@@ -723,9 +724,9 @@
             this.geositeIcon.Cursor = System.Windows.Forms.Cursors.Hand;
             this.geositeIcon.FlatAppearance.BorderSize = 0;
             this.geositeIcon.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.geositeIcon.Location = new System.Drawing.Point(285, 148);
+            this.geositeIcon.Location = new System.Drawing.Point(307, 177);
             this.geositeIcon.Name = "geositeIcon";
-            this.geositeIcon.Size = new System.Drawing.Size(79, 71);
+            this.geositeIcon.Size = new System.Drawing.Size(86, 77);
             this.geositeIcon.TabIndex = 15;
             this.OGCtoolTip.SetToolTip(this.geositeIcon, "Geosite(Xml)");
             this.geositeIcon.UseVisualStyleBackColor = true;
@@ -735,7 +736,7 @@
             // 
             this.pictureBox13.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox13.BackgroundImage")));
             this.pictureBox13.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pictureBox13.Location = new System.Drawing.Point(261, 16);
+            this.pictureBox13.Location = new System.Drawing.Point(272, 18);
             this.pictureBox13.Name = "pictureBox13";
             this.pictureBox13.Size = new System.Drawing.Size(23, 26);
             this.pictureBox13.TabIndex = 14;
@@ -747,7 +748,7 @@
             this.vectorSaveFile.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("vectorSaveFile.BackgroundImage")));
             this.vectorSaveFile.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.vectorSaveFile.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.vectorSaveFile.Location = new System.Drawing.Point(6, 16);
+            this.vectorSaveFile.Location = new System.Drawing.Point(6, 18);
             this.vectorSaveFile.Name = "vectorSaveFile";
             this.vectorSaveFile.Size = new System.Drawing.Size(26, 26);
             this.vectorSaveFile.TabIndex = 12;
@@ -775,9 +776,9 @@
             this.geojsonIcon.Cursor = System.Windows.Forms.Cursors.Hand;
             this.geojsonIcon.FlatAppearance.BorderSize = 0;
             this.geojsonIcon.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.geojsonIcon.Location = new System.Drawing.Point(177, 148);
+            this.geojsonIcon.Location = new System.Drawing.Point(190, 177);
             this.geojsonIcon.Name = "geojsonIcon";
-            this.geojsonIcon.Size = new System.Drawing.Size(79, 71);
+            this.geojsonIcon.Size = new System.Drawing.Size(86, 77);
             this.geojsonIcon.TabIndex = 15;
             this.OGCtoolTip.SetToolTip(this.geojsonIcon, "GeoJSON(geojson)");
             this.geojsonIcon.UseVisualStyleBackColor = true;
@@ -790,9 +791,9 @@
             this.gmlIcon.Cursor = System.Windows.Forms.Cursors.Default;
             this.gmlIcon.FlatAppearance.BorderSize = 0;
             this.gmlIcon.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.gmlIcon.Location = new System.Drawing.Point(68, 148);
+            this.gmlIcon.Location = new System.Drawing.Point(71, 177);
             this.gmlIcon.Name = "gmlIcon";
-            this.gmlIcon.Size = new System.Drawing.Size(79, 71);
+            this.gmlIcon.Size = new System.Drawing.Size(86, 77);
             this.gmlIcon.TabIndex = 15;
             this.OGCtoolTip.SetToolTip(this.gmlIcon, "OGC-GML(GML)");
             this.gmlIcon.UseVisualStyleBackColor = true;
@@ -804,9 +805,9 @@
             this.mapgisIcon.Cursor = System.Windows.Forms.Cursors.Hand;
             this.mapgisIcon.FlatAppearance.BorderSize = 0;
             this.mapgisIcon.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.mapgisIcon.Location = new System.Drawing.Point(120, 16);
+            this.mapgisIcon.Location = new System.Drawing.Point(128, 32);
             this.mapgisIcon.Name = "mapgisIcon";
-            this.mapgisIcon.Size = new System.Drawing.Size(66, 60);
+            this.mapgisIcon.Size = new System.Drawing.Size(73, 66);
             this.mapgisIcon.TabIndex = 15;
             this.OGCtoolTip.SetToolTip(this.mapgisIcon, "MapGIS(wt wl wp)");
             this.mapgisIcon.UseVisualStyleBackColor = true;
@@ -820,7 +821,7 @@
             this.PostgresLight.CheckState = System.Windows.Forms.CheckState.Checked;
             this.PostgresLight.Cursor = System.Windows.Forms.Cursors.Hand;
             this.PostgresLight.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.PostgresLight.Location = new System.Drawing.Point(4, 3);
+            this.PostgresLight.Location = new System.Drawing.Point(10, 3);
             this.PostgresLight.Name = "PostgresLight";
             this.PostgresLight.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.PostgresLight.Size = new System.Drawing.Size(44, 21);
@@ -838,7 +839,7 @@
             this.UpdateBox.Checked = true;
             this.UpdateBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.UpdateBox.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.UpdateBox.Location = new System.Drawing.Point(151, 17);
+            this.UpdateBox.Location = new System.Drawing.Point(183, 17);
             this.UpdateBox.Name = "UpdateBox";
             this.UpdateBox.Size = new System.Drawing.Size(36, 16);
             this.UpdateBox.TabIndex = 19;
@@ -855,7 +856,7 @@
             this.EPSG4326.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.EPSG4326.Cursor = System.Windows.Forms.Cursors.Hand;
             this.EPSG4326.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.EPSG4326.Location = new System.Drawing.Point(101, 17);
+            this.EPSG4326.Location = new System.Drawing.Point(117, 17);
             this.EPSG4326.Name = "EPSG4326";
             this.EPSG4326.Size = new System.Drawing.Size(36, 16);
             this.EPSG4326.TabIndex = 14;
@@ -872,7 +873,7 @@
             this.wmtsSpider.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.wmtsSpider.Cursor = System.Windows.Forms.Cursors.Hand;
             this.wmtsSpider.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.wmtsSpider.Location = new System.Drawing.Point(89, 45);
+            this.wmtsSpider.Location = new System.Drawing.Point(95, 53);
             this.wmtsSpider.Name = "wmtsSpider";
             this.wmtsSpider.Size = new System.Drawing.Size(50, 24);
             this.wmtsSpider.TabIndex = 18;
@@ -897,7 +898,7 @@
             this.pictureBox5.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.pictureBox5.Location = new System.Drawing.Point(8, 7);
             this.pictureBox5.Name = "pictureBox5";
-            this.pictureBox5.Size = new System.Drawing.Size(70, 70);
+            this.pictureBox5.Size = new System.Drawing.Size(87, 84);
             this.pictureBox5.TabIndex = 25;
             this.pictureBox5.TabStop = false;
             this.OGCtoolTip.SetToolTip(this.pictureBox5, "Geographic Reference System");
@@ -928,7 +929,7 @@
             this.VectorFileClear.Enabled = false;
             this.VectorFileClear.Font = new System.Drawing.Font("宋体", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.VectorFileClear.ForeColor = System.Drawing.Color.Black;
-            this.VectorFileClear.Location = new System.Drawing.Point(6, 77);
+            this.VectorFileClear.Location = new System.Drawing.Point(6, 103);
             this.VectorFileClear.Name = "VectorFileClear";
             this.VectorFileClear.Size = new System.Drawing.Size(55, 45);
             this.VectorFileClear.TabIndex = 16;
@@ -944,7 +945,7 @@
             this.VectorOpen.Cursor = System.Windows.Forms.Cursors.Hand;
             this.VectorOpen.Location = new System.Drawing.Point(6, 6);
             this.VectorOpen.Name = "VectorOpen";
-            this.VectorOpen.Size = new System.Drawing.Size(55, 67);
+            this.VectorOpen.Size = new System.Drawing.Size(55, 91);
             this.VectorOpen.TabIndex = 15;
             this.OGCtoolTip.SetToolTip(this.VectorOpen, "Open vector files");
             this.VectorOpen.UseVisualStyleBackColor = false;
@@ -957,10 +958,10 @@
             this.ReClean.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.ReClean.Cursor = System.Windows.Forms.Cursors.Hand;
             this.ReClean.Enabled = false;
-            this.ReClean.Location = new System.Drawing.Point(167, 117);
+            this.ReClean.Location = new System.Drawing.Point(203, 139);
             this.ReClean.Margin = new System.Windows.Forms.Padding(0);
             this.ReClean.Name = "ReClean";
-            this.ReClean.Size = new System.Drawing.Size(45, 28);
+            this.ReClean.Size = new System.Drawing.Size(50, 29);
             this.ReClean.TabIndex = 24;
             this.OGCtoolTip.SetToolTip(this.ReClean, "ReClean");
             this.ReClean.UseVisualStyleBackColor = false;
@@ -973,10 +974,10 @@
             this.ReIndex.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.ReIndex.Cursor = System.Windows.Forms.Cursors.Hand;
             this.ReIndex.Enabled = false;
-            this.ReIndex.Location = new System.Drawing.Point(167, 86);
+            this.ReIndex.Location = new System.Drawing.Point(203, 97);
             this.ReIndex.Margin = new System.Windows.Forms.Padding(0);
             this.ReIndex.Name = "ReIndex";
-            this.ReIndex.Size = new System.Drawing.Size(45, 28);
+            this.ReIndex.Size = new System.Drawing.Size(50, 37);
             this.ReIndex.TabIndex = 24;
             this.OGCtoolTip.SetToolTip(this.ReIndex, "ReIndex");
             this.ReIndex.UseVisualStyleBackColor = false;
@@ -988,9 +989,9 @@
             this.GeositeServerLink.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("GeositeServerLink.BackgroundImage")));
             this.GeositeServerLink.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.GeositeServerLink.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.GeositeServerLink.Location = new System.Drawing.Point(167, 31);
+            this.GeositeServerLink.Location = new System.Drawing.Point(203, 37);
             this.GeositeServerLink.Name = "GeositeServerLink";
-            this.GeositeServerLink.Size = new System.Drawing.Size(45, 51);
+            this.GeositeServerLink.Size = new System.Drawing.Size(50, 57);
             this.GeositeServerLink.TabIndex = 2;
             this.OGCtoolTip.SetToolTip(this.GeositeServerLink, "Connect to GeositeServer");
             this.GeositeServerLink.UseVisualStyleBackColor = false;
@@ -1000,7 +1001,7 @@
             // 
             this.pictureBox4.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox4.BackgroundImage")));
             this.pictureBox4.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.pictureBox4.Location = new System.Drawing.Point(-1, 62);
+            this.pictureBox4.Location = new System.Drawing.Point(-1, 72);
             this.pictureBox4.Name = "pictureBox4";
             this.pictureBox4.Size = new System.Drawing.Size(21, 21);
             this.pictureBox4.TabIndex = 0;
@@ -1011,7 +1012,7 @@
             // 
             this.pictureBox10.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox10.BackgroundImage")));
             this.pictureBox10.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.pictureBox10.Location = new System.Drawing.Point(-1, 123);
+            this.pictureBox10.Location = new System.Drawing.Point(-1, 147);
             this.pictureBox10.Name = "pictureBox10";
             this.pictureBox10.Size = new System.Drawing.Size(21, 21);
             this.pictureBox10.TabIndex = 0;
@@ -1022,7 +1023,7 @@
             // 
             this.pictureBox6.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox6.BackgroundImage")));
             this.pictureBox6.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.pictureBox6.Location = new System.Drawing.Point(-1, 92);
+            this.pictureBox6.Location = new System.Drawing.Point(-1, 109);
             this.pictureBox6.Name = "pictureBox6";
             this.pictureBox6.Size = new System.Drawing.Size(21, 21);
             this.pictureBox6.TabIndex = 0;
@@ -1033,7 +1034,7 @@
             // 
             this.pictureBox3.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox3.BackgroundImage")));
             this.pictureBox3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.pictureBox3.Location = new System.Drawing.Point(-1, 32);
+            this.pictureBox3.Location = new System.Drawing.Point(-1, 37);
             this.pictureBox3.Name = "pictureBox3";
             this.pictureBox3.Size = new System.Drawing.Size(21, 21);
             this.pictureBox3.TabIndex = 0;
@@ -1060,9 +1061,9 @@
             this.PostgresRun.Enabled = false;
             this.PostgresRun.Font = new System.Drawing.Font("Arial", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.PostgresRun.ForeColor = System.Drawing.Color.Black;
-            this.PostgresRun.Location = new System.Drawing.Point(464, 211);
+            this.PostgresRun.Location = new System.Drawing.Point(494, 243);
             this.PostgresRun.Name = "PostgresRun";
-            this.PostgresRun.Size = new System.Drawing.Size(55, 134);
+            this.PostgresRun.Size = new System.Drawing.Size(67, 154);
             this.PostgresRun.TabIndex = 14;
             this.OGCtoolTip.SetToolTip(this.PostgresRun, "Start");
             this.PostgresRun.UseVisualStyleBackColor = false;
@@ -1073,7 +1074,7 @@
             this.tilewebapi.BackColor = System.Drawing.Color.White;
             this.tilewebapi.Location = new System.Drawing.Point(33, 6);
             this.tilewebapi.Name = "tilewebapi";
-            this.tilewebapi.Size = new System.Drawing.Size(403, 21);
+            this.tilewebapi.Size = new System.Drawing.Size(427, 21);
             this.tilewebapi.TabIndex = 30;
             this.tilewebapi.TextChanged += new System.EventHandler(this.tilewebapi_TextChanged);
             // 
@@ -1085,9 +1086,9 @@
             this.panel3.Controls.Add(this.groupBox6);
             this.panel3.Controls.Add(this.groupBox4);
             this.panel3.Controls.Add(this.FileRun);
-            this.panel3.Location = new System.Drawing.Point(2, 240);
+            this.panel3.Location = new System.Drawing.Point(0, 289);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(519, 104);
+            this.panel3.Size = new System.Drawing.Size(559, 106);
             this.panel3.TabIndex = 14;
             // 
             // groupBox6
@@ -1098,7 +1099,7 @@
             this.groupBox6.Controls.Add(this.vectorTargetFile);
             this.groupBox6.Location = new System.Drawing.Point(6, 53);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(457, 48);
+            this.groupBox6.Size = new System.Drawing.Size(497, 50);
             this.groupBox6.TabIndex = 15;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Save";
@@ -1107,9 +1108,9 @@
             // 
             this.panel12.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel12.Controls.Add(this.SaveAsFormat);
-            this.panel12.Location = new System.Drawing.Point(290, 18);
+            this.panel12.Location = new System.Drawing.Point(301, 20);
             this.panel12.Name = "panel12";
-            this.panel12.Size = new System.Drawing.Size(159, 21);
+            this.panel12.Size = new System.Drawing.Size(190, 21);
             this.panel12.TabIndex = 13;
             // 
             // groupBox4
@@ -1118,7 +1119,7 @@
             this.groupBox4.Controls.Add(this.vectorSourceFile);
             this.groupBox4.Location = new System.Drawing.Point(6, 1);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(457, 48);
+            this.groupBox4.Size = new System.Drawing.Size(497, 50);
             this.groupBox4.TabIndex = 14;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Open";
@@ -1136,7 +1137,7 @@
             this.box.Location = new System.Drawing.Point(3, 3);
             this.box.Margin = new System.Windows.Forms.Padding(0);
             this.box.Name = "box";
-            this.box.Size = new System.Drawing.Size(518, 346);
+            this.box.Size = new System.Drawing.Size(558, 398);
             this.box.TabIndex = 16;
             // 
             // panel1
@@ -1154,15 +1155,15 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(518, 346);
+            this.panel1.Size = new System.Drawing.Size(558, 398);
             this.panel1.TabIndex = 10;
             // 
             // panel5
             // 
             this.panel5.BackColor = System.Drawing.Color.LightGray;
-            this.panel5.Location = new System.Drawing.Point(0, 237);
+            this.panel5.Location = new System.Drawing.Point(0, 287);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(518, 1);
+            this.panel5.Size = new System.Drawing.Size(556, 1);
             this.panel5.TabIndex = 16;
             // 
             // pictureBox1
@@ -1175,7 +1176,7 @@
             this.pictureBox1.Location = new System.Drawing.Point(35, 0);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(0);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(445, 244);
+            this.pictureBox1.Size = new System.Drawing.Size(485, 296);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 12;
             this.pictureBox1.TabStop = false;
@@ -1190,7 +1191,7 @@
             this.ogcCard.Multiline = true;
             this.ogcCard.Name = "ogcCard";
             this.ogcCard.SelectedIndex = 0;
-            this.ogcCard.Size = new System.Drawing.Size(532, 378);
+            this.ogcCard.Size = new System.Drawing.Size(572, 430);
             this.ogcCard.TabIndex = 17;
             this.ogcCard.SelectedIndexChanged += new System.EventHandler(this.ogcCard_SelectedIndexChanged);
             // 
@@ -1200,20 +1201,21 @@
             this.fileCard.Location = new System.Drawing.Point(4, 22);
             this.fileCard.Name = "fileCard";
             this.fileCard.Padding = new System.Windows.Forms.Padding(3);
-            this.fileCard.Size = new System.Drawing.Size(524, 352);
+            this.fileCard.Size = new System.Drawing.Size(564, 404);
             this.fileCard.TabIndex = 0;
             this.fileCard.Text = "File";
             this.fileCard.UseVisualStyleBackColor = true;
             // 
             // databaseCard
             // 
+            this.databaseCard.Controls.Add(this.panel7);
             this.databaseCard.Controls.Add(this.panel8);
             this.databaseCard.Controls.Add(this.dataCards);
             this.databaseCard.Controls.Add(this.databasePanel);
             this.databaseCard.Controls.Add(this.PostgresRun);
             this.databaseCard.Location = new System.Drawing.Point(4, 22);
             this.databaseCard.Name = "databaseCard";
-            this.databaseCard.Size = new System.Drawing.Size(524, 352);
+            this.databaseCard.Size = new System.Drawing.Size(564, 404);
             this.databaseCard.TabIndex = 2;
             this.databaseCard.Text = "Database";
             this.databaseCard.UseVisualStyleBackColor = true;
@@ -1223,19 +1225,19 @@
             this.panel8.BackColor = System.Drawing.Color.White;
             this.panel8.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel8.Controls.Add(this.PostgresLight);
-            this.panel8.Location = new System.Drawing.Point(464, 177);
+            this.panel8.Location = new System.Drawing.Point(494, 209);
             this.panel8.Name = "panel8";
-            this.panel8.Size = new System.Drawing.Size(55, 28);
+            this.panel8.Size = new System.Drawing.Size(67, 28);
             this.panel8.TabIndex = 17;
             // 
             // dataCards
             // 
             this.dataCards.Controls.Add(this.RasterPage);
             this.dataCards.Controls.Add(this.VectorPage);
-            this.dataCards.Location = new System.Drawing.Point(0, 155);
+            this.dataCards.Location = new System.Drawing.Point(0, 184);
             this.dataCards.Name = "dataCards";
             this.dataCards.SelectedIndex = 0;
-            this.dataCards.Size = new System.Drawing.Size(462, 190);
+            this.dataCards.Size = new System.Drawing.Size(488, 217);
             this.dataCards.TabIndex = 20;
             this.dataCards.SelectedIndexChanged += new System.EventHandler(this.dataCards_SelectedIndexChanged);
             // 
@@ -1245,7 +1247,7 @@
             this.RasterPage.Controls.Add(this.tilesource);
             this.RasterPage.Location = new System.Drawing.Point(4, 22);
             this.RasterPage.Name = "RasterPage";
-            this.RasterPage.Size = new System.Drawing.Size(454, 164);
+            this.RasterPage.Size = new System.Drawing.Size(480, 191);
             this.RasterPage.TabIndex = 2;
             this.RasterPage.Text = "Raster";
             this.RasterPage.UseVisualStyleBackColor = true;
@@ -1254,17 +1256,17 @@
             // 
             this.PushPanel.Controls.Add(this.groupBox1);
             this.PushPanel.Controls.Add(this.method);
-            this.PushPanel.Location = new System.Drawing.Point(1, 115);
+            this.PushPanel.Location = new System.Drawing.Point(1, 136);
             this.PushPanel.Name = "PushPanel";
-            this.PushPanel.Size = new System.Drawing.Size(450, 50);
+            this.PushPanel.Size = new System.Drawing.Size(472, 50);
             this.PushPanel.TabIndex = 19;
             // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.themeNameBox);
-            this.groupBox1.Location = new System.Drawing.Point(204, 2);
+            this.groupBox1.Location = new System.Drawing.Point(236, 2);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(243, 43);
+            this.groupBox1.Size = new System.Drawing.Size(233, 43);
             this.groupBox1.TabIndex = 18;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Theme Name";
@@ -1275,7 +1277,7 @@
             this.themeNameBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.themeNameBox.Location = new System.Drawing.Point(7, 20);
             this.themeNameBox.Name = "themeNameBox";
-            this.themeNameBox.Size = new System.Drawing.Size(230, 14);
+            this.themeNameBox.Size = new System.Drawing.Size(220, 14);
             this.themeNameBox.TabIndex = 30;
             this.themeNameBox.TextChanged += new System.EventHandler(this.themeNameBox_TextChanged);
             // 
@@ -1288,7 +1290,7 @@
             this.method.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.method.Location = new System.Drawing.Point(2, 2);
             this.method.Name = "method";
-            this.method.Size = new System.Drawing.Size(196, 43);
+            this.method.Size = new System.Drawing.Size(228, 43);
             this.method.TabIndex = 21;
             this.method.TabStop = false;
             this.method.Text = "Mode";
@@ -1377,7 +1379,7 @@
             this.tilesource.Location = new System.Drawing.Point(3, 3);
             this.tilesource.Name = "tilesource";
             this.tilesource.SelectedIndex = 0;
-            this.tilesource.Size = new System.Drawing.Size(448, 110);
+            this.tilesource.Size = new System.Drawing.Size(474, 127);
             this.tilesource.TabIndex = 18;
             this.tilesource.SelectedIndexChanged += new System.EventHandler(this.tilesource_SelectedIndexChanged);
             // 
@@ -1389,7 +1391,7 @@
             this.LocalTilePage.Location = new System.Drawing.Point(4, 22);
             this.LocalTilePage.Name = "LocalTilePage";
             this.LocalTilePage.Padding = new System.Windows.Forms.Padding(3);
-            this.LocalTilePage.Size = new System.Drawing.Size(440, 84);
+            this.LocalTilePage.Size = new System.Drawing.Size(466, 101);
             this.LocalTilePage.TabIndex = 0;
             this.LocalTilePage.Text = "Folder";
             this.LocalTilePage.UseVisualStyleBackColor = true;
@@ -1402,7 +1404,7 @@
             this.localTileOpen.Cursor = System.Windows.Forms.Cursors.Hand;
             this.localTileOpen.Location = new System.Drawing.Point(6, 6);
             this.localTileOpen.Name = "localTileOpen";
-            this.localTileOpen.Size = new System.Drawing.Size(45, 23);
+            this.localTileOpen.Size = new System.Drawing.Size(58, 40);
             this.localTileOpen.TabIndex = 5;
             this.localTileOpen.Text = "Open";
             this.localTileOpen.UseVisualStyleBackColor = false;
@@ -1416,9 +1418,9 @@
             this.groupBox5.Controls.Add(this.FormatTMS);
             this.groupBox5.Controls.Add(this.FormatArcGIS);
             this.groupBox5.Controls.Add(this.FormatMapcruncher);
-            this.groupBox5.Location = new System.Drawing.Point(6, 35);
+            this.groupBox5.Location = new System.Drawing.Point(6, 50);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(428, 43);
+            this.groupBox5.Size = new System.Drawing.Size(457, 43);
             this.groupBox5.TabIndex = 23;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Format";
@@ -1428,10 +1430,10 @@
             this.localTileFolder.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.localTileFolder.BackColor = System.Drawing.SystemColors.Window;
             this.localTileFolder.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.localTileFolder.Location = new System.Drawing.Point(57, 7);
+            this.localTileFolder.Location = new System.Drawing.Point(70, 15);
             this.localTileFolder.Name = "localTileFolder";
             this.localTileFolder.ReadOnly = true;
-            this.localTileFolder.Size = new System.Drawing.Size(377, 21);
+            this.localTileFolder.Size = new System.Drawing.Size(393, 21);
             this.localTileFolder.TabIndex = 10;
             this.localTileFolder.TextChanged += new System.EventHandler(this.localTileFolder_TextChanged);
             this.localTileFolder.DoubleClick += new System.EventHandler(this.localTileOpen_Click);
@@ -1457,14 +1459,14 @@
             this.RemoteTilePage.Location = new System.Drawing.Point(4, 22);
             this.RemoteTilePage.Name = "RemoteTilePage";
             this.RemoteTilePage.Padding = new System.Windows.Forms.Padding(3);
-            this.RemoteTilePage.Size = new System.Drawing.Size(440, 84);
+            this.RemoteTilePage.Size = new System.Drawing.Size(466, 101);
             this.RemoteTilePage.TabIndex = 1;
             this.RemoteTilePage.Text = "WM[T]S";
             this.RemoteTilePage.UseVisualStyleBackColor = true;
             // 
             // subdomainsBox
             // 
-            this.subdomainsBox.Location = new System.Drawing.Point(33, 32);
+            this.subdomainsBox.Location = new System.Drawing.Point(33, 38);
             this.subdomainsBox.Name = "subdomainsBox";
             this.subdomainsBox.Size = new System.Drawing.Size(52, 21);
             this.subdomainsBox.TabIndex = 37;
@@ -1473,7 +1475,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(147, 62);
+            this.label5.Location = new System.Drawing.Point(158, 76);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(47, 12);
             this.label5.TabIndex = 35;
@@ -1535,9 +1537,9 @@
             "22",
             "23",
             "24"});
-            this.wmtsMaxZoom.Location = new System.Drawing.Point(196, 58);
+            this.wmtsMaxZoom.Location = new System.Drawing.Point(213, 72);
             this.wmtsMaxZoom.Name = "wmtsMaxZoom";
-            this.wmtsMaxZoom.Size = new System.Drawing.Size(43, 20);
+            this.wmtsMaxZoom.Size = new System.Drawing.Size(48, 20);
             this.wmtsMaxZoom.TabIndex = 13;
             this.wmtsMaxZoom.Tag = "18";
             this.wmtsMaxZoom.SelectedIndexChanged += new System.EventHandler(this.wmtsMaxZoom_SelectedIndexChanged);
@@ -1598,9 +1600,9 @@
             "21",
             "22",
             "23"});
-            this.wmtsMinZoom.Location = new System.Drawing.Point(196, 33);
+            this.wmtsMinZoom.Location = new System.Drawing.Point(213, 40);
             this.wmtsMinZoom.Name = "wmtsMinZoom";
-            this.wmtsMinZoom.Size = new System.Drawing.Size(43, 20);
+            this.wmtsMinZoom.Size = new System.Drawing.Size(48, 20);
             this.wmtsMinZoom.TabIndex = 13;
             this.wmtsMinZoom.Tag = "0";
             this.wmtsMinZoom.SelectedIndexChanged += new System.EventHandler(this.wmtsMinZoom_SelectedIndexChanged);
@@ -1608,7 +1610,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(147, 37);
+            this.label4.Location = new System.Drawing.Point(158, 45);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(47, 12);
             this.label4.TabIndex = 35;
@@ -1624,7 +1626,7 @@
             this.ModelPage.Controls.Add(this.pictureBox5);
             this.ModelPage.Location = new System.Drawing.Point(4, 22);
             this.ModelPage.Name = "ModelPage";
-            this.ModelPage.Size = new System.Drawing.Size(440, 84);
+            this.ModelPage.Size = new System.Drawing.Size(466, 101);
             this.ModelPage.TabIndex = 4;
             this.ModelPage.Text = "Model";
             this.ModelPage.UseVisualStyleBackColor = true;
@@ -1632,9 +1634,9 @@
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.rasterTileSize);
-            this.groupBox3.Location = new System.Drawing.Point(152, 34);
+            this.groupBox3.Location = new System.Drawing.Point(165, 48);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(138, 43);
+            this.groupBox3.Size = new System.Drawing.Size(151, 43);
             this.groupBox3.TabIndex = 26;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Tile size";
@@ -1642,7 +1644,7 @@
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.nodatabox);
-            this.groupBox2.Location = new System.Drawing.Point(298, 34);
+            this.groupBox2.Location = new System.Drawing.Point(324, 48);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(136, 43);
             this.groupBox2.TabIndex = 26;
@@ -1664,10 +1666,10 @@
             this.ModelOpenTextBox.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.ModelOpenTextBox.BackColor = System.Drawing.SystemColors.Window;
             this.ModelOpenTextBox.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, ((byte)(134)));
-            this.ModelOpenTextBox.Location = new System.Drawing.Point(152, 8);
+            this.ModelOpenTextBox.Location = new System.Drawing.Point(165, 16);
             this.ModelOpenTextBox.Name = "ModelOpenTextBox";
             this.ModelOpenTextBox.ReadOnly = true;
-            this.ModelOpenTextBox.Size = new System.Drawing.Size(282, 21);
+            this.ModelOpenTextBox.Size = new System.Drawing.Size(295, 21);
             this.ModelOpenTextBox.TabIndex = 12;
             this.ModelOpenTextBox.TextChanged += new System.EventHandler(this.ModelOpenTextBox_TextChanged);
             this.ModelOpenTextBox.DoubleClick += new System.EventHandler(this.ModelOpen_Click);
@@ -1685,7 +1687,7 @@
             this.DeepZoomPage.Controls.Add(this.pictureBox8);
             this.DeepZoomPage.Location = new System.Drawing.Point(4, 22);
             this.DeepZoomPage.Name = "DeepZoomPage";
-            this.DeepZoomPage.Size = new System.Drawing.Size(440, 84);
+            this.DeepZoomPage.Size = new System.Drawing.Size(466, 101);
             this.DeepZoomPage.TabIndex = 2;
             this.DeepZoomPage.Text = "DeepZoom";
             this.DeepZoomPage.UseVisualStyleBackColor = true;
@@ -1693,7 +1695,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(196, 63);
+            this.label3.Location = new System.Drawing.Point(251, 78);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(137, 12);
             this.label3.TabIndex = 28;
@@ -1736,7 +1738,7 @@
             "22",
             "23",
             "24"});
-            this.DeepZoomLevels.Location = new System.Drawing.Point(135, 59);
+            this.DeepZoomLevels.Location = new System.Drawing.Point(190, 74);
             this.DeepZoomLevels.Name = "DeepZoomLevels";
             this.DeepZoomLevels.Size = new System.Drawing.Size(56, 20);
             this.DeepZoomLevels.TabIndex = 27;
@@ -1747,9 +1749,9 @@
             this.DeepZoomSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.DeepZoomSave.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.DeepZoomSave.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.DeepZoomSave.Location = new System.Drawing.Point(84, 32);
+            this.DeepZoomSave.Location = new System.Drawing.Point(97, 37);
             this.DeepZoomSave.Name = "DeepZoomSave";
-            this.DeepZoomSave.Size = new System.Drawing.Size(45, 23);
+            this.DeepZoomSave.Size = new System.Drawing.Size(45, 57);
             this.DeepZoomSave.TabIndex = 26;
             this.DeepZoomSave.Text = "Save";
             this.DeepZoomSave.UseVisualStyleBackColor = true;
@@ -1762,9 +1764,9 @@
             this.DeepZoomOpen.Cursor = System.Windows.Forms.Cursors.Hand;
             this.DeepZoomOpen.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
             this.DeepZoomOpen.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
-            this.DeepZoomOpen.Location = new System.Drawing.Point(84, 6);
+            this.DeepZoomOpen.Location = new System.Drawing.Point(97, 6);
             this.DeepZoomOpen.Name = "DeepZoomOpen";
-            this.DeepZoomOpen.Size = new System.Drawing.Size(45, 23);
+            this.DeepZoomOpen.Size = new System.Drawing.Size(45, 25);
             this.DeepZoomOpen.TabIndex = 25;
             this.DeepZoomOpen.Text = "Open";
             this.DeepZoomOpen.UseVisualStyleBackColor = true;
@@ -1773,7 +1775,7 @@
             // DeepZoomSaveTextBox
             // 
             this.DeepZoomSaveTextBox.BackColor = System.Drawing.Color.White;
-            this.DeepZoomSaveTextBox.Location = new System.Drawing.Point(135, 33);
+            this.DeepZoomSaveTextBox.Location = new System.Drawing.Point(148, 42);
             this.DeepZoomSaveTextBox.Name = "DeepZoomSaveTextBox";
             this.DeepZoomSaveTextBox.ReadOnly = true;
             this.DeepZoomSaveTextBox.Size = new System.Drawing.Size(260, 21);
@@ -1785,7 +1787,7 @@
             // label34
             // 
             this.label34.AutoSize = true;
-            this.label34.Location = new System.Drawing.Point(90, 62);
+            this.label34.Location = new System.Drawing.Point(145, 77);
             this.label34.Name = "label34";
             this.label34.Size = new System.Drawing.Size(35, 12);
             this.label34.TabIndex = 19;
@@ -1795,7 +1797,7 @@
             // DeepZoomOpenTextBox
             // 
             this.DeepZoomOpenTextBox.BackColor = System.Drawing.Color.White;
-            this.DeepZoomOpenTextBox.Location = new System.Drawing.Point(135, 7);
+            this.DeepZoomOpenTextBox.Location = new System.Drawing.Point(148, 7);
             this.DeepZoomOpenTextBox.Name = "DeepZoomOpenTextBox";
             this.DeepZoomOpenTextBox.ReadOnly = true;
             this.DeepZoomOpenTextBox.Size = new System.Drawing.Size(260, 21);
@@ -1810,7 +1812,7 @@
             this.pictureBox8.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.pictureBox8.Location = new System.Drawing.Point(8, 7);
             this.pictureBox8.Name = "pictureBox8";
-            this.pictureBox8.Size = new System.Drawing.Size(70, 70);
+            this.pictureBox8.Size = new System.Drawing.Size(83, 87);
             this.pictureBox8.TabIndex = 24;
             this.pictureBox8.TabStop = false;
             // 
@@ -1825,7 +1827,7 @@
             this.TileConvertPage.Controls.Add(this.pictureBox9);
             this.TileConvertPage.Location = new System.Drawing.Point(4, 22);
             this.TileConvertPage.Name = "TileConvertPage";
-            this.TileConvertPage.Size = new System.Drawing.Size(440, 84);
+            this.TileConvertPage.Size = new System.Drawing.Size(466, 101);
             this.TileConvertPage.TabIndex = 3;
             this.TileConvertPage.Text = "Convert";
             this.TileConvertPage.UseVisualStyleBackColor = true;
@@ -1837,9 +1839,9 @@
             this.TileFormatSave.Cursor = System.Windows.Forms.Cursors.Hand;
             this.TileFormatSave.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
             this.TileFormatSave.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
-            this.TileFormatSave.Location = new System.Drawing.Point(78, 46);
+            this.TileFormatSave.Location = new System.Drawing.Point(85, 55);
             this.TileFormatSave.Name = "TileFormatSave";
-            this.TileFormatSave.Size = new System.Drawing.Size(45, 23);
+            this.TileFormatSave.Size = new System.Drawing.Size(45, 29);
             this.TileFormatSave.TabIndex = 28;
             this.TileFormatSave.Text = "Save";
             this.TileFormatSave.UseVisualStyleBackColor = false;
@@ -1852,9 +1854,9 @@
             this.TileFormatOpen.Cursor = System.Windows.Forms.Cursors.Hand;
             this.TileFormatOpen.FlatAppearance.MouseDownBackColor = System.Drawing.Color.White;
             this.TileFormatOpen.FlatAppearance.MouseOverBackColor = System.Drawing.Color.White;
-            this.TileFormatOpen.Location = new System.Drawing.Point(78, 14);
+            this.TileFormatOpen.Location = new System.Drawing.Point(85, 12);
             this.TileFormatOpen.Name = "TileFormatOpen";
-            this.TileFormatOpen.Size = new System.Drawing.Size(45, 23);
+            this.TileFormatOpen.Size = new System.Drawing.Size(45, 29);
             this.TileFormatOpen.TabIndex = 27;
             this.TileFormatOpen.Text = "Open";
             this.TileFormatOpen.UseVisualStyleBackColor = true;
@@ -1866,9 +1868,9 @@
             this.panel6.Controls.Add(this.mapcrunchertoogc);
             this.panel6.Controls.Add(this.ogctomapcruncher);
             this.panel6.Controls.Add(this.ogctomaptiler);
-            this.panel6.Location = new System.Drawing.Point(259, 3);
+            this.panel6.Location = new System.Drawing.Point(276, 10);
             this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(138, 77);
+            this.panel6.Size = new System.Drawing.Size(141, 83);
             this.panel6.TabIndex = 21;
             // 
             // maptilertoogc
@@ -1876,7 +1878,7 @@
             this.maptilertoogc.AutoSize = true;
             this.maptilertoogc.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.maptilertoogc.Checked = true;
-            this.maptilertoogc.Location = new System.Drawing.Point(4, 3);
+            this.maptilertoogc.Location = new System.Drawing.Point(5, 6);
             this.maptilertoogc.Name = "maptilertoogc";
             this.maptilertoogc.Size = new System.Drawing.Size(131, 16);
             this.maptilertoogc.TabIndex = 2;
@@ -1889,7 +1891,7 @@
             // 
             this.mapcrunchertoogc.AutoSize = true;
             this.mapcrunchertoogc.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.mapcrunchertoogc.Location = new System.Drawing.Point(4, 21);
+            this.mapcrunchertoogc.Location = new System.Drawing.Point(5, 24);
             this.mapcrunchertoogc.Name = "mapcrunchertoogc";
             this.mapcrunchertoogc.Size = new System.Drawing.Size(131, 16);
             this.mapcrunchertoogc.TabIndex = 3;
@@ -1901,7 +1903,7 @@
             // 
             this.ogctomapcruncher.AutoSize = true;
             this.ogctomapcruncher.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.ogctomapcruncher.Location = new System.Drawing.Point(4, 39);
+            this.ogctomapcruncher.Location = new System.Drawing.Point(5, 42);
             this.ogctomapcruncher.Name = "ogctomapcruncher";
             this.ogctomapcruncher.Size = new System.Drawing.Size(131, 16);
             this.ogctomapcruncher.TabIndex = 4;
@@ -1913,7 +1915,7 @@
             // 
             this.ogctomaptiler.AutoSize = true;
             this.ogctomaptiler.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.ogctomaptiler.Location = new System.Drawing.Point(4, 57);
+            this.ogctomaptiler.Location = new System.Drawing.Point(5, 60);
             this.ogctomaptiler.Name = "ogctomaptiler";
             this.ogctomaptiler.Size = new System.Drawing.Size(131, 16);
             this.ogctomaptiler.TabIndex = 5;
@@ -1924,10 +1926,10 @@
             // TileFormatSaveBox
             // 
             this.TileFormatSaveBox.BackColor = System.Drawing.Color.White;
-            this.TileFormatSaveBox.Location = new System.Drawing.Point(128, 47);
+            this.TileFormatSaveBox.Location = new System.Drawing.Point(136, 59);
             this.TileFormatSaveBox.Name = "TileFormatSaveBox";
             this.TileFormatSaveBox.ReadOnly = true;
-            this.TileFormatSaveBox.Size = new System.Drawing.Size(127, 21);
+            this.TileFormatSaveBox.Size = new System.Drawing.Size(134, 21);
             this.TileFormatSaveBox.TabIndex = 0;
             this.TileFormatSaveBox.TextChanged += new System.EventHandler(this.TileFormatChanged);
             this.TileFormatSaveBox.DoubleClick += new System.EventHandler(this.TileFormatSave_Click);
@@ -1935,10 +1937,10 @@
             // TileFormatOpenBox
             // 
             this.TileFormatOpenBox.BackColor = System.Drawing.Color.White;
-            this.TileFormatOpenBox.Location = new System.Drawing.Point(128, 15);
+            this.TileFormatOpenBox.Location = new System.Drawing.Point(136, 15);
             this.TileFormatOpenBox.Name = "TileFormatOpenBox";
             this.TileFormatOpenBox.ReadOnly = true;
-            this.TileFormatOpenBox.Size = new System.Drawing.Size(127, 21);
+            this.TileFormatOpenBox.Size = new System.Drawing.Size(134, 21);
             this.TileFormatOpenBox.TabIndex = 0;
             this.TileFormatOpenBox.TextChanged += new System.EventHandler(this.TileFormatChanged);
             this.TileFormatOpenBox.DoubleClick += new System.EventHandler(this.TileFormatOpen_Click);
@@ -1947,9 +1949,9 @@
             // 
             this.pictureBox9.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBox9.BackgroundImage")));
             this.pictureBox9.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.pictureBox9.Location = new System.Drawing.Point(8, 11);
+            this.pictureBox9.Location = new System.Drawing.Point(6, 12);
             this.pictureBox9.Name = "pictureBox9";
-            this.pictureBox9.Size = new System.Drawing.Size(62, 62);
+            this.pictureBox9.Size = new System.Drawing.Size(74, 74);
             this.pictureBox9.TabIndex = 25;
             this.pictureBox9.TabStop = false;
             // 
@@ -1962,7 +1964,7 @@
             this.VectorPage.Location = new System.Drawing.Point(4, 22);
             this.VectorPage.Name = "VectorPage";
             this.VectorPage.Padding = new System.Windows.Forms.Padding(3);
-            this.VectorPage.Size = new System.Drawing.Size(454, 164);
+            this.VectorPage.Size = new System.Drawing.Size(480, 191);
             this.VectorPage.TabIndex = 0;
             this.VectorPage.Text = "Vector";
             this.VectorPage.UseVisualStyleBackColor = true;
@@ -1972,7 +1974,7 @@
             this.panel9.BackColor = System.Drawing.Color.White;
             this.panel9.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel9.Controls.Add(this.topologyCheckBox);
-            this.panel9.Location = new System.Drawing.Point(6, 128);
+            this.panel9.Location = new System.Drawing.Point(6, 154);
             this.panel9.Name = "panel9";
             this.panel9.Size = new System.Drawing.Size(55, 30);
             this.panel9.TabIndex = 17;
@@ -1983,7 +1985,7 @@
             this.panel4.Controls.Add(this.vectorFilePool);
             this.panel4.Location = new System.Drawing.Point(67, 6);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(381, 152);
+            this.panel4.Size = new System.Drawing.Size(407, 179);
             this.panel4.TabIndex = 4;
             // 
             // vectorFilePool
@@ -2000,7 +2002,7 @@
             this.vectorFilePool.Name = "vectorFilePool";
             this.vectorFilePool.RowTemplate.Height = 23;
             this.vectorFilePool.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.vectorFilePool.Size = new System.Drawing.Size(381, 154);
+            this.vectorFilePool.Size = new System.Drawing.Size(407, 181);
             this.vectorFilePool.TabIndex = 3;
             this.vectorFilePool.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.vectorFilePool_CellBeginEdit);
             this.vectorFilePool.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.vectorFilePool_CellEndEdit);
@@ -2022,8 +2024,8 @@
             // 
             // VectorStatus
             // 
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.VectorStatus.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.VectorStatus.DefaultCellStyle = dataGridViewCellStyle9;
             this.VectorStatus.HeaderText = "※";
             this.VectorStatus.Name = "VectorStatus";
             this.VectorStatus.ReadOnly = true;
@@ -2049,7 +2051,7 @@
             this.databasePanel.Controls.Add(this.pictureBox2);
             this.databasePanel.Location = new System.Drawing.Point(3, 3);
             this.databasePanel.Name = "databasePanel";
-            this.databasePanel.Size = new System.Drawing.Size(516, 147);
+            this.databasePanel.Size = new System.Drawing.Size(558, 175);
             this.databasePanel.TabIndex = 0;
             // 
             // dataGridPanel
@@ -2063,18 +2065,18 @@
             this.dataGridPanel.Controls.Add(this.pagesBox);
             this.dataGridPanel.Controls.Add(this.deleteTree);
             this.dataGridPanel.Enabled = false;
-            this.dataGridPanel.Location = new System.Drawing.Point(217, 4);
+            this.dataGridPanel.Location = new System.Drawing.Point(255, 4);
             this.dataGridPanel.Name = "dataGridPanel";
-            this.dataGridPanel.Size = new System.Drawing.Size(299, 143);
+            this.dataGridPanel.Size = new System.Drawing.Size(303, 168);
             this.dataGridPanel.TabIndex = 23;
             // 
             // panel2
             // 
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel2.Controls.Add(this.clusterDataPool);
-            this.panel2.Location = new System.Drawing.Point(0, 0);
+            this.panel2.Location = new System.Drawing.Point(3, 0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(299, 112);
+            this.panel2.Size = new System.Drawing.Size(297, 130);
             this.panel2.TabIndex = 5;
             // 
             // clusterDataPool
@@ -2082,13 +2084,13 @@
             this.clusterDataPool.AllowUserToAddRows = false;
             this.clusterDataPool.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
             this.clusterDataPool.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.clusterDataPool.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle10.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle10.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle10.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.clusterDataPool.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle10;
             this.clusterDataPool.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.clusterDataPool.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.ThemeName,
@@ -2099,7 +2101,7 @@
             this.clusterDataPool.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             this.clusterDataPool.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.clusterDataPool.ShowCellToolTips = false;
-            this.clusterDataPool.Size = new System.Drawing.Size(299, 112);
+            this.clusterDataPool.Size = new System.Drawing.Size(297, 130);
             this.clusterDataPool.TabIndex = 20;
             this.clusterDataPool.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.dataPool_CellBeginEdit);
             this.clusterDataPool.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.clusterDataPool_CellClick);
@@ -2124,7 +2126,7 @@
             // waitingBar
             // 
             this.waitingBar.BackColor = System.Drawing.Color.White;
-            this.waitingBar.Location = new System.Drawing.Point(1, 115);
+            this.waitingBar.Location = new System.Drawing.Point(3, 133);
             this.waitingBar.MarqueeAnimationSpeed = 0;
             this.waitingBar.Name = "waitingBar";
             this.waitingBar.Size = new System.Drawing.Size(297, 1);
@@ -2137,20 +2139,20 @@
             // 
             this.GeositeServerPort.BackColor = System.Drawing.Color.WhiteSmoke;
             this.GeositeServerPort.Enabled = false;
-            this.GeositeServerPort.Location = new System.Drawing.Point(23, 123);
+            this.GeositeServerPort.Location = new System.Drawing.Point(23, 147);
             this.GeositeServerPort.Name = "GeositeServerPort";
             this.GeositeServerPort.ReadOnly = true;
-            this.GeositeServerPort.Size = new System.Drawing.Size(107, 21);
+            this.GeositeServerPort.Size = new System.Drawing.Size(126, 21);
             this.GeositeServerPort.TabIndex = 22;
             // 
             // GeositeServerName
             // 
             this.GeositeServerName.BackColor = System.Drawing.Color.WhiteSmoke;
             this.GeositeServerName.Enabled = false;
-            this.GeositeServerName.Location = new System.Drawing.Point(23, 92);
+            this.GeositeServerName.Location = new System.Drawing.Point(23, 109);
             this.GeositeServerName.Name = "GeositeServerName";
             this.GeositeServerName.ReadOnly = true;
-            this.GeositeServerName.Size = new System.Drawing.Size(107, 21);
+            this.GeositeServerName.Size = new System.Drawing.Size(126, 21);
             this.GeositeServerName.TabIndex = 22;
             // 
             // helpCard
@@ -2160,7 +2162,7 @@
             this.helpCard.Location = new System.Drawing.Point(4, 22);
             this.helpCard.Name = "helpCard";
             this.helpCard.Padding = new System.Windows.Forms.Padding(3);
-            this.helpCard.Size = new System.Drawing.Size(524, 352);
+            this.helpCard.Size = new System.Drawing.Size(564, 404);
             this.helpCard.TabIndex = 1;
             this.helpCard.Text = "Help";
             this.helpCard.UseVisualStyleBackColor = true;
@@ -2174,7 +2176,7 @@
             this.tabControl2.Multiline = true;
             this.tabControl2.Name = "tabControl2";
             this.tabControl2.SelectedIndex = 0;
-            this.tabControl2.Size = new System.Drawing.Size(512, 343);
+            this.tabControl2.Size = new System.Drawing.Size(555, 392);
             this.tabControl2.TabIndex = 0;
             // 
             // tabPage3
@@ -2186,7 +2188,7 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 4);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(504, 317);
+            this.tabPage3.Size = new System.Drawing.Size(547, 366);
             this.tabPage3.TabIndex = 0;
             this.tabPage3.Text = "Introduction";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -2196,7 +2198,7 @@
             this.panel10.BackColor = System.Drawing.Color.Gainsboro;
             this.panel10.Location = new System.Drawing.Point(89, 70);
             this.panel10.Name = "panel10";
-            this.panel10.Size = new System.Drawing.Size(411, 1);
+            this.panel10.Size = new System.Drawing.Size(455, 1);
             this.panel10.TabIndex = 3;
             // 
             // richTextBox1
@@ -2233,7 +2235,7 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
             this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox1.Size = new System.Drawing.Size(498, 233);
+            this.textBox1.Size = new System.Drawing.Size(541, 282);
             this.textBox1.TabIndex = 0;
             this.textBox1.Text = resources.GetString("textBox1.Text");
             // 
@@ -2246,7 +2248,7 @@
             this.tabPage4.Location = new System.Drawing.Point(4, 4);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(504, 317);
+            this.tabPage4.Size = new System.Drawing.Size(547, 366);
             this.tabPage4.TabIndex = 1;
             this.tabPage4.Text = "Interface";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -2254,9 +2256,9 @@
             // panel11
             // 
             this.panel11.BackColor = System.Drawing.Color.Gainsboro;
-            this.panel11.Location = new System.Drawing.Point(89, 57);
+            this.panel11.Location = new System.Drawing.Point(89, 54);
             this.panel11.Name = "panel11";
-            this.panel11.Size = new System.Drawing.Size(409, 1);
+            this.panel11.Size = new System.Drawing.Size(454, 1);
             this.panel11.TabIndex = 5;
             // 
             // richTextBox2
@@ -2267,7 +2269,7 @@
             this.richTextBox2.Name = "richTextBox2";
             this.richTextBox2.ReadOnly = true;
             this.richTextBox2.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.richTextBox2.Size = new System.Drawing.Size(409, 38);
+            this.richTextBox2.Size = new System.Drawing.Size(454, 38);
             this.richTextBox2.TabIndex = 4;
             this.richTextBox2.Text = "OGC.net provides a dynamic link library for embedded development.\nTips: https://g" +
     "ithub.com/CGSgeosite/OGC.net";
@@ -2277,12 +2279,12 @@
             this.textBox2.BackColor = System.Drawing.Color.White;
             this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBox2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.textBox2.Location = new System.Drawing.Point(3, 73);
+            this.textBox2.Location = new System.Drawing.Point(3, 64);
             this.textBox2.Multiline = true;
             this.textBox2.Name = "textBox2";
             this.textBox2.ReadOnly = true;
             this.textBox2.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox2.Size = new System.Drawing.Size(498, 241);
+            this.textBox2.Size = new System.Drawing.Size(541, 299);
             this.textBox2.TabIndex = 0;
             this.textBox2.Text = resources.GetString("textBox2.Text");
             // 
@@ -2313,10 +2315,10 @@
             this.statusBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.statusProgress,
             this.statusText});
-            this.statusBar.Location = new System.Drawing.Point(0, 389);
+            this.statusBar.Location = new System.Drawing.Point(0, 439);
             this.statusBar.Name = "statusBar";
             this.statusBar.ShowItemToolTips = true;
-            this.statusBar.Size = new System.Drawing.Size(545, 22);
+            this.statusBar.Size = new System.Drawing.Size(584, 22);
             this.statusBar.SizingGrip = false;
             this.statusBar.TabIndex = 18;
             // 
@@ -2332,7 +2334,7 @@
             // 
             this.statusText.DoubleClickEnabled = true;
             this.statusText.Name = "statusText";
-            this.statusText.Size = new System.Drawing.Size(530, 17);
+            this.statusText.Size = new System.Drawing.Size(569, 17);
             this.statusText.Spring = true;
             this.statusText.ToolTipText = "Dblclick to clipboard";
             this.statusText.DoubleClick += new System.EventHandler(this.statusText_DoubleClick);
@@ -2354,12 +2356,20 @@
             this.kmllogo.TabIndex = 9;
             this.kmllogo.TabStop = false;
             // 
+            // panel7
+            // 
+            this.panel7.BackColor = System.Drawing.Color.LightGray;
+            this.panel7.Location = new System.Drawing.Point(0, 179);
+            this.panel7.Name = "panel7";
+            this.panel7.Size = new System.Drawing.Size(561, 1);
+            this.panel7.TabIndex = 21;
+            // 
             // OGCform
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(545, 411);
+            this.ClientSize = new System.Drawing.Size(584, 461);
             this.Controls.Add(this.statusBar);
             this.Controls.Add(this.ogcCard);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -2606,6 +2616,7 @@
         private System.Windows.Forms.PictureBox pictureBox13;
         private System.Windows.Forms.Button ReIndex;
         private System.Windows.Forms.Button ReClean;
+        private System.Windows.Forms.Panel panel7;
     }
 }
 
