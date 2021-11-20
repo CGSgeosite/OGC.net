@@ -30,8 +30,8 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OGCform));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
             this.vectorSourceFile = new System.Windows.Forms.TextBox();
             this.vectorTargetFile = new System.Windows.Forms.TextBox();
             this.OGCtoolTip = new System.Windows.Forms.ToolTip(this.components);
@@ -107,6 +107,7 @@
             this.ogcCard = new System.Windows.Forms.TabControl();
             this.fileCard = new System.Windows.Forms.TabPage();
             this.databaseCard = new System.Windows.Forms.TabPage();
+            this.panel7 = new System.Windows.Forms.Panel();
             this.panel8 = new System.Windows.Forms.Panel();
             this.dataCards = new System.Windows.Forms.TabControl();
             this.RasterPage = new System.Windows.Forms.TabPage();
@@ -187,7 +188,6 @@
             this.statusText = new System.Windows.Forms.ToolStripStatusLabel();
             this.dataGridViewImageColumn1 = new System.Windows.Forms.DataGridViewImageColumn();
             this.kmllogo = new System.Windows.Forms.PictureBox();
-            this.panel7 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox13)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.vectorSaveFile)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.vectorOpenFile)).BeginInit();
@@ -248,10 +248,13 @@
             // 
             this.vectorSourceFile.BackColor = System.Drawing.Color.White;
             this.vectorSourceFile.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.vectorSourceFile.Location = new System.Drawing.Point(38, 19);
+            this.vectorSourceFile.Location = new System.Drawing.Point(38, 16);
+            this.vectorSourceFile.MaxLength = 3276700;
+            this.vectorSourceFile.Multiline = true;
             this.vectorSourceFile.Name = "vectorSourceFile";
             this.vectorSourceFile.ReadOnly = true;
-            this.vectorSourceFile.Size = new System.Drawing.Size(453, 21);
+            this.vectorSourceFile.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.vectorSourceFile.Size = new System.Drawing.Size(453, 26);
             this.vectorSourceFile.TabIndex = 0;
             this.vectorSourceFile.TextChanged += new System.EventHandler(this.vectorSourceFile_TextChanged);
             this.vectorSourceFile.DoubleClick += new System.EventHandler(this.vectorOpenFile_Click);
@@ -1073,6 +1076,7 @@
             // 
             this.tilewebapi.BackColor = System.Drawing.Color.White;
             this.tilewebapi.Location = new System.Drawing.Point(33, 6);
+            this.tilewebapi.MaxLength = 3276700;
             this.tilewebapi.Name = "tilewebapi";
             this.tilewebapi.Size = new System.Drawing.Size(427, 21);
             this.tilewebapi.TabIndex = 30;
@@ -1219,6 +1223,14 @@
             this.databaseCard.TabIndex = 2;
             this.databaseCard.Text = "Database";
             this.databaseCard.UseVisualStyleBackColor = true;
+            // 
+            // panel7
+            // 
+            this.panel7.BackColor = System.Drawing.Color.LightGray;
+            this.panel7.Location = new System.Drawing.Point(0, 179);
+            this.panel7.Name = "panel7";
+            this.panel7.Size = new System.Drawing.Size(561, 1);
+            this.panel7.TabIndex = 21;
             // 
             // panel8
             // 
@@ -1431,6 +1443,7 @@
             this.localTileFolder.BackColor = System.Drawing.SystemColors.Window;
             this.localTileFolder.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.localTileFolder.Location = new System.Drawing.Point(70, 15);
+            this.localTileFolder.MaxLength = 3276700;
             this.localTileFolder.Name = "localTileFolder";
             this.localTileFolder.ReadOnly = true;
             this.localTileFolder.Size = new System.Drawing.Size(393, 21);
@@ -1666,10 +1679,13 @@
             this.ModelOpenTextBox.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.ModelOpenTextBox.BackColor = System.Drawing.SystemColors.Window;
             this.ModelOpenTextBox.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, ((byte)(134)));
-            this.ModelOpenTextBox.Location = new System.Drawing.Point(165, 16);
+            this.ModelOpenTextBox.Location = new System.Drawing.Point(165, 15);
+            this.ModelOpenTextBox.MaxLength = 3276700;
+            this.ModelOpenTextBox.Multiline = true;
             this.ModelOpenTextBox.Name = "ModelOpenTextBox";
             this.ModelOpenTextBox.ReadOnly = true;
-            this.ModelOpenTextBox.Size = new System.Drawing.Size(295, 21);
+            this.ModelOpenTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.ModelOpenTextBox.Size = new System.Drawing.Size(295, 26);
             this.ModelOpenTextBox.TabIndex = 12;
             this.ModelOpenTextBox.TextChanged += new System.EventHandler(this.ModelOpenTextBox_TextChanged);
             this.ModelOpenTextBox.DoubleClick += new System.EventHandler(this.ModelOpen_Click);
@@ -1764,9 +1780,9 @@
             this.DeepZoomOpen.Cursor = System.Windows.Forms.Cursors.Hand;
             this.DeepZoomOpen.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
             this.DeepZoomOpen.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
-            this.DeepZoomOpen.Location = new System.Drawing.Point(97, 6);
+            this.DeepZoomOpen.Location = new System.Drawing.Point(97, 7);
             this.DeepZoomOpen.Name = "DeepZoomOpen";
-            this.DeepZoomOpen.Size = new System.Drawing.Size(45, 25);
+            this.DeepZoomOpen.Size = new System.Drawing.Size(45, 26);
             this.DeepZoomOpen.TabIndex = 25;
             this.DeepZoomOpen.Text = "Open";
             this.DeepZoomOpen.UseVisualStyleBackColor = true;
@@ -1798,9 +1814,12 @@
             // 
             this.DeepZoomOpenTextBox.BackColor = System.Drawing.Color.White;
             this.DeepZoomOpenTextBox.Location = new System.Drawing.Point(148, 7);
+            this.DeepZoomOpenTextBox.MaxLength = 3276700;
+            this.DeepZoomOpenTextBox.Multiline = true;
             this.DeepZoomOpenTextBox.Name = "DeepZoomOpenTextBox";
             this.DeepZoomOpenTextBox.ReadOnly = true;
-            this.DeepZoomOpenTextBox.Size = new System.Drawing.Size(260, 21);
+            this.DeepZoomOpenTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.DeepZoomOpenTextBox.Size = new System.Drawing.Size(260, 26);
             this.DeepZoomOpenTextBox.TabIndex = 17;
             this.DeepZoomOpenTextBox.TabStop = false;
             this.DeepZoomOpenTextBox.TextChanged += new System.EventHandler(this.DeepZoomChanged);
@@ -1938,6 +1957,7 @@
             // 
             this.TileFormatOpenBox.BackColor = System.Drawing.Color.White;
             this.TileFormatOpenBox.Location = new System.Drawing.Point(136, 15);
+            this.TileFormatOpenBox.MaxLength = 3276700;
             this.TileFormatOpenBox.Name = "TileFormatOpenBox";
             this.TileFormatOpenBox.ReadOnly = true;
             this.TileFormatOpenBox.Size = new System.Drawing.Size(134, 21);
@@ -2024,8 +2044,8 @@
             // 
             // VectorStatus
             // 
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.VectorStatus.DefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.VectorStatus.DefaultCellStyle = dataGridViewCellStyle11;
             this.VectorStatus.HeaderText = "※";
             this.VectorStatus.Name = "VectorStatus";
             this.VectorStatus.ReadOnly = true;
@@ -2084,13 +2104,13 @@
             this.clusterDataPool.AllowUserToAddRows = false;
             this.clusterDataPool.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
             this.clusterDataPool.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            dataGridViewCellStyle10.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle10.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            dataGridViewCellStyle10.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.clusterDataPool.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle12.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle12.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle12.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.clusterDataPool.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle12;
             this.clusterDataPool.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.clusterDataPool.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.ThemeName,
@@ -2355,14 +2375,6 @@
             this.kmllogo.Size = new System.Drawing.Size(90, 82);
             this.kmllogo.TabIndex = 9;
             this.kmllogo.TabStop = false;
-            // 
-            // panel7
-            // 
-            this.panel7.BackColor = System.Drawing.Color.LightGray;
-            this.panel7.Location = new System.Drawing.Point(0, 179);
-            this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(561, 1);
-            this.panel7.TabIndex = 21;
             // 
             // OGCform
             // 
