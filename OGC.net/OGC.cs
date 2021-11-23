@@ -6931,7 +6931,21 @@ $func$ LANGUAGE plpgsql;"
 
             var tabIndex = parameter.index;
             var themeMetadataX = parameter.metadata;
-            var status = (short)(parameter.light ? 0 : 2);
+
+            /*  
+            文档树状态码status，继承自[forest.status]，含义如下
+            持久化	暗数据	完整性	含义
+            ======	======	======	==============================================================
+            0		0		0		默认值0：非持久化数据（参与对等）		明数据		无值或失败
+            0		0		1		指定值1：非持久化数据（参与对等）		明数据		正常
+            0		1		0		指定值2：非持久化数据（参与对等）		暗数据		失败
+            0		1		1		指定值3：非持久化数据（参与对等）		暗数据		正常
+            1		0		0		指定值4：持久化数据（不参与后续对等）	明数据		失败
+            1		0		1		指定值5：持久化数据（不参与后续对等）	明数据		正常
+            1		1		0		指定值6：持久化数据（不参与后续对等）	暗数据		失败
+            1		1		1		指定值7：持久化数据（不参与后续对等）	暗数据		正常
+            */
+            var status = (short)(parameter.light ? 4 : 6);
 
             // 瓦片存储约定：
             // 1）为便于高速提取瓦片，采用一个member存储全部瓦片方案，或将某专题不同缩放级的全部瓦片所属的member个数不超过24个（每个member可对应一个缩放级）
@@ -7358,6 +7372,16 @@ $func$ LANGUAGE plpgsql;"
 
                         break;
                 }
+
+                oneForest.Tree(
+                    enclosure:
+                    (
+                        tree,
+                        new List<int>() {typeCode}, 
+                        true
+                    )
+                ); //向树记录写入完整性标志以及类型数组
+                ClusterDate.Reset(); //刷新界面---专题列表
             }
             return total > 0 ? $"Pushed {total} tile" + (total > 1 ? "s" : "") : "No tile pushed";
         }
