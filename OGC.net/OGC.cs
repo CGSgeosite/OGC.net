@@ -3201,7 +3201,7 @@ $func$ LANGUAGE plpgsql;"
             if (VectorBackgroundWorker.CancellationPending)
             {
                 e.Cancel = true;
-                return "Pause...";
+                return "Pause...";  
             }
 
             var doTopology = topologyCheckBox.Checked; //针对矢量数据，是否执行【拓扑】？ 
@@ -3217,8 +3217,21 @@ $func$ LANGUAGE plpgsql;"
             if (!forestResult.Success)
                 return forestResult.Message; //此结果信息将出现在状态行
 
-            var status = (short)(PostgresLight.Checked ? 0 : 2);
-            var forestChanged = false; // 记录数据库森林结构是否发生变更，以便刷新界面 
+            /*  
+            文档树状态码status，继承自[forest.status]，含义如下
+            持久化	暗数据	完整性	含义
+            ======	======	======	==============================================================
+            0		0		0		默认值0：非持久化数据（参与对等）		明数据		无值或失败
+            0		0		1		指定值1：非持久化数据（参与对等）		明数据		正常
+            0		1		0		指定值2：非持久化数据（参与对等）		暗数据		失败
+            0		1		1		指定值3：非持久化数据（参与对等）		暗数据		正常
+            1		0		0		指定值4：持久化数据（不参与后续对等）	明数据		失败
+            1		0		1		指定值5：持久化数据（不参与后续对等）	明数据		正常
+            1		1		0		指定值6：持久化数据（不参与后续对等）	暗数据		失败
+            1		1		1		指定值7：持久化数据（不参与后续对等）	暗数据		正常
+            */
+            var status = (short)(PostgresLight.Checked ? 4 : 6);
+            var forestChanged = false; // 记录数据库森林结构是否发生变更，以便刷新界面  
 
             string statusInfo = null;
 
@@ -3361,7 +3374,7 @@ $func$ LANGUAGE plpgsql;"
 
                                             var treeTimeStamp =
                                                 $"{forest},{sequence},{DateTime.Parse($"{FileInfo["timeStamp"]}"): yyyyMMdd,HHmmss}";
-                                            var treeResult =
+                                            var treeResult = 
                                                 oneForest.Tree(
                                                     treeTimeStamp,
                                                     FeatureCollectionX,
@@ -3370,7 +3383,7 @@ $func$ LANGUAGE plpgsql;"
                                                 );
                                             if (treeResult.Success)
                                             {
-                                                var pointer = 0;
+                                                var pointer = 0; 
                                                 var valid = 0;
                                                 var TreePath = TreePathString;
                                                 if (string.IsNullOrWhiteSpace(TreePath))
@@ -3701,7 +3714,7 @@ $func$ LANGUAGE plpgsql;"
 
                                                 oneForest.Tree(enclosure: (treeId,
                                                     treeType, isOK)); //向树记录写入完整性标志以及类型数组
-
+                                                ClusterDate?.Reset();
                                                 if (isOK)
                                                 {
                                                     //（0：非空间数据【默认】
@@ -3720,7 +3733,7 @@ $func$ LANGUAGE plpgsql;"
                                                         new Action(
                                                             () =>
                                                             {
-                                                                statusCell.Value = "✔";
+                                                                statusCell.Value = "✔"; 
                                                                 statusCell.ToolTipText = "OK";
                                                             }
                                                         )
@@ -3861,7 +3874,7 @@ $func$ LANGUAGE plpgsql;"
                                             );
                                         if (treeResult.Success)
                                         {
-                                            forestChanged = true;
+                                            forestChanged = true; 
 
                                             var treeId = treeResult.Id;
                                             //此时，文档树所容纳的叶子类型type默认值：0
@@ -4189,14 +4202,14 @@ $func$ LANGUAGE plpgsql;"
 
                                             oneForest.Tree(enclosure: (treeId,
                                                 treeType, isOK)); //向树记录写入完整性标志以及类型数组
-
+                                            ClusterDate?.Reset();
                                             if (isOK)
                                             {
                                                 this.Invoke(
                                                     new Action(
                                                         () =>
                                                         {
-                                                            statusCell.Value = "✔";
+                                                            statusCell.Value = "✔"; 
                                                             statusCell.ToolTipText = "OK";
                                                         }
                                                     )
@@ -4351,7 +4364,7 @@ $func$ LANGUAGE plpgsql;"
                                                     );
                                                 if (treeResult.Success)
                                                 {
-                                                    forestChanged = true;
+                                                    forestChanged = true; 
 
                                                     var treeId = treeResult.Id;
                                                     //此时，文档树所容纳的叶子类型type默认值：0
@@ -4672,7 +4685,7 @@ $func$ LANGUAGE plpgsql;"
                                                     }
 
                                                     oneForest.Tree(enclosure: (treeId, treeType, isOK)); //向树记录写入完整性标志以及类型数组
-
+                                                    ClusterDate?.Reset();
                                                     if (isOK)
                                                     {
                                                         this.Invoke(
@@ -4902,7 +4915,7 @@ $func$ LANGUAGE plpgsql;"
 
                                             oneForest.Tree(enclosure: (treeId,
                                                 treeType, isOK)); //向树记录写入完整性标志以及类型数组
-
+                                            ClusterDate?.Reset();
                                             if (isOK)
                                             {
                                                 this.Invoke(
@@ -5130,7 +5143,7 @@ $func$ LANGUAGE plpgsql;"
 
                                             oneForest.Tree(enclosure: (treeId,
                                                 treeType, isOK)); //向树记录写入完整性标志以及类型数组
-
+                                            ClusterDate?.Reset();
                                             if (isOK)
                                             {
                                                 this.Invoke(
@@ -5377,7 +5390,7 @@ $func$ LANGUAGE plpgsql;"
 
                                                 oneForest.Tree(enclosure: (treeId,
                                                     treeType, isOK)); //向树记录写入完整性标志以及类型数组
-
+                                                ClusterDate?.Reset();
                                                 if (isOK)
                                                 {
                                                     this.Invoke(
