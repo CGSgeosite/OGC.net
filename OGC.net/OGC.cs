@@ -3235,7 +3235,7 @@ $func$ LANGUAGE plpgsql;"
 
             string statusInfo = null;
 
-            foreach (var row in vectorFilePool.SelectedRows.Cast<DataGridViewRow>().Where(row => !row.IsNewRow)) //vectorFilePool.Rows
+            foreach (var row in vectorFilePool.SelectedRows.Cast<DataGridViewRow>().Where(row => !row.IsNewRow).OrderBy(row => row.Index)) //vectorFilePool.Rows
             {
                 var theme = $"{row.Cells[0].Value}";
                 var path = $"{row.Cells[1].Value}";

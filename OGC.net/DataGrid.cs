@@ -50,7 +50,7 @@ namespace Geosite
 
         public void Reset()
         {
-            var result = PostgreSqlHelper.Scalar(
+            var treeCount = PostgreSqlHelper.Scalar(
                 "SELECT COUNT(*) FROM tree WHERE forest = @forest;",
                 new Dictionary<string, object>
                 {
@@ -58,7 +58,7 @@ namespace Geosite
                 }
             );
 
-            int.TryParse($"{result}", out _totel);
+            int.TryParse($"{treeCount}", out _totel);
             
             Show(_page);
         }
@@ -96,7 +96,7 @@ namespace Geosite
             );
             var offset = _page * _limit;
             var trees = PostgreSqlHelper.XElementReader(
-                "SELECT id, name, uri, timestamp, type, status FROM tree WHERE forest = @forest ORDER BY id OFFSET @offset LIMIT @limit;",
+                "SELECT id, name, uri, timestamp, type, status FROM tree WHERE forest = @forest ORDER BY timestamp[3] DESC, timestamp[4] DESC OFFSET @offset LIMIT @limit;",
                 new Dictionary<string, object>
                 {
                     {"forest", _forest},
