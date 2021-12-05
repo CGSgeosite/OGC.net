@@ -19,6 +19,9 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Microsoft.VisualBasic;
 
+/*
+ * 国际标准化地学大数据转换与推送软件
+ */
 namespace Geosite
 {
     public partial class OGCform : Form
@@ -2606,7 +2609,6 @@ $func$ LANGUAGE plpgsql;"
                 },
                 null
             );
-
         }
 
         private void ReIndex_Click(object sender, EventArgs e)
@@ -3250,7 +3252,7 @@ $func$ LANGUAGE plpgsql;"
                     )
                 );
 
-                var oldId = PostgreSqlHelper.Scalar(
+                var oldTree = PostgreSqlHelper.ScalarAsync(
                     "SELECT id FROM tree WHERE forest = @forest AND (name ILIKE @name::text) LIMIT 1;", // OR (timestamp[3] = @timestamp3 AND timestamp[4] = @timestamp4)
                     new Dictionary<string, object>
                     {
@@ -3260,8 +3262,8 @@ $func$ LANGUAGE plpgsql;"
                         //{"timestamp3", yyyyMMdd}, 
                         //{"timestamp4", HHmmss}
                     }
-                );
-                if (oldId != null)
+                ).Result;
+                if (oldTree != null)
                 {
                     this.Invoke(
                         new Action(
@@ -3286,13 +3288,13 @@ $func$ LANGUAGE plpgsql;"
                     );
 
                     var sequenceMax =
-                        PostgreSqlHelper.Scalar(
+                        PostgreSqlHelper.ScalarAsync(
                             "SELECT sequence FROM tree WHERE forest = @forest ORDER BY sequence DESC LIMIT 1;",
                             new Dictionary<string, object>
                             {
                                 {"forest", forest}
                             }
-                        );
+                        ).Result;
                     var sequence = sequenceMax == null ? 0 : 1 + int.Parse($"{sequenceMax}");
 
                     var fileType = Path.GetExtension(path).ToLower();
@@ -6244,14 +6246,14 @@ $func$ LANGUAGE plpgsql;"
         {
             if (ClusterUser.status)
             {
-                var result = PostgreSqlHelper.Scalar(
+                var result = PostgreSqlHelper.ScalarAsync(
                     "SELECT id FROM forest WHERE id = @id AND name = @name::text LIMIT 1;",
                     new Dictionary<string, object>
                     {
                         {"id", ClusterUser.forest},
                         {"name", ClusterUser.name}
                     }
-                );
+                ).Result;
                 if (result == null)
                 {
                     statusText.Text = @"Nothing was found";
@@ -6275,14 +6277,14 @@ $func$ LANGUAGE plpgsql;"
 
                         var task = new Func<bool>(
                             () =>
-                                PostgreSqlHelper.NonQuery(
+                                PostgreSqlHelper.NonQueryAsync(
                                     "DELETE FROM forest WHERE id = @id AND name = @name::text;",
                                     new Dictionary<string, object>
                                     {
                                         {"id", ClusterUser.forest},
                                         {"name", ClusterUser.name}
                                     }
-                                ) !=
+                                ).Result !=
                                 null
                         );
 
@@ -6978,14 +6980,14 @@ $func$ LANGUAGE plpgsql;"
                 var themeName = themeNames[pointer];
 
                 //先大致检测是否存在指定的树记录，重点甄别类型码是否合适
-                var oldTreeType = PostgreSqlHelper.Scalar(
+                var oldTreeType = PostgreSqlHelper.ScalarAsync(
                     "SELECT type FROM tree WHERE forest = @forest AND name ILIKE @name::text LIMIT 1;",
                     new Dictionary<string, object>
                     {
                     {"forest", forest},
                     {"name", themeName}
                     }
-                );
+                ).Result;
                 if (oldTreeType != null)
                 {
                     //文档树要素类型码：
@@ -7022,7 +7024,7 @@ $func$ LANGUAGE plpgsql;"
                 int typeCode; //非空间数据【默认】
                 XElement propertyX;
 
-                var oldTree = PostgreSqlHelper.Scalar(
+                var oldTree = PostgreSqlHelper.ScalarAsync(
                     "SELECT (branch.tree, branch.routename, branch.routeid, leaf.id, leaf.type, leaf.property) FROM leaf," +
                     "(" +
                     "   SELECT tree, array_agg(name) AS routename, array_agg(id) AS routeid FROM" +
@@ -7040,7 +7042,7 @@ $func$ LANGUAGE plpgsql;"
                         {"forest", forest},
                         {"name", themeName}
                     }
-                );
+                ).Result;
 
                 /*  瓦片树基本信息模板：
                     <FeatureCollection timeStamp="2021-07-27T08:26:02"> 
@@ -7082,13 +7084,13 @@ $func$ LANGUAGE plpgsql;"
                 else
                 {
                     var sequenceMax =
-                        PostgreSqlHelper.Scalar(
+                        PostgreSqlHelper.ScalarAsync(
                             "SELECT sequence FROM tree WHERE forest = @forest ORDER BY sequence DESC LIMIT 1;",
                             new Dictionary<string, object>
                             {
                                 {"forest", forest}
                             }
-                        );
+                        ).Result;
                     //文档树序号--[0,已有的最大值+1]
                     var sequence = sequenceMax == null ? 0 : 1 + int.Parse($"{sequenceMax}");
 

@@ -10322,7 +10322,7 @@ public void Export(string SaveAs, string Format = "geojson");
 
 5、PostgreSQL通讯
 /// &lt;summary&gt;
-/// SQL查询助手，支持【参数化】和【事务】
+/// SQL查询助手，支持【参数化】、【异步】和【事务】
 /// &lt;/summary&gt;
 public static class PostgreSqlHelper;
 
@@ -10370,6 +10370,11 @@ public static (bool Success, string Message, short flag) Connection();
 public static int? NonQuery();
 
 /// &lt;summary&gt;
+/// 异步执行非查询语句
+/// &lt;/summary&gt;
+public static async Task&lt;int?&gt; NonQueryAsync();
+		
+/// &lt;summary&gt;
 /// 执行标量查询语句
 /// &lt;/summary&gt;
 /// &lt;param name="cmd"&gt;查询语句&lt;/param&gt;
@@ -10381,6 +10386,11 @@ public static int? NonQuery();
 /// &lt;returns&gt;针对可返回单值的sql语句（标量查询函数），返回对象型结果；若失败，返回空 &lt;/returns&gt;
 public static object Scalar();
 
+/// &lt;summary&gt;
+/// 异步执行标量查询语句
+/// &lt;/summary&gt;
+public static async Task&lt;object&gt; ScalarAsync();
+		
 /// &lt;summary&gt;
 /// 执行查询语句，返回可枚举的Dictionary&lt;string, object&gt;对象序列
 /// &lt;/summary&gt;
@@ -10394,6 +10404,11 @@ public static object Scalar();
 public static IEnumerable&lt;Dictionary&lt;string, object&gt;&gt; DictionaryReader();
 
 /// &lt;summary&gt;
+/// 异步执行查询语句，返回可枚举的Dictionary&lt;string, object&gt;对象序列
+/// &lt;/summary&gt;
+public static async IAsyncEnumerable&lt;Dictionary&lt;string, object&gt;&gt; DictionaryReaderAsync();
+		
+/// &lt;summary&gt;
 /// 执行查询语句，返回DataTable格式对象
 /// &lt;/summary&gt;
 /// &lt;param name="cmd"&gt;查询语句&lt;/param&gt;
@@ -10405,6 +10420,11 @@ public static IEnumerable&lt;Dictionary&lt;string, object&gt;&gt; DictionaryRead
 /// &lt;returns&gt;若返回null，说明查询无效；若结果对象的Rows为0，说明仅存在字段，并未发现任何记录！&lt;/returns&gt;
 public static DataTable DataTableReader();
 
+/// &lt;summary&gt;
+/// 异步执行查询语句，返回DataTable格式对象
+/// &lt;/summary&gt;
+public static async Task&lt;DataTable&gt; DataTableReaderAsync();
+		
 /// &lt;summary&gt;
 /// 执行查询语句，返回xml格式对象
 /// &lt;/summary&gt;
@@ -10419,6 +10439,11 @@ public static DataTable DataTableReader();
 /// &lt;returns&gt;返回XElement格式对象。如果某字段内容符合json格式便将其转换为xml&lt;/returns&gt;
 public static XElement XElementReader();
 
+/// &lt;summary&gt;
+/// 异步执行查询语句，返回xml格式对象
+/// &lt;/summary&gt;
+public static async Task&lt;XElement&gt; XElementReaderAsync();
+		
 6、WKB编码类
 /// &lt;summary&gt;
 /// WKB（PostGIS-Raster类型）编码类
