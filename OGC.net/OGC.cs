@@ -6599,16 +6599,7 @@ $func$ LANGUAGE plpgsql;"
                                 var jsonFile = Path.Combine(localTileFolder.Text, "metadata.json");
                                 if (File.Exists(jsonFile))
                                 {
-                                    using var stream = new FileStream(
-                                        jsonFile,
-                                        FileMode.Open,
-                                        FileAccess.Read,
-                                        FileShare.ReadWrite
-                                    );
-                                    using var sr = new StreamReader(
-                                        stream,
-                                        FreeText.FreeText.GetTextFileEncoding(jsonFile)
-                                    );
+                                    using var sr = FreeText.FreeTextEncoding.OpenFreeTextFile(jsonFile);
                                     var MetaDataX = JsonConvert.DeserializeXNode(sr.ReadToEnd(), "MapTiler")?.Root;
 
                                     /*  
