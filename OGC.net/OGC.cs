@@ -2424,35 +2424,102 @@ namespace Geosite
                                                                                                                                         if (PostgreSqlHelper.NonQuery(SQLstring) != null)
                                                                                                                                         {
                                                                                                                                             //嵌入式自定义SQL函数/////////////////////////////////////////////////////////////
-                                                                                                                                            //针对大数据表，不宜直接执行【count】函数，特提供高速概略计数函数：Geosite_Count()
-                                                                                                                                            //引自维基百科 https://wiki.postgresql.org/wiki/Count_estimate
+                                                                                                                                            //针对大数据表，不宜直接执行【count】函数，特提供高速概略计数函数：count_estimate()
                                                                                                                                             //特别注意：PostgreSQL约束条件中若有单引号，需用2个连续单引号替换！
-                                                                                                                                            const string Geosite_Count = "Geosite_Count";
+                                                                                                                                            const string countEstimate = "count_estimate";
                                                                                                                                             int.TryParse(
-                                                                                                                                                $"{PostgreSqlHelper.Scalar($"SELECT 1 FROM pg_proc WHERE proname = '{Geosite_Count}';")}",
-                                                                                                                                                out var Geosite_Count_Exist);
-                                                                                                                                            if (Geosite_Count_Exist != 1)
+                                                                                                                                                $"{PostgreSqlHelper.Scalar($"SELECT 1 FROM pg_proc WHERE proname = '{countEstimate}';")}",
+                                                                                                                                                out var countEstimateExist);
+                                                                                                                                            if (countEstimateExist != 1)
                                                                                                                                             {
-                                                                                                                                                //Geosite_Count函数用法：SELECT Geosite_Count('SELECT * FROM 表名 WHERE 约束条件'); 
+                                                                                                                                                //count_estimate函数用法：SELECT count_estimate('SELECT * FROM 表名 WHERE 约束条件'); 
                                                                                                                                                 PostgreSqlHelper
                                                                                                                                                     .NonQuery
                                                                                                                                                     (
-$@"
-CREATE FUNCTION {Geosite_Count}(query text) RETURNS INTEGER AS
-$func$
-DECLARE
-    rec record;
-    ROWS INTEGER;
-BEGIN
-    FOR rec IN EXECUTE 'EXPLAIN ' || query LOOP
-        ROWS := SUBSTRING(rec.""QUERY PLAN"" FROM ' rows=([[:digit:]]+)');
-        EXIT WHEN ROWS IS NOT NULL;
-    END LOOP; 
-    RETURN ROWS;
-END
-$func$ LANGUAGE plpgsql;"
+                                                                                                                                                        $@"CREATE OR REPLACE FUNCTION {countEstimate}(query text)" +
+                                                                                                                                                        "  RETURNS integer" +
+                                                                                                                                                        "  LANGUAGE plpgsql AS" +
+                                                                                                                                                        "  $func$" +
+                                                                                                                                                        "  DECLARE" +
+                                                                                                                                                        "    rec record;" +
+                                                                                                                                                        "    rows integer;" +
+                                                                                                                                                        "  BEGIN" +
+                                                                                                                                                        "    FOR rec IN EXECUTE 'EXPLAIN ' || query LOOP" +
+                                                                                                                                                        "      rows := substring(rec.\"QUERY PLAN\" FROM ' rows=([[:digit:]]+)');" +
+                                                                                                                                                        "      EXIT WHEN rows IS NOT NULL;" +
+                                                                                                                                                        "    END LOOP;" +
+                                                                                                                                                        "    RETURN rows;" +
+                                                                                                                                                        "  END" +
+                                                                                                                                                        "  $func$;"
                                                                                                                                                     );
                                                                                                                                             }
+
+                                                                                                                                            /* 扩展聚合函数类，为【GROUP BY】提供首部和尾部成员
+                                                                                                                                            CREATE OR REPLACE FUNCTION public.first_agg (anyelement, anyelement)
+                                                                                                                                              RETURNS anyelement
+                                                                                                                                              LANGUAGE sql IMMUTABLE STRICT PARALLEL SAFE AS
+                                                                                                                                            'SELECT $1';
+
+                                                                                                                                            CREATE AGGREGATE public.first (anyelement) (
+                                                                                                                                              SFUNC    = public.first_agg
+                                                                                                                                            , STYPE    = anyelement
+                                                                                                                                            , PARALLEL = safe
+                                                                                                                                            );
+
+                                                                                                                                            CREATE OR REPLACE FUNCTION public.last_agg (anyelement, anyelement)
+                                                                                                                                              RETURNS anyelement
+                                                                                                                                              LANGUAGE sql IMMUTABLE STRICT PARALLEL SAFE AS
+                                                                                                                                            'SELECT $2';
+
+                                                                                                                                            CREATE AGGREGATE public.last (anyelement) (
+                                                                                                                                              SFUNC    = public.last_agg
+                                                                                                                                            , STYPE    = anyelement
+                                                                                                                                            , PARALLEL = safe
+                                                                                                                                            );
+
+                                                                                                                                            例如：
+                                                                                                                                                SELECT first(id order by id), customer, first(total order by id) FROM purchases 
+                                                                                                                                                GROUP BY customer 
+                                                                                                                                                ORDER BY first(total);
+                                                                                                                                             */
+                                                                                                                                            int.TryParse(
+                                                                                                                                                $"{PostgreSqlHelper.Scalar("SELECT 1 FROM pg_proc WHERE proname = 'first_agg' OR proname = 'first';")}",
+                                                                                                                                                out var firstAggregateExist);
+                                                                                                                                            if (firstAggregateExist != 1)
+                                                                                                                                            {
+                                                                                                                                                PostgreSqlHelper.NonQuery
+                                                                                                                                                   (
+                                                                                                                                                       "CREATE OR REPLACE FUNCTION public.first_agg (anyelement, anyelement)" +
+                                                                                                                                                       "  RETURNS anyelement" +
+                                                                                                                                                       "  LANGUAGE sql IMMUTABLE STRICT PARALLEL SAFE AS" +
+                                                                                                                                                       "  'SELECT $1';" +
+                                                                                                                                                       "  CREATE OR REPLACE AGGREGATE public.first (anyelement) (" +
+                                                                                                                                                       "    SFUNC = public.first_agg" +
+                                                                                                                                                       "    , STYPE = anyelement" +
+                                                                                                                                                       "    , PARALLEL = safe" +
+                                                                                                                                                       "    );" 
+                                                                                                                                                   );
+                                                                                                                                            }
+
+                                                                                                                                            int.TryParse(
+                                                                                                                                                $"{PostgreSqlHelper.Scalar("SELECT 1 FROM pg_proc WHERE proname = 'last_agg' OR proname = 'last';")}",
+                                                                                                                                                out var lastAggregateExist);
+                                                                                                                                            if (lastAggregateExist != 1)
+                                                                                                                                            {
+                                                                                                                                                PostgreSqlHelper.NonQuery
+                                                                                                                                                   (
+                                                                                                                                                       "CREATE OR REPLACE FUNCTION public.last_agg (anyelement, anyelement)" +
+                                                                                                                                                       "  RETURNS anyelement" +
+                                                                                                                                                       "  LANGUAGE sql IMMUTABLE STRICT PARALLEL SAFE AS" +
+                                                                                                                                                       "  'SELECT $2';" +
+                                                                                                                                                       "  CREATE OR REPLACE AGGREGATE public.last (anyelement) (" +
+                                                                                                                                                       "    SFUNC = public.last_agg" +
+                                                                                                                                                       "    , STYPE = anyelement" +
+                                                                                                                                                       "    , PARALLEL = safe" +
+                                                                                                                                                       "    );"
+                                                                                                                                                   );
+                                                                                                                                            }
+
                                                                                                                                             ClusterUser.status = true;
                                                                                                                                         }
                                                                                                                                         else
@@ -2622,96 +2689,96 @@ $func$ LANGUAGE plpgsql;"
                     ogcCard.Enabled = false;
 
                     // 先处理【键集】问题：刷新叶子表频度并删除键集子表内容
-                    statusText.Text = "● Access frequency synchronization ...";
+                    statusText.Text = @"● Access frequency synchronization ...";
                     Application.DoEvents();
                     GeositeHits.Refresh();
 
-                    statusText.Text = "● forest ...";
+                    statusText.Text = @"● forest ...";
                     Application.DoEvents();
                     if (PostgreSqlHelper.NonQuery("REINDEX TABLE forest;", timeout: 0) == null)
                         throw new Exception(PostgreSqlHelper.ErrorMessage);
 
-                    statusText.Text = "● forest_relation ...";
+                    statusText.Text = @"● forest_relation ...";
                     Application.DoEvents();
                     if (PostgreSqlHelper.NonQuery("REINDEX TABLE forest_relation;", timeout: 0) == null)
                         throw new Exception(PostgreSqlHelper.ErrorMessage);
 
-                    statusText.Text = "● tree ...";
+                    statusText.Text = @"● tree ...";
                     Application.DoEvents();
                     if (PostgreSqlHelper.NonQuery("REINDEX TABLE tree;", timeout: 0) == null)
                         throw new Exception(PostgreSqlHelper.ErrorMessage);
 
-                    statusText.Text = "● tree_relation ...";
+                    statusText.Text = @"● tree_relation ...";
                     Application.DoEvents();
                     if (PostgreSqlHelper.NonQuery("REINDEX TABLE tree_relation;", timeout: 0) == null)
                         throw new Exception(PostgreSqlHelper.ErrorMessage);
 
-                    statusText.Text = "● branch ...";
+                    statusText.Text = @"● branch ...";
                     Application.DoEvents();
                     if (PostgreSqlHelper.NonQuery("REINDEX TABLE branch;", timeout: 0) == null)
                         throw new Exception(PostgreSqlHelper.ErrorMessage);
 
-                    statusText.Text = "● branch_relation ...";
+                    statusText.Text = @"● branch_relation ...";
                     Application.DoEvents();
                     if (PostgreSqlHelper.NonQuery("REINDEX TABLE branch_relation;", timeout: 0) == null)
                         throw new Exception(PostgreSqlHelper.ErrorMessage);
 
-                    statusText.Text = "● leaf ...";
+                    statusText.Text = @"● leaf ...";
                     Application.DoEvents();
                     if (PostgreSqlHelper.NonQuery("REINDEX TABLE leaf;", timeout: 0) == null)
                         throw new Exception(PostgreSqlHelper.ErrorMessage);
 
-                    statusText.Text = "● leaf_relation ...";
+                    statusText.Text = @"● leaf_relation ...";
                     Application.DoEvents();
                     if (PostgreSqlHelper.NonQuery("REINDEX TABLE leaf_relation;", timeout: 0) == null)
                         throw new Exception(PostgreSqlHelper.ErrorMessage);
 
-                    statusText.Text = "● leaf_route ...";
+                    statusText.Text = @"● leaf_route ...";
                     Application.DoEvents();
                     if (PostgreSqlHelper.NonQuery("REINDEX TABLE leaf_route;", timeout: 0) == null)
                         throw new Exception(PostgreSqlHelper.ErrorMessage);
 
-                    statusText.Text = "● leaf_property ...";
+                    statusText.Text = @"● leaf_property ...";
                     Application.DoEvents();
                     if (PostgreSqlHelper.NonQuery("REINDEX TABLE leaf_property;", timeout: 0) == null)
                         throw new Exception(PostgreSqlHelper.ErrorMessage);
 
-                    statusText.Text = "● leaf_style ...";
+                    statusText.Text = @"● leaf_style ...";
                     Application.DoEvents();
                     if (PostgreSqlHelper.NonQuery("REINDEX TABLE leaf_style;", timeout: 0) == null)
                         throw new Exception(PostgreSqlHelper.ErrorMessage);
 
-                    statusText.Text = "● leaf_geometry ...";
+                    statusText.Text = @"● leaf_geometry ...";
                     Application.DoEvents();
                     if (PostgreSqlHelper.NonQuery("REINDEX TABLE leaf_geometry;", timeout: 0) == null)
                         throw new Exception(PostgreSqlHelper.ErrorMessage);
 
-                    statusText.Text = "● leaf_tile ...";
+                    statusText.Text = @"● leaf_tile ...";
                     Application.DoEvents();
                     if (PostgreSqlHelper.NonQuery("REINDEX TABLE leaf_tile;", timeout: 0) == null)
                         throw new Exception(PostgreSqlHelper.ErrorMessage);
 
-                    statusText.Text = "● leaf_wms ...";
+                    statusText.Text = @"● leaf_wms ...";
                     Application.DoEvents();
                     if (PostgreSqlHelper.NonQuery("REINDEX TABLE leaf_wms;", timeout: 0) == null)
                         throw new Exception(PostgreSqlHelper.ErrorMessage);
 
-                    statusText.Text = "● leaf_age ...";
+                    statusText.Text = @"● leaf_age ...";
                     Application.DoEvents();
                     if (PostgreSqlHelper.NonQuery("REINDEX TABLE leaf_age;", timeout: 0) == null)
                         throw new Exception(PostgreSqlHelper.ErrorMessage);
 
-                    statusText.Text = "● leaf_hits ...";
+                    statusText.Text = @"● leaf_hits ...";
                     Application.DoEvents();
                     if (PostgreSqlHelper.NonQuery("REINDEX TABLE leaf_hits;", timeout: 0) == null)
                         throw new Exception(PostgreSqlHelper.ErrorMessage);
 
-                    statusText.Text = "Reindex finished";
+                    statusText.Text = @"Reindex finished";
                     Application.DoEvents();
                 }
                 catch (Exception error)
                 {
-                    statusText.Text = $"Reindex failed ({error.Message})";
+                    statusText.Text = @$"Reindex failed ({error.Message})";
                     Application.DoEvents();
                 }
                 finally
@@ -2738,88 +2805,88 @@ $func$ LANGUAGE plpgsql;"
                 {
                     ogcCard.Enabled = false;
 
-                    statusText.Text = "● forest ...";
+                    statusText.Text = @"● forest ...";
                     Application.DoEvents();
                     if (PostgreSqlHelper.NonQuery("VACUUM ANALYZE forest;", timeout: 0) == null)
                         throw new Exception(PostgreSqlHelper.ErrorMessage);
-                    statusText.Text = "● forest_relation ...";
+                    statusText.Text = @"● forest_relation ...";
                     Application.DoEvents();
                     if (PostgreSqlHelper.NonQuery("VACUUM ANALYZE forest_relation;", timeout: 0) == null)
                         throw new Exception(PostgreSqlHelper.ErrorMessage);
 
-                    statusText.Text = "● tree ...";
+                    statusText.Text = @"● tree ...";
                     Application.DoEvents();
                     if (PostgreSqlHelper.NonQuery("VACUUM ANALYZE tree;", timeout: 0) == null)
                         throw new Exception(PostgreSqlHelper.ErrorMessage);
-                    statusText.Text = "● tree_relation ...";
+                    statusText.Text = @"● tree_relation ...";
                     Application.DoEvents();
                     if (PostgreSqlHelper.NonQuery("VACUUM ANALYZE tree_relation;", timeout: 0) == null)
                         throw new Exception(PostgreSqlHelper.ErrorMessage);
 
-                    statusText.Text = "● branch ...";
+                    statusText.Text = @"● branch ...";
                     Application.DoEvents();
                     if (PostgreSqlHelper.NonQuery("VACUUM ANALYZE branch;", timeout: 0) == null)
                         throw new Exception(PostgreSqlHelper.ErrorMessage);
-                    statusText.Text = "● branch_relation ...";
+                    statusText.Text = @"● branch_relation ...";
                     Application.DoEvents();
                     if (PostgreSqlHelper.NonQuery("VACUUM ANALYZE branch_relation;", timeout: 0) == null)
                         throw new Exception(PostgreSqlHelper.ErrorMessage);
 
-                    statusText.Text = "● leaf ...";
+                    statusText.Text = @"● leaf ...";
                     Application.DoEvents();
                     if (PostgreSqlHelper.NonQuery("VACUUM ANALYZE leaf;", timeout: 0) == null)
                         throw new Exception(PostgreSqlHelper.ErrorMessage);
-                    statusText.Text = "● leaf_relation ...";
+                    statusText.Text = @"● leaf_relation ...";
                     Application.DoEvents();
                     if (PostgreSqlHelper.NonQuery("VACUUM ANALYZE leaf_relation;", timeout: 0) == null)
                         throw new Exception(PostgreSqlHelper.ErrorMessage);
 
-                    statusText.Text = "● leaf_route ...";
+                    statusText.Text = @"● leaf_route ...";
                     Application.DoEvents();
                     if (PostgreSqlHelper.NonQuery("VACUUM ANALYZE leaf_route;", timeout: 0) == null)
                         throw new Exception(PostgreSqlHelper.ErrorMessage);
 
-                    statusText.Text = "● leaf_property ...";
+                    statusText.Text = @"● leaf_property ...";
                     Application.DoEvents();
                     if (PostgreSqlHelper.NonQuery("VACUUM ANALYZE leaf_property;", timeout: 0) == null)
                         throw new Exception(PostgreSqlHelper.ErrorMessage);
 
-                    statusText.Text = "● leaf_style ...";
+                    statusText.Text = @"● leaf_style ...";
                     Application.DoEvents();
                     if (PostgreSqlHelper.NonQuery("VACUUM ANALYZE leaf_style;", timeout: 0) == null)
                         throw new Exception(PostgreSqlHelper.ErrorMessage);
 
-                    statusText.Text = "● leaf_geometry ...";
+                    statusText.Text = @"● leaf_geometry ...";
                     Application.DoEvents();
                     if (PostgreSqlHelper.NonQuery("VACUUM ANALYZE leaf_geometry;", timeout: 0) == null)
                         throw new Exception(PostgreSqlHelper.ErrorMessage);
 
-                    statusText.Text = "● leaf_tile ...";
+                    statusText.Text = @"● leaf_tile ...";
                     Application.DoEvents();
                     if (PostgreSqlHelper.NonQuery("VACUUM ANALYZE leaf_tile;", timeout: 0) == null)
                         throw new Exception(PostgreSqlHelper.ErrorMessage);
 
-                    statusText.Text = "● leaf_wms ...";
+                    statusText.Text = @"● leaf_wms ...";
                     Application.DoEvents();
                     if (PostgreSqlHelper.NonQuery("VACUUM ANALYZE leaf_wms;", timeout: 0) == null)
                         throw new Exception(PostgreSqlHelper.ErrorMessage);
 
-                    statusText.Text = "● leaf_age ...";
+                    statusText.Text = @"● leaf_age ...";
                     Application.DoEvents();
                     if (PostgreSqlHelper.NonQuery("VACUUM ANALYZE leaf_age;", timeout: 0) == null)
                         throw new Exception(PostgreSqlHelper.ErrorMessage);
 
-                    statusText.Text = "● leaf_hits ...";
+                    statusText.Text = @"● leaf_hits ...";
                     Application.DoEvents();
                     if (PostgreSqlHelper.NonQuery("VACUUM ANALYZE leaf_hits;", timeout: 0) == null)
                         throw new Exception(PostgreSqlHelper.ErrorMessage);
 
-                    statusText.Text = "Reclean finished";
+                    statusText.Text = @"Reclean finished";
                     Application.DoEvents();
                 }
                 catch (Exception error)
                 {
-                    statusText.Text = $"Reclean failed ({error.Message})";
+                    statusText.Text = @$"Reclean failed ({error.Message})";
                     Application.DoEvents();
                 }
                 finally
