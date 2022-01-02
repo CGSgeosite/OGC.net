@@ -1835,12 +1835,12 @@ namespace Geosite
                                                 var SQLstring =
                                                     "CREATE TABLE forest " +
                                                     "(" +
-                                                    "id INTEGER, name TEXT, property JSONB, timestamp INT[], status SmallInt DEFAULT 0" +
+                                                    "id BigInt, name TEXT, property JSONB, timestamp INT[], status SmallInt DEFAULT 0" +
                                                     ",CONSTRAINT forest_pkey PRIMARY KEY (id)" +
                                                     ",CONSTRAINT forest_status_constraint CHECK (status >= 0 AND status <= 7)" +
-                                                    ");" +
+                                                    ") PARTITION BY HASH (id);" +
                                                     "COMMENT ON TABLE forest IS '森林表，此表是本系统的第一张表，用于存放节点森林基本信息，每片森林（节点群）将由若干颗文档树（GeositeXml）构成';" +
-                                                    "COMMENT ON COLUMN forest.id IS '森林序号标识码（通常由注册表[register.xml]中[forest]节的先后顺序决定），充当主键（唯一性约束）且通常大于等于0，，若设为负值，便不参与后续对等，需通过额外工具进行【增删改】操作';" +
+                                                    "COMMENT ON COLUMN forest.id IS '森林序号标识码（通常由注册表[register.xml]中[forest]节的先后顺序决定，亦可通过接口函数赋值），充当主键（唯一性约束）且通常大于等于0，若设为负值，便不参与后续对等，需通过额外工具进行【增删改】操作';" +
                                                     "COMMENT ON COLUMN forest.name IS '森林简要名称';" +
                                                     "COMMENT ON COLUMN forest.property IS '森林属性描述信息，通常放置图标链接、服务文档等显式定制化信息';" +
                                                     "COMMENT ON COLUMN forest.timestamp IS '森林创建时间戳（由[年月日：yyyyMMdd,时分秒：HHmmss]二元整型数组编码构成）';" +
@@ -1860,7 +1860,14 @@ namespace Geosite
                                                  */
                                                 if (PostgreSqlHelper.NonQuery(SQLstring) != null)
                                                 {
-                                                    //PostgreSqlHelper.NonQuery("CREATE SEQUENCE forest_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 START 1 CACHE 1;");
+                                                    //暂采用CPU核数充当分区个数
+                                                    for (var i = 0; i < processorCount; i++)
+                                                    {
+                                                        SQLstring = $"CREATE TABLE forest_{i} PARTITION OF forest FOR VALUES WITH (MODULUS {processorCount}, REMAINDER {i});";
+                                                        PostgreSqlHelper.NonQuery(SQLstring);
+                                                    }
+
+                                                    //PostgreSqlHelper.NonQuery("CREATE SEQUENCE forest_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 9223372036854775807 START 1 CACHE 1;");
                                                     //PG自动对主键id创建索引：CREATE INDEX forest_id ON forest USING BTREE (id); 
                                                     //PostgreSQL为每一个唯一约束和主键约束创建一个索引来强制唯一性。因此，没有必要显式地为主键列创建一个索引
 
@@ -1876,15 +1883,23 @@ namespace Geosite
                                                         SQLstring =
                                                             "CREATE TABLE forest_relation " +
                                                             "(" +
-                                                            "forest INTEGER, action JSONB, detail XML" +
+                                                            "forest BigInt, action JSONB, detail XML" +
                                                             ",CONSTRAINT forest_relation_pkey PRIMARY KEY (forest)" +
                                                             ",CONSTRAINT forest_relation_cascade FOREIGN KEY (forest) REFERENCES forest (id) MATCH SIMPLE ON DELETE CASCADE NOT VALID" +
-                                                            ");" +
+                                                            ") PARTITION BY HASH (forest);" +
                                                             "COMMENT ON TABLE forest_relation IS '节点森林关系描述表';" +
                                                             "COMMENT ON COLUMN forest_relation.forest IS '节点森林序号标识码';" +
                                                             "COMMENT ON COLUMN forest_relation.action IS '节点森林事务活动容器';" +
                                                             "COMMENT ON COLUMN forest_relation.detail IS '节点森林关系描述容器';"; //暂不额外创建索引
                                                         PostgreSqlHelper.NonQuery(SQLstring);
+
+                                                        //暂采用CPU核数充当分区个数
+                                                        for (var i = 0; i < processorCount; i++)
+                                                        {
+                                                            SQLstring = $"CREATE TABLE forest_relation_{i} PARTITION OF forest_relation FOR VALUES WITH (MODULUS {processorCount}, REMAINDER {i});";
+                                                            PostgreSqlHelper.NonQuery(SQLstring);
+                                                        }
+
                                                         SQLstring =
                                                             "CREATE INDEX forest_relation_action_FTS ON forest_relation USING PGROONGA (action);" +
                                                             "CREATE INDEX forest_relation_action ON forest_relation USING GIN (action);";
@@ -1902,10 +1917,10 @@ namespace Geosite
                                                         SQLstring =
                                                             "CREATE TABLE tree " +
                                                             "(" +
-                                                            "forest INTEGER, sequence INTEGER, id INTEGER, name TEXT, property JSONB, uri TEXT, timestamp INT[], type INT[], status SmallInt DEFAULT 0" +
+                                                            "forest BigInt, sequence BigInt, id BigInt, name TEXT, property JSONB, uri TEXT, timestamp INT[], type INT[], status SmallInt DEFAULT 0" +
                                                             ",CONSTRAINT tree_pkey PRIMARY KEY (id)" +
                                                             ",CONSTRAINT tree_cascade FOREIGN KEY (forest) REFERENCES forest (id) MATCH SIMPLE ON DELETE CASCADE NOT VALID" +
-                                                            ");" +
+                                                            ") PARTITION BY HASH (id);" +
                                                             "COMMENT ON TABLE tree IS '树根表，此表是本系统的第二张表，用于存放某片森林（节点群）中的若干颗文档树（GeositeXML）';" +
                                                             "COMMENT ON COLUMN tree.forest IS '文档树所属节点森林标识码';" + //forest表中的id
                                                             "COMMENT ON COLUMN tree.sequence IS '文档树在节点森林中排列顺序号（由所在森林内的[GeositeXML]文档编号顺序决定）且大于等于0';" +
@@ -1933,7 +1948,14 @@ namespace Geosite
 
                                                         if (PostgreSqlHelper.NonQuery(SQLstring) != null)
                                                         {
-                                                            PostgreSqlHelper.NonQuery("CREATE SEQUENCE tree_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 START 1 CACHE 1;");
+                                                            //暂采用CPU核数充当分区个数
+                                                            for (var i = 0; i < processorCount; i++)
+                                                            {
+                                                                SQLstring = $"CREATE TABLE tree_{i} PARTITION OF tree FOR VALUES WITH (MODULUS {processorCount}, REMAINDER {i});";
+                                                                PostgreSqlHelper.NonQuery(SQLstring);
+                                                            }
+
+                                                            PostgreSqlHelper.NonQuery("CREATE SEQUENCE tree_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 9223372036854775807 START 1 CACHE 1;");
                                                             //PG自动对主键id创建索引：CREATE INDEX tree_id ON tree USING BTREE (id); 
                                                             SQLstring =
                                                                 "CREATE INDEX tree_forest_sequence ON tree USING BTREE (forest, sequence);" +
@@ -1952,15 +1974,23 @@ namespace Geosite
                                                                 SQLstring =
                                                                     "CREATE TABLE tree_relation " +
                                                                     "(" +
-                                                                    "tree INTEGER, action JSONB, detail XML" +
+                                                                    "tree BigInt, action JSONB, detail XML" +
                                                                     ",CONSTRAINT tree_relation_pkey PRIMARY KEY (tree)" +
                                                                     ",CONSTRAINT tree_relation_cascade FOREIGN KEY (tree) REFERENCES tree (id) MATCH SIMPLE ON DELETE CASCADE NOT VALID" +
-                                                                    ");" +
+                                                                    ") PARTITION BY HASH (tree);" +
                                                                     "COMMENT ON TABLE tree_relation IS '文档树关系描述表';" +
                                                                     "COMMENT ON COLUMN tree_relation.tree IS '文档树的标识码';" +
                                                                     "COMMENT ON COLUMN tree_relation.action IS '文档树事务活动容器';" +
                                                                     "COMMENT ON COLUMN tree_relation.detail IS '文档树关系描述容器';";
                                                                 PostgreSqlHelper.NonQuery(SQLstring);
+
+                                                                //暂采用CPU核数充当分区个数
+                                                                for (var i = 0; i < processorCount; i++)
+                                                                {
+                                                                    SQLstring = $"CREATE TABLE tree_relation_{i} PARTITION OF tree_relation FOR VALUES WITH (MODULUS {processorCount}, REMAINDER {i});";
+                                                                    PostgreSqlHelper.NonQuery(SQLstring);
+                                                                }
+
                                                                 SQLstring =
                                                                     "CREATE INDEX tree_relation_action_FTS ON tree_relation USING PGROONGA (action);" +
                                                                     "CREATE INDEX tree_relation_action ON tree_relation USING GIN (action);";
@@ -1979,10 +2009,10 @@ namespace Geosite
                                                                 SQLstring =
                                                                     "CREATE TABLE branch " +
                                                                     "(" +
-                                                                    "tree INTEGER, level SmallInt, name TEXT, property JSONB, id INTEGER, parent INTEGER DEFAULT 0" +
+                                                                    "tree BigInt, level SmallInt, name TEXT, property JSONB, id BigInt, parent BigInt DEFAULT 0" +
                                                                     ",CONSTRAINT branch_pkey PRIMARY KEY (id)" +
                                                                     ",CONSTRAINT branch_cascade FOREIGN KEY (tree) REFERENCES tree (id) MATCH SIMPLE ON DELETE CASCADE NOT VALID" +
-                                                                    ");" +
+                                                                    ") PARTITION BY HASH (id);" +
                                                                     "COMMENT ON TABLE branch IS '枝干谱系表，此表是本系统第三张表，用于存放某棵树（GeositeXml文档）的枝干体系';" +
                                                                     "COMMENT ON COLUMN branch.tree IS '枝干隶属文档树的标识码';" + //forest表中的id字段
                                                                     "COMMENT ON COLUMN branch.level IS '枝干所处分类级别：1是树干、2是树枝、3是树杈、...、n是树梢';" +
@@ -1993,7 +2023,14 @@ namespace Geosite
 
                                                                 if (PostgreSqlHelper.NonQuery(SQLstring) != null)
                                                                 {
-                                                                    PostgreSqlHelper.NonQuery("CREATE SEQUENCE branch_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 START 1 CACHE 1;");
+                                                                    //暂采用CPU核数充当分区个数
+                                                                    for (var i = 0; i < processorCount; i++)
+                                                                    {
+                                                                        SQLstring = $"CREATE TABLE branch_{i} PARTITION OF branch FOR VALUES WITH (MODULUS {processorCount}, REMAINDER {i});";
+                                                                        PostgreSqlHelper.NonQuery(SQLstring);
+                                                                    }
+
+                                                                    PostgreSqlHelper.NonQuery("CREATE SEQUENCE branch_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 9223372036854775807 START 1 CACHE 1;");
 
                                                                     //PG自动对主键id创建索引：CREATE INDEX branch_id ON branch USING btree (id);  
                                                                     SQLstring =
@@ -2009,15 +2046,23 @@ namespace Geosite
                                                                         SQLstring =
                                                                             "CREATE TABLE branch_relation " +
                                                                             "(" +
-                                                                            "branch INTEGER, action JSONB, detail XML" +
+                                                                            "branch BigInt, action JSONB, detail XML" +
                                                                             ",CONSTRAINT branch_relation_pkey PRIMARY KEY (branch)" +
                                                                             ",CONSTRAINT branch_relation_cascade FOREIGN KEY (branch) REFERENCES branch (id) MATCH SIMPLE ON DELETE CASCADE NOT VALID" +
-                                                                            ");" +
+                                                                            ") PARTITION BY HASH (branch);" +
                                                                             "COMMENT ON TABLE branch_relation IS '枝干关系描述表';" +
                                                                             "COMMENT ON COLUMN branch_relation.branch IS '枝干标识码';" +
                                                                             "COMMENT ON COLUMN branch_relation.action IS '枝干事务活动容器';" +
                                                                             "COMMENT ON COLUMN branch_relation.detail IS '枝干关系描述容器';";
                                                                         PostgreSqlHelper.NonQuery(SQLstring);
+
+                                                                        //暂采用CPU核数充当分区个数
+                                                                        for (var i = 0; i < processorCount; i++)
+                                                                        {
+                                                                            SQLstring = $"CREATE TABLE branch_relation_{i} PARTITION OF branch_relation FOR VALUES WITH (MODULUS {processorCount}, REMAINDER {i});";
+                                                                            PostgreSqlHelper.NonQuery(SQLstring);
+                                                                        }
+
                                                                         SQLstring =
                                                                             "CREATE INDEX branch_relation_action_FTS ON branch_relation USING PGROONGA (action);" +
                                                                             "CREATE INDEX branch_relation_action ON branch_relation USING GIN (action);";
@@ -2036,7 +2081,7 @@ namespace Geosite
                                                                         SQLstring =
                                                                             "CREATE TABLE leaf " +
                                                                             "(" +
-                                                                            "branch INTEGER, id BigInt, rank SmallInt DEFAULT 1, type INT DEFAULT 0, name TEXT, property XML, timestamp INT[], frequency BigInt DEFAULT 0" +
+                                                                            "branch BigInt, id BigInt, rank SmallInt DEFAULT 1, type INT DEFAULT 0, name TEXT, property XML, timestamp INT[], frequency BigInt DEFAULT 0" +
                                                                             ",CONSTRAINT leaf_pkey PRIMARY KEY (id)" +
                                                                             ",CONSTRAINT leaf_cascade FOREIGN KEY (branch) REFERENCES branch (id) MATCH SIMPLE ON DELETE CASCADE NOT VALID" +
                                                                             ") PARTITION BY HASH (id);" + //为应对大数据，特按哈希键进行了分区，以便提升查询性能
@@ -2147,7 +2192,7 @@ namespace Geosite
                                                                                 SQLstring =
                                                                                     "CREATE TABLE leaf_route " +
                                                                                     "(" +
-                                                                                    "leaf BigInt, level SmallInt, branch INTEGER" +
+                                                                                    "leaf BigInt, level SmallInt, branch BigInt" +
                                                                                     ",CONSTRAINT leaf_route_pkey PRIMARY KEY (leaf, level, branch)" +
                                                                                     ",CONSTRAINT leaf_route_cascade FOREIGN KEY (leaf) REFERENCES leaf (id) MATCH SIMPLE ON DELETE CASCADE NOT VALID" +
                                                                                     ") PARTITION BY HASH (leaf, level, branch);" + //为应对大数据，特按哈希键进行了分区，以便提升查询性能
@@ -2428,15 +2473,14 @@ namespace Geosite
                                                                                                                                             //特别注意：PostgreSQL约束条件中若有单引号，需用2个连续单引号替换！
                                                                                                                                             const string countEstimate = "count_estimate";
                                                                                                                                             int.TryParse(
-                                                                                                                                                $"{PostgreSqlHelper.Scalar($"SELECT 1 FROM pg_proc WHERE proname = '{countEstimate}';")}",
+                                                                                                                                                $"{PostgreSqlHelper.Scalar($"SELECT count(*) FROM pg_proc WHERE proname = '{countEstimate}';")}",
                                                                                                                                                 out var countEstimateExist);
-                                                                                                                                            if (countEstimateExist != 1)
-                                                                                                                                            {
+                                                                                                                                            if (countEstimateExist == 0)
                                                                                                                                                 //count_estimate函数用法：SELECT count_estimate('SELECT * FROM 表名 WHERE 约束条件'); 
                                                                                                                                                 PostgreSqlHelper
                                                                                                                                                     .NonQuery
                                                                                                                                                     (
-                                                                                                                                                        $@"CREATE OR REPLACE FUNCTION {countEstimate}(query text)" +
+                                                                                                                                                        $@"CREATE OR REPLACE FUNCTION public.{countEstimate}(query text)" +
                                                                                                                                                         "  RETURNS integer" +
                                                                                                                                                         "  LANGUAGE plpgsql AS" +
                                                                                                                                                         "  $func$" +
@@ -2452,7 +2496,6 @@ namespace Geosite
                                                                                                                                                         "  END" +
                                                                                                                                                         "  $func$;"
                                                                                                                                                     );
-                                                                                                                                            }
 
                                                                                                                                             /* 扩展聚合函数类，为【GROUP BY】提供首部和尾部成员
                                                                                                                                             CREATE OR REPLACE FUNCTION public.first_agg (anyelement, anyelement)
@@ -2483,42 +2526,40 @@ namespace Geosite
                                                                                                                                                 ORDER BY first(total);
                                                                                                                                              */
                                                                                                                                             int.TryParse(
-                                                                                                                                                $"{PostgreSqlHelper.Scalar("SELECT 1 FROM pg_proc WHERE proname = 'first_agg' OR proname = 'first';")}",
+                                                                                                                                                $"{PostgreSqlHelper.Scalar("SELECT count(*) FROM pg_proc WHERE proname = 'first_agg' OR proname = 'first';")}",
                                                                                                                                                 out var firstAggregateExist);
-                                                                                                                                            if (firstAggregateExist != 1)
-                                                                                                                                            {
-                                                                                                                                                PostgreSqlHelper.NonQuery
-                                                                                                                                                   (
-                                                                                                                                                       "CREATE OR REPLACE FUNCTION public.first_agg (anyelement, anyelement)" +
-                                                                                                                                                       "  RETURNS anyelement" +
-                                                                                                                                                       "  LANGUAGE sql IMMUTABLE STRICT PARALLEL SAFE AS" +
-                                                                                                                                                       "  'SELECT $1';" +
-                                                                                                                                                       "  CREATE OR REPLACE AGGREGATE public.first (anyelement) (" +
-                                                                                                                                                       "    SFUNC = public.first_agg" +
-                                                                                                                                                       "    , STYPE = anyelement" +
-                                                                                                                                                       "    , PARALLEL = safe" +
-                                                                                                                                                       "    );" 
-                                                                                                                                                   );
-                                                                                                                                            }
+                                                                                                                                            if (firstAggregateExist != 2)
+                                                                                                                                                PostgreSqlHelper
+                                                                                                                                                    .NonQuery
+                                                                                                                                                    (
+                                                                                                                                                        "CREATE OR REPLACE FUNCTION public.first_agg (anyelement, anyelement)" +
+                                                                                                                                                        "  RETURNS anyelement" +
+                                                                                                                                                        "  LANGUAGE sql IMMUTABLE STRICT PARALLEL SAFE AS" +
+                                                                                                                                                        "  'SELECT $1';" +
+                                                                                                                                                        "  CREATE OR REPLACE AGGREGATE public.first (anyelement) (" +
+                                                                                                                                                        "    SFUNC = public.first_agg" +
+                                                                                                                                                        "    , STYPE = anyelement" +
+                                                                                                                                                        "    , PARALLEL = safe" +
+                                                                                                                                                        "    );"
+                                                                                                                                                    );
 
                                                                                                                                             int.TryParse(
-                                                                                                                                                $"{PostgreSqlHelper.Scalar("SELECT 1 FROM pg_proc WHERE proname = 'last_agg' OR proname = 'last';")}",
+                                                                                                                                                $"{PostgreSqlHelper.Scalar("SELECT count(*) FROM pg_proc WHERE proname = 'last_agg' OR proname = 'last';")}",
                                                                                                                                                 out var lastAggregateExist);
-                                                                                                                                            if (lastAggregateExist != 1)
-                                                                                                                                            {
-                                                                                                                                                PostgreSqlHelper.NonQuery
-                                                                                                                                                   (
-                                                                                                                                                       "CREATE OR REPLACE FUNCTION public.last_agg (anyelement, anyelement)" +
-                                                                                                                                                       "  RETURNS anyelement" +
-                                                                                                                                                       "  LANGUAGE sql IMMUTABLE STRICT PARALLEL SAFE AS" +
-                                                                                                                                                       "  'SELECT $2';" +
-                                                                                                                                                       "  CREATE OR REPLACE AGGREGATE public.last (anyelement) (" +
-                                                                                                                                                       "    SFUNC = public.last_agg" +
-                                                                                                                                                       "    , STYPE = anyelement" +
-                                                                                                                                                       "    , PARALLEL = safe" +
-                                                                                                                                                       "    );"
-                                                                                                                                                   );
-                                                                                                                                            }
+                                                                                                                                            if (lastAggregateExist != 2)
+                                                                                                                                                PostgreSqlHelper
+                                                                                                                                                    .NonQuery
+                                                                                                                                                    (
+                                                                                                                                                        "CREATE OR REPLACE FUNCTION public.last_agg (anyelement, anyelement)" +
+                                                                                                                                                        "  RETURNS anyelement" +
+                                                                                                                                                        "  LANGUAGE sql IMMUTABLE STRICT PARALLEL SAFE AS" +
+                                                                                                                                                        "  'SELECT $2';" +
+                                                                                                                                                        "  CREATE OR REPLACE AGGREGATE public.last (anyelement) (" +
+                                                                                                                                                        "    SFUNC = public.last_agg" +
+                                                                                                                                                        "    , STYPE = anyelement" +
+                                                                                                                                                        "    , PARALLEL = safe" +
+                                                                                                                                                        "    );"
+                                                                                                                                                    );
 
                                                                                                                                             ClusterUser.status = true;
                                                                                                                                         }
