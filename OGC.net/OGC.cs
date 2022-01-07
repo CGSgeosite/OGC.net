@@ -2540,7 +2540,7 @@ namespace Geosite
                                                                                                                                                         "    SFUNC = public.first_agg" +
                                                                                                                                                         "    , STYPE = anyelement" +
                                                                                                                                                         "    , PARALLEL = safe" +
-                                                                                                                                                        "    );"
+                                                                                                                                                        "  );"
                                                                                                                                                     );
 
                                                                                                                                             int.TryParse(
@@ -2558,7 +2558,7 @@ namespace Geosite
                                                                                                                                                         "    SFUNC = public.last_agg" +
                                                                                                                                                         "    , STYPE = anyelement" +
                                                                                                                                                         "    , PARALLEL = safe" +
-                                                                                                                                                        "    );"
+                                                                                                                                                        "  );"
                                                                                                                                                     );
 
                                                                                                                                             ClusterUser.status = true;
