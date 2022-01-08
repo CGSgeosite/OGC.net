@@ -2498,29 +2498,7 @@ namespace Geosite
                                                                                                                                                     );
 
                                                                                                                                             /* 扩展聚合函数类，为【GROUP BY】提供首部和尾部成员
-                                                                                                                                            CREATE OR REPLACE FUNCTION public.first_agg (anyelement, anyelement)
-                                                                                                                                              RETURNS anyelement
-                                                                                                                                              LANGUAGE sql IMMUTABLE STRICT PARALLEL SAFE AS
-                                                                                                                                            'SELECT $1';
-
-                                                                                                                                            CREATE AGGREGATE public.first (anyelement) (
-                                                                                                                                              SFUNC    = public.first_agg
-                                                                                                                                            , STYPE    = anyelement
-                                                                                                                                            , PARALLEL = safe
-                                                                                                                                            );
-
-                                                                                                                                            CREATE OR REPLACE FUNCTION public.last_agg (anyelement, anyelement)
-                                                                                                                                              RETURNS anyelement
-                                                                                                                                              LANGUAGE sql IMMUTABLE STRICT PARALLEL SAFE AS
-                                                                                                                                            'SELECT $2';
-
-                                                                                                                                            CREATE AGGREGATE public.last (anyelement) (
-                                                                                                                                              SFUNC    = public.last_agg
-                                                                                                                                            , STYPE    = anyelement
-                                                                                                                                            , PARALLEL = safe
-                                                                                                                                            );
-
-                                                                                                                                            例如：
+                                                                                                                                                例如：
                                                                                                                                                 SELECT first(id order by id), customer, first(total order by id) FROM purchases 
                                                                                                                                                 GROUP BY customer 
                                                                                                                                                 ORDER BY first(total);
