@@ -7,20 +7,20 @@ namespace Geosite
 {
     public partial class MetaData : Form
     {
-        public bool OK;
+        public bool Ok;
         public XElement MetaDataX;
         public bool DonotPrompt;
         
 
-        public MetaData(string MetaDataString = null)
+        public MetaData(string metaDataString = null)
         {
             InitializeComponent();
-            themeMetadata.Text = MetaDataString ?? "";
+            themeMetadata.Text = metaDataString ?? "";
         }
 
         private void OKbutton_Click(object sender, EventArgs e)
         {
-            string Error = null;
+            string error = null;
             var themeMetadataText = themeMetadata.Text;
             if (themeMetadataText.Length > 0)
             {
@@ -30,21 +30,19 @@ namespace Geosite
                 }
                 catch(Exception xmlError)
                 {
-                    Error = xmlError.Message;
+                    error = xmlError.Message;
                     try
                     {
-                        var X = JsonConvert
-                            .DeserializeXNode(themeMetadataText, "property")
-                            ?.ToString();
-                        if (X != null)
+                        var x = JsonConvert.DeserializeXNode(themeMetadataText, "property")?.ToString();
+                        if (x != null)
                         {
-                            MetaDataX = XElement.Parse(X);
-                            Error = null;
+                            MetaDataX = XElement.Parse(x);
+                            error = null;
                         }
                     }
                     catch (Exception jsonError)
                     {
-                        Error = jsonError.Message;
+                        error = jsonError.Message;
                     }
                 }
                 if (MetaDataX != null)
@@ -56,14 +54,14 @@ namespace Geosite
             else 
                 MetaDataX = null;
 
-            if (Error == null)
+            if (error == null)
             {
-                OK = true;
+                Ok = true;
                 Close();
             }
             else
             {
-                Info.Text = Error;
+                Info.Text = error;
                 MetaDataX = null;
             }
         }

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Geosite.GeositeServer.PostgreSQL;
 
@@ -48,9 +50,9 @@ namespace Geosite
             Reset();
         }
 
-        public void Reset()
+        public async void Reset()
         {
-            var treeCount = PostgreSqlHelper.Scalar(
+            var treeCount = await PostgreSqlHelper.ScalarAsync(
                 "SELECT COUNT(*) FROM tree WHERE forest = @forest;",
                 new Dictionary<string, object>
                 {
@@ -59,11 +61,11 @@ namespace Geosite
             );
 
             int.TryParse($"{treeCount}", out _totel);
-            
-            Show(_page);
+
+            await Show(_page);
         }
 
-        private void Show(int page = 0)
+        private async Task Show(int page = 0)
         {
             _page = page;
 
@@ -95,7 +97,7 @@ namespace Geosite
                 )
             );
             var offset = _page * _limit;
-            var trees = PostgreSqlHelper.XElementReader(
+            var trees = await PostgreSqlHelper.XElementReaderAsync(
                 "SELECT id, name, uri, timestamp, type, status FROM tree WHERE forest = @forest ORDER BY timestamp[3] DESC, timestamp[4] DESC OFFSET @offset LIMIT @limit;",
                 new Dictionary<string, object>
                 {
@@ -109,22 +111,17 @@ namespace Geosite
                 var rows = trees.Elements("row");
                 /*
                 <table>
-                  <row>
-                    <id>1</id>
-                    <name>bound_l_www_1</name>
-                    <uri>http://172.29.240.1/0.xml</uri>
-                    <timestamp>0,0,20210714,41031</timestamp>
-                    <type>2</type>
-                    <status>1</status>
-                  </row>
-                  <row>
-                    <id>2</id>
-                    <name>res_P_1</name>
-                    <uri>http://172.29.240.1/1.xml</uri>
-                    <timestamp>0,1,20210714,41201</timestamp>
-                    <type>1</type>
-                    <status>1</status>
-                  </row>
+                    <row>
+                        <id>4</id>
+                        <name>googlemap</name>
+                        <uri>D:\test\googlemap</uri>
+                        <timestamp>-1</timestamp>
+                        <timestamp>3</timestamp>
+                        <timestamp>20211030</timestamp>
+                        <timestamp>143819</timestamp>
+                        <type>11002</type>
+                        <status>5</status>
+                    </row>
                 </table>                 
                  */
 
@@ -133,7 +130,7 @@ namespace Geosite
                     var id = row.Element("id")?.Value;
                     var name = row.Element("name")?.Value.Trim(); 
                     var uri = row.Element("uri")?.Value;
-                    var timestamp = row.Element("timestamp")?.Value;
+                    var timestamp = string.Join(",", row.Elements("timestamp").Select(x => x.Value).ToArray());
                     var type = row.Element("type")?.Value ?? "1";
                     var status = row.Element("status")?.Value;
                     // id：
@@ -292,30 +289,30 @@ namespace Geosite
             }
         }
 
-        public void First()
+        public async void First()
         {
             if (_page != 0)
-                Show();
+                await Show();
         }
 
-        public void Previous()
+        public async void Previous()
         {
             if (_page > 0)
-                Show(_page - 1);
+                await Show(_page - 1);
         }
 
-        public void Next()
+        public async void Next()
         {
             var pages = (int)Math.Ceiling(1.0 * _totel / _limit);
             if (_page < pages - 1)
-                Show(_page + 1);
+                await Show(_page + 1);
         }
 
-        public void Last()
+        public async void Last()
         {
             var pages = (int)Math.Ceiling(1.0 * _totel / _limit);
             if (_page != pages - 1)
-                Show(pages - 1);
+                await Show(pages - 1);
         }
     }
 }

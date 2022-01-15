@@ -2,31 +2,31 @@
 using System.Diagnostics;
 using System.IO;
 
-namespace geosite
+namespace Geosite
 {
     static class RegEdit
     {
         static string _registerKeyName;
 
-        private static string registerkey =>
+        private static string Registerkey =>
             _registerKeyName ??= Path.GetFileNameWithoutExtension(Process.GetCurrentProcess().MainModule?.FileName);
 
-        public static string getkey(string keyname, string defaultvalue = "")
+        public static string Getkey(string keyname, string defaultvalue = "")
         {
-            using var oldRegistryKey = Registry.CurrentUser.OpenSubKey(registerkey, false);
+            using var oldRegistryKey = Registry.CurrentUser.OpenSubKey(Registerkey, false);
             return oldRegistryKey?.GetValue(keyname, defaultvalue).ToString();
         }
 
-        public static void setkey(string keyname, string defaultvalue = "")
+        public static void Setkey(string keyname, string defaultvalue = "")
         {
-            using var oldRegistryKey = Registry.CurrentUser.OpenSubKey(registerkey, true);
+            using var oldRegistryKey = Registry.CurrentUser.OpenSubKey(Registerkey, true);
             if (oldRegistryKey != null)
             {
                 oldRegistryKey.SetValue(keyname, defaultvalue);
             }
             else
             {
-                using RegistryKey newRegistryKey = Registry.CurrentUser.CreateSubKey(registerkey);
+                using var newRegistryKey = Registry.CurrentUser.CreateSubKey(Registerkey);
                 newRegistryKey?.SetValue(keyname, defaultvalue);
             }
         }
