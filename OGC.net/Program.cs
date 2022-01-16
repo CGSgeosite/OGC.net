@@ -34,17 +34,14 @@ namespace Geosite
             {
                 //Attach to Console
                 AttachConsole(-1);
-
-                //bool PostgreSqlConnection; //PostgreSql数据库是否处于连接状态？
-                //(bool status, int forest, string name) ClusterUser; //GeositeServer集群用户信息，其中 name 将充当森林名称
-
+                
                 var applicationName = Assembly.GetExecutingAssembly().GetName().Name;
                 (int Left, int Top)? cursorPosition = null;
 
                 var title =
-                    $@" {applicationName} for {RuntimeInformation.OSDescription} / {RuntimeInformation.ProcessArchitecture} "; // /{RuntimeInformation.FrameworkDescription} 
+                    $@"{applicationName} for {RuntimeInformation.OSDescription} / {RuntimeInformation.ProcessArchitecture} "; // /{RuntimeInformation.FrameworkDescription} 
                 var copyright =
-                    @" Copyright (C) Geosite Development Team of CGS (R)";
+                    ((AssemblyCopyrightAttribute)Assembly.GetExecutingAssembly().GetCustomAttribute(typeof(AssemblyCopyrightAttribute))!).Copyright;
 
                 var splitLine = new string('*', Math.Max(title.Length, copyright.Length));
 

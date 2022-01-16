@@ -40,6 +40,8 @@ namespace Geosite
 
         public OGCform()
         {
+            Opacity = 0;
+
             InitializeComponent();
             InitializeBackgroundWorker();
 
@@ -54,11 +56,7 @@ namespace Geosite
         {
             //-----test----
 
-
-
             //-------------
-
-            this.Opacity = 0;
 
             //窗口标题-----
             Text = Copyright.TitleAttribute + @" V" + Copyright.VersionAttribute;
@@ -204,8 +202,6 @@ namespace Geosite
             tilesource_SelectedIndexChanged(null, null);
 
             _loading = new LoadingBar(waitingBar);
-
-            this.Refresh();
 
             //窗体淡入
             var fadeIn = new Timer
@@ -2687,7 +2683,8 @@ namespace Geosite
                 (x) =>
                 {
                     var resultMessage = task.EndInvoke(x);
-                    this.Invoke(
+                    //this.
+                        Invoke(
                         new Action(
                             () =>
                             {
@@ -3042,7 +3039,8 @@ namespace Geosite
                     (x) =>
                     {
                         var result = task.EndInvoke(x);
-                        this.Invoke(
+                        //this.
+                            Invoke(
                             new Action(
                                 () =>
                                 {
@@ -3101,7 +3099,8 @@ namespace Geosite
                 _loading.Run();
                 // $"{id}\b{timestamp}\b{status}"
                 var tree = Regex.Split(((DataGridView)sender).Rows[rowIndex].Cells[1].ToolTipText, @"[\b]", RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace | RegexOptions.Singleline | RegexOptions.Multiline)[0];
-                this.Invoke(new Action(
+                //this.
+                    Invoke(new Action(
                         () =>
                         {
                             statusText.Text = @"Layers - [ " + (string)PostgreSqlHelper.Scalar(
@@ -3359,7 +3358,8 @@ namespace Geosite
                 var path = $"{row.Cells[1].Value}";
                 var statusCell = row.Cells[2];
 
-                this.Invoke(
+                //this.
+                    Invoke(
                     new Action(
                         () =>
                         {
@@ -6448,7 +6448,8 @@ namespace Geosite
                             (x) =>
                             {
                                 var success = task.EndInvoke(x);
-                                this.Invoke(
+                                //this.
+                                    Invoke(
                                     new Action(
                                         () =>
                                         {
@@ -7301,7 +7302,6 @@ namespace Geosite
                                 var fileInfo = new FileInfo(rasterSourceFileArray[pointer]);
                                 treeUri = fileInfo.FullName;
                                 treeLastWriteTime = fileInfo.LastWriteTime;
-                                //
                                 themeMetadataX = GeositeTilePush.GetRasterMetaData(treeUri, rasterTileSize.Text);
                                 break;
                             default:

@@ -10358,24 +10358,24 @@ public struct PostgreSqlSetting
 public static (bool Success, string Message, short flag) Connection();
 
 /// &lt;summary&gt;
-/// 执行非查询语句
+/// 执行非查询语句（适宜于 insert、delete 和 update 或数据库创建语句等操作）
 /// &lt;/summary&gt;
-/// &lt;param name="cmd"&gt;查询语句，若cmd为空，则仅尝试打开数据库，若成功就返回0，否则返回null。若返回值是null的话，存在两种情况：1是webconfig中未正确设置服务器；2是服务器或数据库无法连接&lt;/param&gt;
+/// &lt;param name="cmd"&gt;查询语句，若cmd为空时仅尝试打开数据库（成功时返回0）&lt;/param&gt;
 /// &lt;param name="parameters"&gt;字段参数字典&lt;/param&gt;
 /// &lt;param name="pooling"&gt;是否开启池化连接，省略或默认值为true。在 linux 环境下动态创建数据库（create database）时，必须将 pooling 明确指定为 false（因为默认值为true），也就是说不能池化，以便使连接被关闭时立即生效！&lt;/param&gt;
 /// &lt;param name="postgres"&gt;是否直连【PostgreSQL数据库管理系统】（创建或删除数据库时必须设为真!），省略或默认值为false（仅操作已指定的当前数据库）&lt;/param&gt;
 /// &lt;param name="transaction"&gt;是否开启事务&lt;/param&gt;
 /// &lt;param name="timeout"&gt;尝试执行命令时需要等待的时间（秒值，默认30秒）&lt;/param&gt;
-/// &lt;returns&gt;针对insert、delete 和 update 操作，返回受影响的记录数；&lt;/returns&gt;
+/// &lt;returns&gt;返回受影响的记录数。失败时返回【null】；创建数据库成功时返回【-1】&lt;/returns&gt;
 public static int? NonQuery();
 
 /// &lt;summary&gt;
-/// 异步执行非查询语句
+/// 异步执行非查询语句（适宜于 insert、delete 和 update 或数据库创建语句等操作）
 /// &lt;/summary&gt;
 public static async Task&lt;int?&gt; NonQueryAsync();
 		
 /// &lt;summary&gt;
-/// 执行标量查询语句
+/// 执行标量查询语句（适宜于 select 单值操作）
 /// &lt;/summary&gt;
 /// &lt;param name="cmd"&gt;查询语句&lt;/param&gt;
 /// &lt;param name="parameters"&gt;字段参数字典&lt;/param&gt;
@@ -10387,12 +10387,12 @@ public static async Task&lt;int?&gt; NonQueryAsync();
 public static object Scalar();
 
 /// &lt;summary&gt;
-/// 异步执行标量查询语句
+/// 异步执行标量查询语句（适宜于 select 单值操作）
 /// &lt;/summary&gt;
 public static async Task&lt;object&gt; ScalarAsync();
 		
 /// &lt;summary&gt;
-/// 执行查询语句，返回可枚举的Dictionary&lt;string, object&gt;对象序列
+/// 执行查询语句（适宜于 select 多值操作），返回可枚举的单条记录字典（Dictionary&amp;lt;string, (object value, Type type, string dataType)&amp;gt;）类型对象序列
 /// &lt;/summary&gt;
 /// &lt;param name="cmd"&gt;查询语句&lt;/param&gt;
 /// &lt;param name="parameters"&gt;字段参数字典&lt;/param&gt;
@@ -10400,16 +10400,16 @@ public static async Task&lt;object&gt; ScalarAsync();
 /// &lt;param name="postgres"&gt;是否直连【PostgreSQL数据库管理系统】（创建或删除数据库时必须设为真!），省略或默认值为false（仅操作已指定的当前数据库）&lt;/param&gt;
 /// &lt;param name="transaction"&gt;是否开启事务&lt;/param&gt;
 /// &lt;param name="timeout"&gt;尝试执行命令时需要等待的时间（秒值，默认30秒）&lt;/param&gt;
-/// &lt;returns&gt;&lt;/returns&gt;
+/// &lt;returns&gt;可枚举的单条记录字典，若失败便返回null。字典键名是字段名，字典值是三元组对象（第一个是数值对象，第二个是C#类型，第三个是PostgreSQL数据类型名）&lt;/returns&gt;
 public static IEnumerable&lt;Dictionary&lt;string, object&gt;&gt; DictionaryReader();
 
 /// &lt;summary&gt;
-/// 异步执行查询语句，返回可枚举的Dictionary&lt;string, object&gt;对象序列
+/// 异步执行查询语句（适宜于 select 多值操作），返回可枚举的单条记录字典（Dictionary&amp;lt;string, (object value, Type type, string dataType)&amp;gt;）类型对象序列
 /// &lt;/summary&gt;
 public static async IAsyncEnumerable&lt;Dictionary&lt;string, object&gt;&gt; DictionaryReaderAsync();
 		
 /// &lt;summary&gt;
-/// 执行查询语句，返回DataTable格式对象
+/// 执行查询语句（适宜于 select 多值操作），返回二维表（DataTable）类型对象
 /// &lt;/summary&gt;
 /// &lt;param name="cmd"&gt;查询语句&lt;/param&gt;
 /// &lt;param name="parameters"&gt;字段参数字典&lt;/param&gt;
@@ -10421,12 +10421,12 @@ public static async IAsyncEnumerable&lt;Dictionary&lt;string, object&gt;&gt; Dic
 public static DataTable DataTableReader();
 
 /// &lt;summary&gt;
-/// 异步执行查询语句，返回DataTable格式对象
+/// 异步执行查询语句（适宜于 select 多值操作），返回二维表（DataTable）类型对象
 /// &lt;/summary&gt;
 public static async Task&lt;DataTable&gt; DataTableReaderAsync();
 		
 /// &lt;summary&gt;
-/// 执行查询语句，返回xml格式对象
+/// 执行查询语句（适宜于 select 多值操作），返回XElement类型对象（注：因涉及xml格式识别与转换而导致运行效率略低）
 /// &lt;/summary&gt;
 /// &lt;param name="cmd"&gt;查询语句&lt;/param&gt;
 /// &lt;param name="parameters"&gt;字段参数字典&lt;/param&gt;
@@ -10436,11 +10436,11 @@ public static async Task&lt;DataTable&gt; DataTableReaderAsync();
 /// &lt;param name="timeout"&gt;尝试执行命令时需要等待的时间（秒值，默认30秒）&lt;/param&gt;
 /// &lt;param name="XElementRootName"&gt;返回XElement格式对象的根标签名称，默认：【table】&lt;/param&gt;
 /// &lt;param name="XElementNodeName"&gt;返回XElement格式对象的节点标签名称，默认：【row】&lt;/param&gt;
-/// &lt;returns&gt;返回XElement格式对象。如果某字段内容符合json格式便将其转换为xml&lt;/returns&gt;
+/// &lt;returns&gt;XElement类型对象（包括字段名和字段值，不携带字段类型信息！如果某字段内容符合json格式便将其转换为xml）&lt;/returns&gt;
 public static XElement XElementReader();
 
 /// &lt;summary&gt;
-/// 异步执行查询语句，返回xml格式对象
+/// 异步执行查询语句（适宜于 select 多值操作），返回XElement类型对象（注：因涉及xml格式识别与转换而导致运行效率略低）
 /// &lt;/summary&gt;
 public static async Task&lt;XElement&gt; XElementReaderAsync();
 		
