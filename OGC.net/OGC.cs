@@ -3388,8 +3388,6 @@ namespace Geosite
             1		1		1		指定值7：持久化数据（不参与后续对等）	暗数据		正常
             */
             var status = (short)(PostgresLight.Checked ? 4 : 6);
-            var forestChanged = false; // 记录数据库森林结构是否发生变更，以便刷新界面  
-
             string statusInfo = null;
 
             foreach (var row in vectorFilePool.SelectedRows.Cast<DataGridViewRow>().Where(row => !row.IsNewRow).OrderBy(row => row.Index)) //vectorFilePool.Rows
@@ -3552,9 +3550,6 @@ namespace Geosite
                                                 if (string.IsNullOrWhiteSpace(treePath))
                                                     treePath = "Untitled";
                                                 var treeNameArray = Regex.Split(treePath, @"[\/\\\|]+");
-
-                                                forestChanged = true;
-
                                                 var treeId = treeResult.Id;
                                                 //此时，文档树所容纳的叶子类型type默认值：0
                                                 var treeType = new List<int>();
@@ -4045,8 +4040,6 @@ namespace Geosite
                                             );
                                         if (treeResult.Success)
                                         {
-                                            forestChanged = true; 
-
                                             var treeId = treeResult.Id;
                                             //此时，文档树所容纳的叶子类型type默认值：0
                                             var treeType = new List<int>();
@@ -4501,8 +4494,6 @@ namespace Geosite
                                                     );
                                                 if (treeResult.Success)
                                                 {
-                                                    forestChanged = true; 
-
                                                     var treeId = treeResult.Id;
                                                     //此时，文档树所容纳的叶子类型type默认值：0
                                                     var treeType = new List<int>();
@@ -4915,8 +4906,6 @@ namespace Geosite
 
                                         if (treeResult.Success)
                                         {
-                                            forestChanged = true;
-
                                             var treeId = treeResult.Id;
 
                                             //此时，文档树所容纳的叶子类型type默认值：0
@@ -5148,8 +5137,6 @@ namespace Geosite
 
                                         if (treeResult.Success)
                                         {
-                                            forestChanged = true;
-
                                             var treeId = treeResult.Id;
 
                                             //此时，文档树所容纳的叶子类型type默认值：0
@@ -5398,8 +5385,6 @@ namespace Geosite
 
                                             if (treeResult.Success)
                                             {
-                                                forestChanged = true;
-
                                                 var treeId = treeResult.Id;
 
                                                 //此时，文档树所容纳的叶子类型type默认值：0
@@ -5622,18 +5607,16 @@ namespace Geosite
                 }
             }
 
-            if (forestChanged) //更新 DataGrid 控件 - ClusterDate
-            {
-                //this.
-                    Invoke(
-                    new Action(
-                        () =>
-                        {
-                            _clusterDate?.Reset();
-                        }
-                    )
-                );
-            }
+            ////更新 DataGrid 控件 - ClusterDate //由于每个文档推送时已经刷新了一次，这里无需额外执行了
+            //this.
+            //Invoke(
+            //new Action(
+            //    () =>
+            //    {
+            //        _clusterDate?.Reset();
+            //    }
+            //)
+            //);
 
             return statusInfo; //此结果信息将出现在状态行
         }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Geosite.GeositeServer.PostgreSQL;
 
@@ -50,25 +49,22 @@ namespace Geosite
             Reset();
         }
 
-        public async void Reset()
+        public void Reset()
         {
-            var treeCount = await PostgreSqlHelper.ScalarAsync(
+            var treeCount =  PostgreSqlHelper.Scalar(
                 "SELECT COUNT(*) FROM tree WHERE forest = @forest;",
                 new Dictionary<string, object>
                 {
                     { "forest", _forest }
                 }
             );
-
             int.TryParse($"{treeCount}", out _totel);
-
-            await Show(_page);
+            Show(_page);
         }
 
-        private async Task Show(int page = 0)
+        private void Show(int page = 0)
         {
             _page = page;
-
             _dataGridView.Invoke(
                 new Action(
                     () =>
@@ -77,7 +73,6 @@ namespace Geosite
                     }
                 )
             );
-
             var pages = (int)Math.Ceiling(1.0 * _totel / _limit);
             if (pages == 0) 
                 pages = 1;
@@ -97,7 +92,7 @@ namespace Geosite
                 )
             );
             var offset = _page * _limit;
-            var trees = await PostgreSqlHelper.XElementReaderAsync(
+            var trees = PostgreSqlHelper.XElementReader(
                 "SELECT id, name, uri, timestamp, type, status FROM tree WHERE forest = @forest ORDER BY timestamp[3] DESC, timestamp[4] DESC OFFSET @offset LIMIT @limit;",
                 new Dictionary<string, object>
                 {
@@ -289,30 +284,30 @@ namespace Geosite
             }
         }
 
-        public async void First()
+        public void First()
         {
             if (_page != 0)
-                await Show();
+                Show();
         }
 
-        public async void Previous()
+        public void Previous()
         {
             if (_page > 0)
-                await Show(_page - 1);
+                Show(_page - 1);
         }
 
-        public async void Next()
+        public void Next()
         {
             var pages = (int)Math.Ceiling(1.0 * _totel / _limit);
             if (_page < pages - 1)
-                await Show(_page + 1);
+                Show(_page + 1);
         }
 
-        public async void Last()
+        public void Last()
         {
             var pages = (int)Math.Ceiling(1.0 * _totel / _limit);
             if (_page != pages - 1)
-                await Show(pages - 1);
+                Show(pages - 1);
         }
     }
 }
