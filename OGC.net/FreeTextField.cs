@@ -6,7 +6,7 @@ namespace Geosite
     public partial class FreeTextField : Form
     {
         public string CoordinateFieldName;
-        public bool OK;
+        public bool Ok;
 
         public FreeTextField(string[] fieldNames)
         {
@@ -20,7 +20,7 @@ namespace Geosite
         private void OKbutton_Click(object sender, EventArgs e)
         {
             CoordinateFieldName = CoordinateComboBox.Text;
-            OK = true;
+            Ok = true;
             Close();
         }
     }

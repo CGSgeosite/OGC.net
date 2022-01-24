@@ -10549,7 +10549,7 @@ public (bool Success, string Message)? leaf_style();
 /// &lt;param name="propertyX"&gt;叶子属性对象，通常源自Leaf函数的返回值&lt;/param&gt;
 /// &lt;param name="update"&gt;当记录已存在时是否更新？默认：true&lt;/param&gt;
 /// &lt;returns&gt;二元组：记录插入是否成功，异常信息&lt;/returns&gt;
-public (bool Success, string Message)? leaf_property();
+public (bool Success, string Message)? leaf_description();
 
 /// &lt;summary&gt;
 /// 叶子关系描述

@@ -1,4 +1,33 @@
-﻿using System;
+﻿/******************************************************************************
+ *
+ * Name: OGC.cs
+ * Purpose: A free tool for reading ShapeFile, MapGIS, TXT/CSV, converting them
+ *          into GML, GeoJSON, ShapeFile, KML and GeositeXML, and pushing vector
+ *          or raster to PostgreSQL database.
+ *
+ ******************************************************************************
+ * (C) 2019-2022 Geosite Development Team of CGS (R)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ * DEALINGS IN THE SOFTWARE.
+ *****************************************************************************/
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
@@ -20,9 +49,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Microsoft.VisualBasic;
 
-/*
- * 国际标准化地学大数据转换与推送软件
- */
 namespace Geosite
 {
     public partial class OGCform : Form
@@ -32,10 +58,8 @@ namespace Geosite
         private (bool status, int forest, string name) _clusterUser; //GeositeServer集群用户信息，其中 name 将充当森林名称
         private DataGrid _clusterDate;
         private string _clusterDateGridCell;
-
         private bool _noPromptMetaData; //是否不再弹出元数据对话框？
         private bool _noPromptLayersBuilder; //是否不再弹出层级分类对话框？
-
         private LoadingBar _loading; //加载进度条
 
         public OGCform()
@@ -48,7 +72,6 @@ namespace Geosite
             _postgreSqlConnection =
                 _noPromptMetaData =
                     _noPromptLayersBuilder = false;
-
             _getCopyright = Copyright.CopyrightAttribute;
         }
 
@@ -538,7 +561,7 @@ namespace Geosite
                                                 {
                                                     var getTreeLayers = new LayersBuilder(new FileInfo(sourceFile).FullName);
                                                     getTreeLayers.ShowDialog();
-                                                    if (getTreeLayers.OK)
+                                                    if (getTreeLayers.Ok)
                                                     {
                                                         treePathString = getTreeLayers.TreePathString;
                                                         description = getTreeLayers.Description;
@@ -614,7 +637,7 @@ namespace Geosite
                                         {
                                             var freeTextFieldsForm = new FreeTextField(freeTextFields);
                                             freeTextFieldsForm.ShowDialog();
-                                            coordinateFieldName = freeTextFieldsForm.OK ? freeTextFieldsForm.CoordinateFieldName : null;
+                                            coordinateFieldName = freeTextFieldsForm.Ok ? freeTextFieldsForm.CoordinateFieldName : null;
                                         }
                                     }
 
@@ -670,7 +693,7 @@ namespace Geosite
                                                     {
                                                         var getTreeLayers = new LayersBuilder(new FileInfo(sourceFile).FullName);
                                                         getTreeLayers.ShowDialog();
-                                                        if (getTreeLayers.OK)
+                                                        if (getTreeLayers.Ok)
                                                         {
                                                             treePathString = getTreeLayers.TreePathString;
                                                             description = getTreeLayers.Description;
@@ -754,7 +777,7 @@ namespace Geosite
                                         {
                                             var getTreeLayers = new LayersBuilder();
                                             getTreeLayers.ShowDialog();
-                                            if (getTreeLayers.OK)
+                                            if (getTreeLayers.Ok)
                                             {
                                                 description = getTreeLayers.Description;
                                                 _noPromptLayersBuilder = getTreeLayers.DonotPrompt;
@@ -854,7 +877,7 @@ namespace Geosite
                                         {
                                             var getTreeLayers = new LayersBuilder();
                                             getTreeLayers.ShowDialog();
-                                            if (getTreeLayers.OK)
+                                            if (getTreeLayers.Ok)
                                             {
                                                 description = getTreeLayers.Description;
                                                 _noPromptLayersBuilder = getTreeLayers.DonotPrompt;
@@ -955,7 +978,7 @@ namespace Geosite
                                         {
                                             var getTreeLayers = new LayersBuilder(new FileInfo(sourceFile).FullName);
                                             getTreeLayers.ShowDialog();
-                                            if (getTreeLayers.OK)
+                                            if (getTreeLayers.Ok)
                                             {
                                                 treePathString = getTreeLayers.TreePathString;
                                                 description = getTreeLayers.Description;
@@ -1051,7 +1074,7 @@ namespace Geosite
                                                 {
                                                     var getTreeLayers = new LayersBuilder(new FileInfo(sourceFile).FullName);
                                                     getTreeLayers.ShowDialog();
-                                                    if (getTreeLayers.OK)
+                                                    if (getTreeLayers.Ok)
                                                     {
                                                         treePathString = getTreeLayers.TreePathString;
                                                         description = getTreeLayers.Description;
@@ -1692,7 +1715,14 @@ namespace Geosite
             }
 
             /*
-                能否连接成功，取决于服务器端-GeositeServer配置文件中提供的数据库主机ip与本机之间能否正常通讯              
+                出于安全考虑，数据库连接能否成功，取决于（GeositeServer）管理员在服务器端（appsettings.json）如何配置，样例如下：             
+                "clusterUser": [
+                    {
+                        "name": "用户名",
+                        "administrator": true, //是否具备管理员权限
+                        "forest": -1 //森林序号，应小于0
+                    }
+                ]
              */
             _loading.Run();
 
@@ -1710,7 +1740,7 @@ namespace Geosite
                 var userX = GeositeServerUsers.GetClusterUser(
                    serverUrl,
                    serverUser,
-                   $"{GeositeConfuser.Cryptography.hashEncoder(serverPassword)}" //将密码以哈希密文形式传输，以防链路侦听密码
+                   $"{GeositeConfuser.Cryptography.hashEncoder(serverPassword)}" //出于安全考虑，密码以哈希密文形式传输，以防链路侦听密码
                );
                 /*  返回样例：
                     <User>
@@ -1864,7 +1894,7 @@ namespace Geosite
                                                 var sqlString =
                                                     "CREATE TABLE forest " +
                                                     "(" +
-                                                    "id BigInt, name TEXT, property JSONB, timestamp INT[], status SmallInt DEFAULT 0" +
+                                                    "id INTEGER, name TEXT, property JSONB, timestamp INTEGER[], status SmallInt DEFAULT 0" +
                                                     ",CONSTRAINT forest_pkey PRIMARY KEY (id)" +
                                                     ",CONSTRAINT forest_status_constraint CHECK (status >= 0 AND status <= 7)" +
                                                     ") PARTITION BY HASH (id);" +
@@ -1912,7 +1942,7 @@ namespace Geosite
                                                         sqlString =
                                                             "CREATE TABLE forest_relation " +
                                                             "(" +
-                                                            "forest BigInt, action JSONB, detail XML" +
+                                                            "forest INTEGER, action JSONB, detail XML" +
                                                             ",CONSTRAINT forest_relation_pkey PRIMARY KEY (forest)" +
                                                             ",CONSTRAINT forest_relation_cascade FOREIGN KEY (forest) REFERENCES forest (id) MATCH SIMPLE ON DELETE CASCADE NOT VALID" +
                                                             ") PARTITION BY HASH (forest);" +
@@ -1935,7 +1965,8 @@ namespace Geosite
                                                         PostgreSqlHelper.NonQuery(sqlString);
 
                                                         ///////////////////////////// 支持外挂子表 /////////////////////////////
-                                                        this.Invoke(
+                                                        //this.
+                                                            Invoke(
                                                             new Action(
                                                                 () =>
                                                                 {
@@ -1946,7 +1977,7 @@ namespace Geosite
                                                         sqlString =
                                                             "CREATE TABLE tree " +
                                                             "(" +
-                                                            "forest BigInt, sequence BigInt, id BigInt, name TEXT, property JSONB, uri TEXT, timestamp INT[], type INT[], status SmallInt DEFAULT 0" +
+                                                            "forest INTEGER, sequence INTEGER, id INTEGER, name TEXT, property JSONB, uri TEXT, timestamp INTEGER[], type INTEGER[], status SmallInt DEFAULT 0" +
                                                             ",CONSTRAINT tree_pkey PRIMARY KEY (id)" +
                                                             ",CONSTRAINT tree_cascade FOREIGN KEY (forest) REFERENCES forest (id) MATCH SIMPLE ON DELETE CASCADE NOT VALID" +
                                                             ") PARTITION BY HASH (id);" +
@@ -2003,7 +2034,7 @@ namespace Geosite
                                                                 sqlString =
                                                                     "CREATE TABLE tree_relation " +
                                                                     "(" +
-                                                                    "tree BigInt, action JSONB, detail XML" +
+                                                                    "tree INTEGER, action JSONB, detail XML" +
                                                                     ",CONSTRAINT tree_relation_pkey PRIMARY KEY (tree)" +
                                                                     ",CONSTRAINT tree_relation_cascade FOREIGN KEY (tree) REFERENCES tree (id) MATCH SIMPLE ON DELETE CASCADE NOT VALID" +
                                                                     ") PARTITION BY HASH (tree);" +
@@ -2026,7 +2057,8 @@ namespace Geosite
                                                                 PostgreSqlHelper.NonQuery(sqlString);
 
                                                                 ///////////////////////////////////////////////////////////////////////////////////////
-                                                                this.Invoke(
+                                                                //this.
+                                                                    Invoke(
                                                                     new Action(
                                                                         () =>
                                                                         {
@@ -2038,7 +2070,7 @@ namespace Geosite
                                                                 sqlString =
                                                                     "CREATE TABLE branch " +
                                                                     "(" +
-                                                                    "tree BigInt, level SmallInt, name TEXT, property JSONB, id BigInt, parent BigInt DEFAULT 0" +
+                                                                    "tree INTEGER, level SmallInt, name TEXT, property JSONB, id INTEGER, parent INTEGER DEFAULT 0" +
                                                                     ",CONSTRAINT branch_pkey PRIMARY KEY (id)" +
                                                                     ",CONSTRAINT branch_cascade FOREIGN KEY (tree) REFERENCES tree (id) MATCH SIMPLE ON DELETE CASCADE NOT VALID" +
                                                                     ") PARTITION BY HASH (id);" +
@@ -2075,7 +2107,7 @@ namespace Geosite
                                                                         sqlString =
                                                                             "CREATE TABLE branch_relation " +
                                                                             "(" +
-                                                                            "branch BigInt, action JSONB, detail XML" +
+                                                                            "branch INTEGER, action JSONB, detail XML" +
                                                                             ",CONSTRAINT branch_relation_pkey PRIMARY KEY (branch)" +
                                                                             ",CONSTRAINT branch_relation_cascade FOREIGN KEY (branch) REFERENCES branch (id) MATCH SIMPLE ON DELETE CASCADE NOT VALID" +
                                                                             ") PARTITION BY HASH (branch);" +
@@ -2098,7 +2130,8 @@ namespace Geosite
                                                                         PostgreSqlHelper.NonQuery(sqlString);
 
                                                                         ///////////////////////////// 支持外挂子表 /////////////////////////////
-                                                                        this.Invoke(
+                                                                        //this.
+                                                                            Invoke(
                                                                             new Action(
                                                                                 () =>
                                                                                 {
@@ -2110,7 +2143,7 @@ namespace Geosite
                                                                         sqlString =
                                                                             "CREATE TABLE leaf " +
                                                                             "(" +
-                                                                            "branch BigInt, id BigInt, rank SmallInt DEFAULT 1, type INT DEFAULT 0, name TEXT, property XML, timestamp INT[], frequency BigInt DEFAULT 0" +
+                                                                            "branch INTEGER, id BigInt, rank SmallInt DEFAULT 1, type INT DEFAULT 0, name TEXT, property BigInt, timestamp INT[], frequency BigInt DEFAULT 0" +
                                                                             ",CONSTRAINT leaf_pkey PRIMARY KEY (id)" +
                                                                             ",CONSTRAINT leaf_cascade FOREIGN KEY (branch) REFERENCES branch (id) MATCH SIMPLE ON DELETE CASCADE NOT VALID" +
                                                                             ") PARTITION BY HASH (id);" + //为应对大数据，特按哈希键进行了分区，以便提升查询性能
@@ -2120,7 +2153,7 @@ namespace Geosite
                                                                             "COMMENT ON COLUMN leaf.rank IS '叶子要素访问级别或权限序号，通常用于充当交互访问层的约束条件（0：可编辑；1：可查看属性（默认值）；2：可浏览提示；...）';" +
                                                                             "COMMENT ON COLUMN leaf.type IS '叶子要素类别码（0：非空间数据【默认】、1：Point点、2：Line线、3：Polygon面、4：Image地理贴图、10000：Wmts栅格金字塔瓦片服务类型[epsg:0 - 无投影瓦片]、10001：Wmts瓦片服务类型[epsg:4326 - 地理坐标系瓦片]、10002：Wmts栅格金字塔瓦片服务类型[epsg:3857 - 球体墨卡托瓦片]、11000：Tile栅格金字塔瓦片类型[epsg:0 - 无投影瓦片]、11001：Tile栅格金字塔瓦片类型[epsg:4326 - 地理坐标系瓦片]、11002：Tile栅格金字塔瓦片类型[epsg:3857 - 球体墨卡托瓦片]、12000：Tile栅格平铺式瓦片类型[epsg:0 - 无投影瓦片]、12001：Tile栅格平铺式瓦片类型[epsg:4326 - 地理坐标系瓦片]、12002：Tile栅格平铺式瓦片类型[epsg:3857 - 球体墨卡托瓦片]）';" +
                                                                             "COMMENT ON COLUMN leaf.name IS '叶子要素名称';" +
-                                                                            "COMMENT ON COLUMN leaf.property IS '叶子要素属性描述原本';" +
+                                                                            "COMMENT ON COLUMN leaf.property IS '叶子要素属性架构哈希值';" +
                                                                             "COMMENT ON COLUMN leaf.timestamp IS '叶子要素创建时间戳（由[年月日：yyyyMMdd,时分秒：HHmmss]二元整型数组编码构成）';" + //以便实施btree索引和关系运算
                                                                             "COMMENT ON COLUMN leaf.frequency IS '叶子要素访问频度';";
                                                                         /*  
@@ -2170,6 +2203,7 @@ namespace Geosite
                                                                                 "CREATE INDEX leaf_type ON leaf USING BTREE (type);" +
                                                                                 "CREATE INDEX leaf_name ON leaf USING BTREE (name);" +
                                                                                 "CREATE INDEX leaf_name_FTS ON leaf USING PGROONGA (name);" + //以便支持全文检索
+                                                                                "CREATE INDEX leaf_property ON leaf USING BTREE (property);" + //为 group by 提供索引，以便提取异构记录 
                                                                                 "CREATE INDEX leaf_timestamp_yyyymmdd ON leaf USING BTREE ((timestamp[1]));" +
                                                                                 "CREATE INDEX leaf_timestamp_hhmmss ON leaf USING BTREE ((timestamp[2]));" +
                                                                                 //"CREATE INDEX leaf_frequency ON leaf USING BTREE (frequency);" +
@@ -2208,7 +2242,8 @@ namespace Geosite
                                                                                 PostgreSqlHelper.NonQuery(sqlString);
 
                                                                                 ///////////////////////////////////////////////////////////////////////////////////////
-                                                                                this.Invoke(
+                                                                                //this.
+                                                                                    Invoke(
                                                                                     new Action(
                                                                                         () =>
                                                                                         {
@@ -2242,32 +2277,34 @@ namespace Geosite
                                                                                     sqlString = "CREATE INDEX leaf_route_level_branch ON leaf_route USING BTREE (level, branch);";
                                                                                     if (PostgreSqlHelper.NonQuery(sqlString) != null)
                                                                                     {
-                                                                                        this.Invoke(
+                                                                                        //this.
+                                                                                            Invoke(
                                                                                             new Action(
                                                                                                 () =>
                                                                                                 {
-                                                                                                    statusText.Text = @"Create leaf table（leaf_property）...";
+                                                                                                    statusText.Text = @"Create leaf table（leaf_description）...";
                                                                                                 }
                                                                                             )
                                                                                         );
 
                                                                                         sqlString =
-                                                                                            "CREATE TABLE leaf_property " +
-                                                                                            "(" +
-                                                                                            "leaf bigint, level SmallInt, sequence SmallInt, name TEXT, remarks TEXT, flag BOOLEAN DEFAULT false, type SmallInt DEFAULT 0, content Text, numericvalue Numeric" +
-                                                                                            ",CONSTRAINT leaf_property_pkey PRIMARY KEY (leaf, level, sequence)" +
-                                                                                            ",CONSTRAINT leaf_property_cascade FOREIGN KEY (leaf) REFERENCES leaf (id) MATCH SIMPLE ON DELETE CASCADE NOT VALID" +
-                                                                                            ") PARTITION BY HASH (leaf, level, sequence);" + //为应对大数据，特按哈希键进行了分区，以便提升查询性能
-                                                                                            "COMMENT ON TABLE leaf_property IS '叶子要素表（leaf）的属性描述子表';" +
-                                                                                            "COMMENT ON COLUMN leaf_property.leaf IS '叶子要素的标识码';" + //leaf表中的id
-                                                                                            "COMMENT ON COLUMN leaf_property.level IS '字段（键）的嵌套层级';" +
-                                                                                            "COMMENT ON COLUMN leaf_property.sequence IS '字段（键）的同级序号';" +
-                                                                                            "COMMENT ON COLUMN leaf_property.name IS '字段（键）的名称';" +
-                                                                                            "COMMENT ON COLUMN leaf_property.remarks IS '字段（键）的注释';" +
-                                                                                            "COMMENT ON COLUMN leaf_property.flag IS '字段（键）的逻辑标识（false：此键无值；true：此键有值）';" +
-                                                                                            "COMMENT ON COLUMN leaf_property.type IS '字段（值）的数据类型码，目前支持：-1【分类型字段】、0【string（null）】、1【integer】、2【decimal】、3【hybrid】、4【boolean】';" +
-                                                                                            "COMMENT ON COLUMN leaf_property.content IS '字段（值）的全文内容，以便实施全文检索以及自然语言处理';" + //若开展自然语言处理，可将语义规则存入leaf_relation
-                                                                                            "COMMENT ON COLUMN leaf_property.numericvalue IS '字段（值）的数值型（1【integer】、2【decimal】、3【hybrid】、4【boolean】）容器，以便支持超大值域聚合计算';";
+                                                                                            "CREATE TABLE leaf_description " +
+                                                                                            "(" + //parent字段增设于 2022年1月20日，便于实现xml重构
+                                                                                            "leaf bigint, level SmallInt, sequence SmallInt, parent SmallInt, name TEXT, attribute JSONB, flag BOOLEAN DEFAULT false, type SmallInt DEFAULT 0, content Text, numericvalue Numeric" +
+                                                                                            ",CONSTRAINT leaf_description_pkey PRIMARY KEY (leaf, level, sequence, parent)" + //唯一性
+                                                                                            ",CONSTRAINT leaf_description_cascade FOREIGN KEY (leaf) REFERENCES leaf (id) MATCH SIMPLE ON DELETE CASCADE NOT VALID" +
+                                                                                            ") PARTITION BY HASH (leaf, level, sequence, parent);" + //(leaf, level, sequence, parent) 为应对大数据，特按哈希键进行了分区，以便提升查询性能
+                                                                                            "COMMENT ON TABLE leaf_description IS '叶子要素表（leaf）的属性描述子表';" +
+                                                                                            "COMMENT ON COLUMN leaf_description.leaf IS '叶子要素的标识码';" + //leaf表中的id
+                                                                                            "COMMENT ON COLUMN leaf_description.level IS '字段（键）的嵌套层级';" +
+                                                                                            "COMMENT ON COLUMN leaf_description.sequence IS '字段（键）的同级序号';" +
+                                                                                            "COMMENT ON COLUMN leaf_description.parent IS '字段所属父级层级的排列序号';" +
+                                                                                            "COMMENT ON COLUMN leaf_description.name IS '字段（键）的名称';" +
+                                                                                            "COMMENT ON COLUMN leaf_description.attribute IS '字段（键）的属性，由若干扁平化键值对（KVP）构成';" +
+                                                                                            "COMMENT ON COLUMN leaf_description.flag IS '字段（键）的逻辑标识（false：此键无值；true：此键有值）';" +
+                                                                                            "COMMENT ON COLUMN leaf_description.type IS '字段（值）的数据类型码，目前支持：-1【分类型字段】、0【string（null）】、1【integer】、2【decimal】、3【hybrid】、4【boolean】';" +
+                                                                                            "COMMENT ON COLUMN leaf_description.content IS '字段（值）的全文内容，以便实施全文检索以及自然语言处理';" + //若开展自然语言处理，可将语义规则存入leaf_relation
+                                                                                            "COMMENT ON COLUMN leaf_description.numericvalue IS '字段（值）的数值型（1【integer】、2【decimal】、3【hybrid】、4【boolean】）容器，以便支持超大值域聚合计算';";
 
                                                                                         if (PostgreSqlHelper.NonQuery(sqlString) != null)
                                                                                         {
@@ -2275,22 +2312,23 @@ namespace Geosite
                                                                                             for (var i = 0; i < processorCount; i++)
                                                                                             {
                                                                                                 sqlString =
-                                                                                                    $"CREATE TABLE leaf_property_{i} PARTITION OF leaf_property FOR VALUES WITH (MODULUS {processorCount}, REMAINDER {i});";
+                                                                                                    $"CREATE TABLE leaf_description_{i} PARTITION OF leaf_description FOR VALUES WITH (MODULUS {processorCount}, REMAINDER {i});";
                                                                                                 PostgreSqlHelper.NonQuery(sqlString);
                                                                                             }
 
                                                                                             sqlString =
-                                                                                                "CREATE INDEX leaf_property_name ON leaf_property USING BTREE (name);" +
-                                                                                                "CREATE INDEX leaf_property_name_FTS ON leaf_property USING PGROONGA (name);" +
-                                                                                                "CREATE INDEX leaf_property_flag ON leaf_property USING BTREE (flag);" +
-                                                                                                "CREATE INDEX leaf_property_type ON leaf_property USING BTREE (type);" +
-                                                                                                "CREATE INDEX leaf_property_content ON leaf_property USING PGROONGA (content);" + //全文检索（FTS）采用了 PGROONGA 扩展
-                                                                                                "CREATE INDEX leaf_property_numericvalue ON leaf_property USING BTREE (numericvalue);";
+                                                                                                "CREATE INDEX leaf_description_name ON leaf_description USING BTREE (name);" +
+                                                                                                "CREATE INDEX leaf_description_name_FTS ON leaf_description USING PGROONGA (name);" +
+                                                                                                "CREATE INDEX leaf_description_flag ON leaf_description USING BTREE (flag);" +
+                                                                                                "CREATE INDEX leaf_description_type ON leaf_description USING BTREE (type);" +
+                                                                                                "CREATE INDEX leaf_description_content ON leaf_description USING PGROONGA (content);" + //全文检索（FTS）采用了 PGROONGA 扩展
+                                                                                                "CREATE INDEX leaf_description_numericvalue ON leaf_description USING BTREE (numericvalue);";
 
                                                                                             if (PostgreSqlHelper.NonQuery(sqlString) != null)
                                                                                             {
                                                                                                 ///////////////////////////////////////////////////////////////////////////////////////
-                                                                                                this.Invoke(
+                                                                                                //this.
+                                                                                                    Invoke(
                                                                                                     new Action(
                                                                                                         () =>
                                                                                                         {
@@ -2325,7 +2363,8 @@ namespace Geosite
                                                                                                     if (PostgreSqlHelper.NonQuery(sqlString) != null)
                                                                                                     {
                                                                                                         ///////////////////////////////////////////////////////////////////////////////////////
-                                                                                                        this.Invoke(
+                                                                                                        //this.
+                                                                                                            Invoke(
                                                                                                             new Action(
                                                                                                                 () =>
                                                                                                                 {
@@ -2362,7 +2401,8 @@ namespace Geosite
                                                                                                             if (PostgreSqlHelper.NonQuery(sqlString) != null)
                                                                                                             {
                                                                                                                 ///////////////////////////////////////////////////////////////////////////////////////
-                                                                                                                this.Invoke(
+                                                                                                                //this.
+                                                                                                                    Invoke(
                                                                                                                     new Action(
                                                                                                                         () =>
                                                                                                                         {
@@ -2377,7 +2417,7 @@ namespace Geosite
                                                                                                                     ",CONSTRAINT leaf_tile_pkey PRIMARY KEY (leaf, z, x, y)" +
                                                                                                                     ",CONSTRAINT leaf_tile_cascade FOREIGN KEY (leaf) REFERENCES leaf (id) MATCH SIMPLE ON DELETE CASCADE NOT VALID" +
                                                                                                                     ") PARTITION BY HASH (leaf, z, x, y);" + //为应对大数据，特按哈希键进行了分区，以便提升查询性能
-                                                                                                                    "COMMENT ON TABLE leaf_tile IS '叶子要素表（leaf）的栅格瓦片子表，支持【四叉树金字塔式瓦片】和【平铺式地图瓦片】两种类型，每类瓦片的元数据信息需在叶子表中的property中进行表述';" +
+                                                                                                                    "COMMENT ON TABLE leaf_tile IS '叶子要素表（leaf）的栅格瓦片子表，支持【四叉树金字塔式瓦片】和【平铺式地图瓦片】两种类型，每类瓦片的元数据信息需在叶子属性子表中的type进行表述';" +
                                                                                                                     "COMMENT ON COLUMN leaf_tile.leaf IS '叶子要素的标识码';" + //leaf表中的id
                                                                                                                     "COMMENT ON COLUMN leaf_tile.z IS '叶子瓦片缩放级（注：平铺式瓦片类型的z值强制为【-1】，四叉树金字塔式瓦片类型的z值通常介于【0～24】之间）';" +
                                                                                                                     "COMMENT ON COLUMN leaf_tile.x IS '叶子瓦片横向坐标编码';" +
@@ -2401,7 +2441,8 @@ namespace Geosite
                                                                                                                     if (PostgreSqlHelper.NonQuery(sqlString) != null)
                                                                                                                     {
                                                                                                                         ///////////////////////////////////////////////////////////////////////////////////////
-                                                                                                                        this.Invoke(
+                                                                                                                        //this.
+                                                                                                                            Invoke(
                                                                                                                             new Action(
                                                                                                                                 () =>
                                                                                                                                 {
@@ -2417,7 +2458,7 @@ namespace Geosite
                                                                                                                             ",CONSTRAINT leaf_wms_pkey PRIMARY KEY (leaf)" +
                                                                                                                             ",CONSTRAINT leaf_wms_cascade FOREIGN KEY (leaf) REFERENCES leaf (id) MATCH SIMPLE ON DELETE CASCADE NOT VALID" +
                                                                                                                             ") PARTITION BY HASH (leaf);" +
-                                                                                                                            "COMMENT ON TABLE leaf_wms IS '叶子要素表（leaf）的瓦片服务子表，元数据信息需在叶子表中的property中进行表述';" +
+                                                                                                                            "COMMENT ON TABLE leaf_wms IS '叶子要素表（leaf）的瓦片服务子表，元数据信息需在叶子属性表中的type中进行表述';" +
                                                                                                                             "COMMENT ON COLUMN leaf_wms.leaf IS '叶子要素的标识码';" + //leaf表中的id
                                                                                                                             "COMMENT ON COLUMN leaf_wms.wms IS '叶子要素服务地址模板，暂支持【OGC】、【BingMap】、【DeepZoom】和【ESRI】瓦片编码类型';" +
                                                                                                                             "COMMENT ON COLUMN leaf_wms.boundary IS '叶子要素几何边框（EPSG:4326）';"; //经纬度
@@ -2436,7 +2477,8 @@ namespace Geosite
                                                                                                                             if (PostgreSqlHelper.NonQuery(sqlString) != null)
                                                                                                                             {
                                                                                                                                 //仅用于充当访问频度缓冲区，重建索引时将自动清除/////////////////////////////////////////////////////////////////////////////////////
-                                                                                                                                this.Invoke(
+                                                                                                                                //this.
+                                                                                                                                    Invoke(
                                                                                                                                     new Action(
                                                                                                                                         () =>
                                                                                                                                         {
@@ -2466,7 +2508,8 @@ namespace Geosite
                                                                                                                                     }
 
                                                                                                                                     ///////////////////////////////////////////////////////////////////////////////////////
-                                                                                                                                    this.Invoke(
+                                                                                                                                    //this.
+                                                                                                                                        Invoke(
                                                                                                                                         new Action(
                                                                                                                                             () =>
                                                                                                                                             {
@@ -2601,10 +2644,10 @@ namespace Geosite
                                                                                                     errorMessage = $"Failed to create leaf_style - {PostgreSqlHelper.ErrorMessage}";
                                                                                             }
                                                                                             else
-                                                                                                errorMessage = $"Failed to create some indexes of leaf_property - {PostgreSqlHelper.ErrorMessage}";
+                                                                                                errorMessage = $"Failed to create some indexes of leaf_description - {PostgreSqlHelper.ErrorMessage}";
                                                                                         }
                                                                                         else
-                                                                                            errorMessage = $"Failed to create leaf_property - {PostgreSqlHelper.ErrorMessage}";
+                                                                                            errorMessage = $"Failed to create leaf_description - {PostgreSqlHelper.ErrorMessage}";
                                                                                     }
                                                                                     else
                                                                                         errorMessage = $"Failed to create some indexes of leaf_route - {PostgreSqlHelper.ErrorMessage}";
@@ -2784,9 +2827,9 @@ namespace Geosite
                     if (PostgreSqlHelper.NonQuery("REINDEX TABLE leaf_route;", timeout: 0) == null)
                         throw new Exception(PostgreSqlHelper.ErrorMessage);
 
-                    statusText.Text = @"● leaf_property ...";
+                    statusText.Text = @"● leaf_description ...";
                     Application.DoEvents();
-                    if (PostgreSqlHelper.NonQuery("REINDEX TABLE leaf_property;", timeout: 0) == null)
+                    if (PostgreSqlHelper.NonQuery("REINDEX TABLE leaf_description;", timeout: 0) == null)
                         throw new Exception(PostgreSqlHelper.ErrorMessage);
 
                     statusText.Text = @"● leaf_style ...";
@@ -2892,9 +2935,9 @@ namespace Geosite
                     if (PostgreSqlHelper.NonQuery("VACUUM ANALYZE leaf_route;", timeout: 0) == null)
                         throw new Exception(PostgreSqlHelper.ErrorMessage);
 
-                    statusText.Text = @"● leaf_property ...";
+                    statusText.Text = @"● leaf_description ...";
                     Application.DoEvents();
-                    if (PostgreSqlHelper.NonQuery("VACUUM ANALYZE leaf_property;", timeout: 0) == null)
+                    if (PostgreSqlHelper.NonQuery("VACUUM ANALYZE leaf_description;", timeout: 0) == null)
                         throw new Exception(PostgreSqlHelper.ErrorMessage);
 
                     statusText.Text = @"● leaf_style ...";
@@ -3017,17 +3060,14 @@ namespace Geosite
                 databasePanel.Enabled = false;
                 Application.DoEvents();
 
-                var ids = (from DataGridViewRow row in selectedRows
-                           select row.Cells[1]
-                        into typeCell
-                           select Regex.Split(
-                               typeCell.ToolTipText,
-                               @"[\b]",
-                               RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Multiline
-                           )
-                        into typeCellArray
-                           select typeCellArray[0]
-                    ).ToList();
+                var ids =
+                    selectedRows
+                        .Cast<DataGridViewRow>()
+                        .Select(row => row.Cells[1])
+                        .Select(typeCell => Regex.Split(typeCell.ToolTipText, @"[\b]",
+                            RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Multiline))
+                        .Select(typeCellArray => typeCellArray[0])
+                        .ToList();
 
                 var task = new Func<bool>(
                     () =>
@@ -3103,13 +3143,17 @@ namespace Geosite
                     Invoke(new Action(
                         () =>
                         {
-                            statusText.Text = @"Layers - [ " + (string)PostgreSqlHelper.Scalar(
-                                "SELECT array_to_string(array_agg(name), '/') FROM (SELECT name FROM branch WHERE tree = @tree ORDER BY level) AS route;",
-                                new Dictionary<string, object>
-                                {
-                                    { "tree", int.Parse(tree) }
-                                }
-                            ) + @" ]";
+                            statusText.Text =
+                                @"Layers - [ " +
+                                (string) PostgreSqlHelper.Scalar
+                                (
+                                    "SELECT array_to_string(array_agg(name), '/') FROM (SELECT name FROM branch WHERE tree = @tree ORDER BY level) AS route;",
+                                    new Dictionary<string, object>
+                                    {
+                                        {"tree", int.Parse(tree)}
+                                    }
+                                ) +
+                                @" ]";
                             _loading.Run(false);
                         }
                     )
@@ -3122,11 +3166,7 @@ namespace Geosite
             var colIndex = e.ColumnIndex;
             var rowIndex = e.RowIndex;
             if (colIndex == 0 && rowIndex >= 0) //theme 列
-            {
-                var dataGridView = (DataGridView)sender;
-                var col = dataGridView.Rows[rowIndex].Cells[colIndex];
-                _clusterDateGridCell = $"{col.Value}".Trim();
-            }
+                _clusterDateGridCell = $"{((DataGridView) sender).Rows[rowIndex].Cells[colIndex].Value}".Trim();
         }
 
         private void dataPool_CellEndEdit(object sender, DataGridViewCellEventArgs e)
@@ -3135,8 +3175,7 @@ namespace Geosite
             var rowIndex = e.RowIndex;
             if (colIndex == 0 && rowIndex >= 0) //theme 列
             {
-                var dataGridView = (DataGridView)sender;
-                var row = dataGridView.Rows[rowIndex];
+                var row = ((DataGridView)sender).Rows[rowIndex];
                 var col = row.Cells[colIndex];
                 var newName = $"{col.Value}".Trim();
                 var oldName = _clusterDateGridCell;
@@ -3159,14 +3198,14 @@ namespace Geosite
                     _loading.Run();
 
                     var forest = _clusterUser.forest;
-                    var oldId = PostgreSqlHelper.Scalar(
+                    var oldId = PostgreSqlHelper.ScalarAsync(
                         "SELECT id FROM tree WHERE forest = @forest AND name ILIKE @name::text LIMIT 1;",
-                        new Dictionary<string, object>
+                        new Dictionary<string, object>()
                         {
                             {"forest", forest},
                             {"name", newName}
                         }
-                    );
+                    ).Result;
                     if (oldId != null)
                     {
                         row.Cells[colIndex].Value = oldName;
@@ -3185,6 +3224,7 @@ namespace Geosite
                             RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Multiline
                         );
                         var id = typeCellArray[0];
+
                         //var timestamp = typeCellArray[1]; //0,0,20210714,41031 //Regex.Split(typeCellArray[1], "[,]", RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Multiline);
                         //var status = typeCellArray[2];
                         //var nameCell = row.Cells[1];
@@ -3192,11 +3232,11 @@ namespace Geosite
                         //var name = nameCell.Value;
 
                         if (PostgreSqlHelper.NonQuery(
-                            "UPDATE tree SET name = @name WHERE id = @id::integer;", //@name::text
+                            "UPDATE tree SET name = @name WHERE id = @id;", //@name::text
                             new Dictionary<string, object>
                             {
                                 {"name", newName},
-                                {"id", id} //int.Parse(id)
+                                {"id", long.Parse(id)}
                             }
                             ) == null)
                         {
@@ -3431,7 +3471,7 @@ namespace Geosite
                                     {
                                         var getTreeLayers = new LayersBuilder(new FileInfo(path).FullName);
                                         getTreeLayers.ShowDialog();
-                                        if (getTreeLayers.OK)
+                                        if (getTreeLayers.Ok)
                                         {
                                             treePathString = getTreeLayers.TreePathString;
                                             description = getTreeLayers.Description;
@@ -3475,12 +3515,15 @@ namespace Geosite
                                                 new XElement("name", theme)
                                                 );
                                             if (description != null)
-                                            {
-                                                var property = new XElement("property");
-                                                foreach (var x in description.Elements())
-                                                    property.Add(new XElement($"{x.Name}", x.Value));
-                                                featureCollectionX.Add(property);
-                                            }
+                                                featureCollectionX.Add(
+                                                    new XElement
+                                                    (
+                                                        "property",
+                                                        description
+                                                            .Elements()
+                                                            .Select(x => new XElement($"{x.Name}", x.Value))
+                                                    )
+                                                );
                                             var bbox = (JArray)getFileInfo["bbox"]; // $"[{west}, {south}, {east}, {north}]"
                                             featureCollectionX.Add(
                                                 new XElement(
@@ -3686,10 +3729,8 @@ namespace Geosite
                                                                                 "LINESTRING(" +
                                                                                 string.Join(
                                                                                     ",",
-                                                                                    (
-                                                                                        from coor in coordinates
-                                                                                        select $"{coor[0]} {coor[1]}"
-                                                                                    ).ToArray()
+                                                                                    coordinates.Select(coor =>
+                                                                                        $"{coor[0]} {coor[1]}").ToArray()
                                                                                 ) +
                                                                                 ")"
                                                                             ),
@@ -3724,18 +3765,15 @@ namespace Geosite
                                                                                 string.Join
                                                                                 (
                                                                                     ",",
-                                                                                    (
-                                                                                        from JArray coordinate
-                                                                                            in coordinates
-                                                                                        select "(" + string.Join(",",
-                                                                                            (
-                                                                                                from xy in coordinate
-                                                                                                select
-                                                                                                    $"{xy[0]} {xy[1]}"
-                                                                                            )
-                                                                                            .ToArray()
-                                                                                        ) + ")"
-                                                                                    )
+                                                                                    coordinates
+                                                                                        .Cast<JArray>()
+                                                                                        .Select(coordinate =>
+                                                                                            "(" + 
+                                                                                            string.Join(",",
+                                                                                                coordinate.Select(xy =>
+                                                                                                        $"{xy[0]} {xy[1]}")
+                                                                                                .ToArray()) + 
+                                                                                            ")")
                                                                                     .ToList()
                                                                                 ) +
                                                                                 ")"
@@ -3919,7 +3957,7 @@ namespace Geosite
                                     {
                                         var getTreeLayers = new LayersBuilder(new FileInfo(path).FullName);
                                         getTreeLayers.ShowDialog();
-                                        if (getTreeLayers.OK)
+                                        if (getTreeLayers.Ok)
                                         {
                                             treePathString = getTreeLayers.TreePathString;
                                             description = getTreeLayers.Description;
@@ -3967,10 +4005,16 @@ namespace Geosite
                                         );
                                         if (description != null)
                                         {
-                                            var property = new XElement("property");
-                                            foreach (var x in description.Elements())
-                                                property.Add(new XElement($"{x.Name}", x.Value));
-                                            featureCollectionX.Add(property);
+                                            featureCollectionX.Add
+                                            (
+                                                new XElement
+                                                (
+                                                    "property",
+                                                    description
+                                                        .Elements()
+                                                        .Select(x => new XElement($"{x.Name}", x.Value))
+                                                )
+                                            );
                                         }
 
                                         var bbox = (JArray)getFileInfo[
@@ -4155,97 +4199,51 @@ namespace Geosite
                                                                 feature["timeStamp"]
                                                                     ?.Value<string>(); //DateTime.Now.ToString("s");
 
-                                                            XElement featureX = null;
-                                                            switch (featureType)
+                                                            XElement featureX = featureType switch
                                                             {
-                                                                case "Point":
-                                                                    featureX = new XElement
-                                                                    (
-                                                                        "member",
-                                                                        new XAttribute("type", "Point"),
-                                                                        new XAttribute("typeCode", "1"),
-                                                                        new XAttribute("id", featureId),
-                                                                        new XAttribute("timeStamp", featureTimeStamp),
-                                                                        elementdescriptionX,
-                                                                        new XElement(
-                                                                            "geometry",
-                                                                            //单点 POINT(x y z ...)
-                                                                            //多点 MULTIPOINT(x y z ...,x y z ...,x y z ...) 
-                                                                            $"POINT({coordinates[0]} {coordinates[1]})"
-                                                                        ),
-                                                                        featureBoundaryX,
-                                                                        styleX
-                                                                    );
-
-                                                                    break;
-                                                                case "LineString":
-                                                                    featureX = new XElement
-                                                                    (
-                                                                        "member",
-                                                                        new XAttribute("type", "Line"),
-                                                                        new XAttribute("typeCode", "2"),
-                                                                        new XAttribute("id", featureId),
-                                                                        new XAttribute("timeStamp", featureTimeStamp),
-                                                                        elementdescriptionX,
-                                                                        new XElement(
-                                                                            "geometry",
-                                                                            //单线 LINESTRING(x y z ...,x y z ...,x y z ...)
-                                                                            //多线 MULTILINESTRING((x y z ...,x y z ...,x y z ...),(x y z ...,x y z ...,x y z ...))
-                                                                            "LINESTRING(" +
-                                                                            string.Join(
-                                                                                ",",
-                                                                                (
-                                                                                    from coor in coordinates
-                                                                                    select $"{coor[0]} {coor[1]}"
-                                                                                ).ToArray()
-                                                                            ) +
-                                                                            ")"
-                                                                        ),
-                                                                        featureBoundaryX,
-                                                                        styleX
-                                                                    );
-
-                                                                    break;
-                                                                case "Polygon":
-                                                                    featureX = new XElement
-                                                                    (
-                                                                        "member",
-                                                                        new XAttribute("type", "Polygon"),
-                                                                        new XAttribute("typeCode", "3"),
-                                                                        new XAttribute("id", featureId),
-                                                                        new XAttribute("timeStamp",
-                                                                            featureTimeStamp),
-                                                                        elementdescriptionX,
-                                                                        new XElement(
-                                                                            "geometry",
-                                                                            //单面 POLYGON((x y z ...,x y z ...,x y z ...)) 
-                                                                            //母子面 POLYGON((x y z ...,x y z ...,x y z ...),(x y z ...,x y z ...,x y z ...),(x y z ...,x y z ...,x y z ...),...)
-                                                                            //多面已处理为单面或母子面  MULTIPOLYGON(((x y z ...,x y z ...,x y z ...),(x y z ...,x y z ...,x y z ...)), ((x y z ...,x y z ...,x y z ...)))
-                                                                            "POLYGON(" +
-                                                                            string.Join
-                                                                            (
-                                                                                ",",
-                                                                                (
-                                                                                    from JArray coordinate
-                                                                                        in coordinates
-                                                                                    select "(" + string.Join(",",
-                                                                                        (
-                                                                                            from xy in coordinate
-                                                                                            select $"{xy[0]} {xy[1]}"
-                                                                                        )
-                                                                                        .ToArray()
-                                                                                    ) + ")"
-                                                                                )
-                                                                                .ToList()
-                                                                            ) +
-                                                                            ")"
-                                                                        ),
-                                                                        featureBoundaryX,
-                                                                        styleX
-                                                                    );
-
-                                                                    break;
-                                                            }
+                                                                "Point" => new XElement("member",
+                                                                    new XAttribute("type", "Point"),
+                                                                    new XAttribute("typeCode", "1"),
+                                                                    new XAttribute("id", featureId),
+                                                                    new XAttribute("timeStamp", featureTimeStamp),
+                                                                    elementdescriptionX, new XElement("geometry",
+                                                                        //单点 POINT(x y z ...)
+                                                                        //多点 MULTIPOINT(x y z ...,x y z ...,x y z ...) 
+                                                                        $"POINT({coordinates[0]} {coordinates[1]})"),
+                                                                    featureBoundaryX, styleX),
+                                                                "LineString" => new XElement("member",
+                                                                    new XAttribute("type", "Line"),
+                                                                    new XAttribute("typeCode", "2"),
+                                                                    new XAttribute("id", featureId),
+                                                                    new XAttribute("timeStamp", featureTimeStamp),
+                                                                    elementdescriptionX, new XElement("geometry",
+                                                                        //单线 LINESTRING(x y z ...,x y z ...,x y z ...)
+                                                                        //多线 MULTILINESTRING((x y z ...,x y z ...,x y z ...),(x y z ...,x y z ...,x y z ...))
+                                                                        "LINESTRING(" + string.Join(",",
+                                                                            coordinates.Select(coor =>
+                                                                                    $"{coor[0]} {coor[1]}")
+                                                                                .ToArray()) + ")"), featureBoundaryX,
+                                                                    styleX),
+                                                                "Polygon" => new XElement("member",
+                                                                    new XAttribute("type", "Polygon"),
+                                                                    new XAttribute("typeCode", "3"),
+                                                                    new XAttribute("id", featureId),
+                                                                    new XAttribute("timeStamp", featureTimeStamp),
+                                                                    elementdescriptionX, new XElement("geometry",
+                                                                        //单面 POLYGON((x y z ...,x y z ...,x y z ...)) 
+                                                                        //母子面 POLYGON((x y z ...,x y z ...,x y z ...),(x y z ...,x y z ...,x y z ...),(x y z ...,x y z ...,x y z ...),...)
+                                                                        //多面已处理为单面或母子面  MULTIPOLYGON(((x y z ...,x y z ...,x y z ...),(x y z ...,x y z ...,x y z ...)), ((x y z ...,x y z ...,x y z ...)))
+                                                                        "POLYGON(" + string.Join(",",
+                                                                            (coordinates.Cast<JArray>()
+                                                                                .Select(coordinate =>
+                                                                                    "(" + string.Join(",",
+                                                                                        coordinate.Select(xy =>
+                                                                                                $"{xy[0]} {xy[1]}")
+                                                                                            .ToArray()) +
+                                                                                    ")")).ToList()) +
+                                                                        ")"), featureBoundaryX, styleX),
+                                                                _ => null
+                                                            };
                                                             if (featureX != null)
                                                             {
                                                                 //写叶子
@@ -4408,7 +4406,7 @@ namespace Geosite
                                     {
                                         var txtForm = new FreeTextField(freeTextFields);
                                         txtForm.ShowDialog();
-                                        coordinateFieldName = txtForm.OK ? txtForm.CoordinateFieldName : null;
+                                        coordinateFieldName = txtForm.Ok ? txtForm.CoordinateFieldName : null;
                                     }
 
                                     if (coordinateFieldName != null)
@@ -4420,7 +4418,7 @@ namespace Geosite
                                         {
                                             var getTreeLayers = new LayersBuilder(new FileInfo(path).FullName);
                                             getTreeLayers.ShowDialog();
-                                            if (getTreeLayers.OK)
+                                            if (getTreeLayers.Ok)
                                             {
                                                 treePathString = getTreeLayers.TreePathString;
                                                 description = getTreeLayers.Description;
@@ -4466,10 +4464,15 @@ namespace Geosite
                                                     );
                                                 if (description != null)
                                                 {
-                                                    var property = new XElement("property");
-                                                    foreach (var x in description.Elements())
-                                                        property.Add(new XElement($"{x.Name}", x.Value));
-                                                    featureCollectionX.Add(property);
+                                                    featureCollectionX.Add
+                                                    (
+                                                        new XElement(
+                                                            "property",
+                                                            description
+                                                                .Elements()
+                                                                .Select(x => new XElement($"{x.Name}", x.Value))
+                                                        )
+                                                    );
                                                 }
                                                 var bbox = (JArray)getFileInfo["bbox"]; // $"[{west}, {south}, {east}, {north}]"
                                                 featureCollectionX.Add(
@@ -4675,11 +4678,8 @@ namespace Geosite
                                                                                     "LINESTRING(" +
                                                                                     string.Join(
                                                                                         ",",
-                                                                                        (
-                                                                                            from coor in coordinates
-                                                                                            select
-                                                                                                $"{coor[0]} {coor[1]}"
-                                                                                        ).ToArray()
+                                                                                        coordinates.Select(coor =>
+                                                                                            $"{coor[0]} {coor[1]}").ToArray()
                                                                                     ) +
                                                                                     ")"
                                                                                 ),
@@ -4711,20 +4711,10 @@ namespace Geosite
                                                                                     string.Join
                                                                                     (
                                                                                         ",",
-                                                                                        (
-                                                                                            from JArray coordinate
-                                                                                                in coordinates
-                                                                                            select "(" + string.Join(
-                                                                                                ",",
-                                                                                                (
-                                                                                                    from xy in
-                                                                                                        coordinate
-                                                                                                    select
-                                                                                                        $"{xy[0]} {xy[1]}"
-                                                                                                )
-                                                                                                .ToArray()
-                                                                                            ) + ")"
-                                                                                        )
+                                                                                        coordinates
+                                                                                            .Cast<JArray>()
+                                                                                            .Select(coordinate =>
+                                                                                                $"({string.Join(",", (coordinate.Select(xy => $"{xy[0]} {xy[1]}")).ToArray())})")
                                                                                         .ToList()
                                                                                     ) +
                                                                                     ")"
@@ -4783,7 +4773,8 @@ namespace Geosite
                                                                         }
                                                                         else
                                                                         {
-                                                                            this.Invoke(
+                                                                            //this.
+                                                                                Invoke(
                                                                                 new Action(
                                                                                     () =>
                                                                                     {
@@ -4891,7 +4882,7 @@ namespace Geosite
                                     {
                                         var getTreeLayers = new LayersBuilder(new FileInfo(path).FullName);
                                         getTreeLayers.ShowDialog();
-                                        if (getTreeLayers.OK)
+                                        if (getTreeLayers.Ok)
                                         {
                                             description = getTreeLayers.Description;
                                             _noPromptLayersBuilder = getTreeLayers.DonotPrompt;
@@ -5125,7 +5116,7 @@ namespace Geosite
                                     {
                                         var getTreeLayers = new LayersBuilder(new FileInfo(path).FullName);
                                         getTreeLayers.ShowDialog();
-                                        if (getTreeLayers.OK)
+                                        if (getTreeLayers.Ok)
                                         {
                                             description = getTreeLayers.Description;
                                             _noPromptLayersBuilder = getTreeLayers.DonotPrompt;
@@ -5142,15 +5133,15 @@ namespace Geosite
                                             vectorBackgroundWorker.ReportProgress(thisEvent.progress ?? -1,
                                                 thisEvent.message ?? string.Empty);
                                         };
-                                        var FeatureCollectionX = kml.KmlToGeositeXml(kml.GetTree(path), null, description).Root;
-                                        FeatureCollectionX.Element("name").Value = theme;
+                                        var featureCollectionX = kml.KmlToGeositeXml(kml.GetTree(path), null, description).Root;
+                                        featureCollectionX.Element("name").Value = theme;
                                         var treeTimeStamp =
-                                            $"{forest},{sequence},{DateTime.Parse(FeatureCollectionX.Attribute("timeStamp").Value): yyyyMMdd,HHmmss}";
+                                            $"{forest},{sequence},{DateTime.Parse(featureCollectionX.Attribute("timeStamp").Value): yyyyMMdd,HHmmss}";
 
                                         var treeResult =
                                             oneForest.Tree(
                                                 treeTimeStamp,
-                                                FeatureCollectionX,
+                                                featureCollectionX,
                                                 path,
                                                 status
                                             );
@@ -5164,7 +5155,7 @@ namespace Geosite
                                             //此时，文档树所容纳的叶子类型type默认值：0
                                             var treeType = new List<int>();
 
-                                            var isOK = true;
+                                            var isOk = true;
 
                                             //第3层：遍历识别不同的实体要素标签，以便提升兼容性
                                             foreach
@@ -5175,7 +5166,7 @@ namespace Geosite
                                                     }
                                                     .Select
                                                     (
-                                                        leafName => FeatureCollectionX
+                                                        leafName => featureCollectionX
                                                             .DescendantsAndSelf(leafName).ToList()
                                                     )
                                                     .Where
@@ -5205,12 +5196,13 @@ namespace Geosite
                                                             sequence: sequence,
                                                             tree: treeId,
                                                             leafX: leafX,
-                                                            leafRootX: FeatureCollectionX
+                                                            leafRootX: featureCollectionX
                                                         );
 
                                                         if (!createRoute.Success)
                                                         {
-                                                            this.Invoke(
+                                                            //this.
+                                                                Invoke(
                                                                 new Action(
                                                                     () =>
                                                                     {
@@ -5220,7 +5212,7 @@ namespace Geosite
                                                                 )
                                                             );
 
-                                                            isOK = false;
+                                                            isOk = false;
                                                             //break;
                                                         }
                                                         else
@@ -5263,7 +5255,8 @@ namespace Geosite
                                                             }
                                                             else
                                                             {
-                                                                this.Invoke(
+                                                                //this.
+                                                                    Invoke(
                                                                     new Action(
                                                                         () =>
                                                                         {
@@ -5273,7 +5266,7 @@ namespace Geosite
                                                                     )
                                                                 );
 
-                                                                isOK = false;
+                                                                isOk = false;
                                                                 //break;
                                                             }
                                                         }
@@ -5288,11 +5281,12 @@ namespace Geosite
                                             }
 
                                             oneForest.Tree(enclosure: (treeId,
-                                                treeType, isOK)); //向树记录写入完整性标志以及类型数组
+                                                treeType, isOk)); //向树记录写入完整性标志以及类型数组
                                             _clusterDate?.Reset();
-                                            if (isOK)
+                                            if (isOk)
                                             {
-                                                this.Invoke(
+                                                //this.
+                                                    Invoke(
                                                     new Action(
                                                         () =>
                                                         {
@@ -5305,7 +5299,8 @@ namespace Geosite
                                         }
                                         else
                                         {
-                                            this.Invoke(
+                                            //this.
+                                                Invoke(
                                                 new Action(
                                                     () =>
                                                     {
@@ -5318,7 +5313,8 @@ namespace Geosite
                                     }
                                     else
                                     {
-                                        this.Invoke(
+                                        //this.
+                                            Invoke(
                                             new Action(
                                                 () =>
                                                 {
@@ -5331,7 +5327,8 @@ namespace Geosite
                                 }
                                 catch (Exception error)
                                 {
-                                    this.Invoke(
+                                    //this.
+                                        Invoke(
                                         new Action(
                                             () =>
                                             {
@@ -5354,7 +5351,7 @@ namespace Geosite
                                     {
                                         var getTreeLayers = new LayersBuilder(new FileInfo(path).FullName);
                                         getTreeLayers.ShowDialog();
-                                        if (getTreeLayers.OK)
+                                        if (getTreeLayers.Ok)
                                         {
                                             treePathString = getTreeLayers.TreePathString;
                                             description = getTreeLayers.Description;
@@ -5364,9 +5361,8 @@ namespace Geosite
                                             canDo = false;
                                     }
                                     else
-                                    {
                                         treePathString = ConsoleIO.FilePathToXPath(new FileInfo(path).FullName);
-                                    }
+
                                     if (canDo)
                                     {
                                         using var geoJsonObject = new GeositeXml.GeositeXml();
@@ -5690,8 +5686,7 @@ namespace Geosite
             var rowIndex = e.RowIndex;
             if (colIndex == 0)
             {
-                var dataGridView = (DataGridView)sender;
-                var row = dataGridView.Rows[rowIndex];
+                var row = ((DataGridView)sender).Rows[rowIndex];
                 var col = row.Cells[colIndex];
                 var newName = $"{col.Value}".Trim();
                 var oldName = _clusterDateGridCell;
@@ -5732,10 +5727,7 @@ namespace Geosite
                 ShowNewFolderButton = false
             };
 
-            if (Directory.Exists(oldPath))
-            {
-                openFolderDialog.SelectedPath = oldPath;
-            }
+            if (Directory.Exists(oldPath)) openFolderDialog.SelectedPath = oldPath;
 
             if (openFolderDialog.ShowDialog() == DialogResult.OK)
             {
@@ -6120,7 +6112,8 @@ namespace Geosite
                                 //(object Sender, ImageInfoEventArgs Event)
                                 {
                                     //第三步
-                                    this.Invoke(
+                                    //this.
+                                        Invoke(
                                         new Action(
                                             () =>
                                             {
@@ -6136,7 +6129,8 @@ namespace Geosite
                                 deepZoomObject.CreateDirectory += delegate (object _, DirectoryEventArgs thisEvent)
                                 {
                                     //第四步 ......
-                                    this.Invoke(
+                                    //this.
+                                        Invoke(
                                         new Action(
                                             () =>
                                             {
@@ -6156,7 +6150,8 @@ namespace Geosite
                                 //(object Sender, OutputInfoEventArgs Event)
                                 {
                                     //第六步
-                                    this.Invoke(
+                                    //this.
+                                        Invoke(
                                         new Action(
                                             () =>
                                             {
@@ -6400,91 +6395,94 @@ namespace Geosite
 
         private void deleteForest_Click(object sender, EventArgs e)
         {
-            if (_clusterUser.status)
-            {
-                var result = PostgreSqlHelper.ScalarAsync(
-                    "SELECT id FROM forest WHERE id = @id AND name = @name::text LIMIT 1;",
-                    new Dictionary<string, object>
-                    {
-                        {"id", _clusterUser.forest},
-                        {"name", _clusterUser.name}
-                    }
-                ).Result;
-                if (result == null)
+            if (!_clusterUser.status) 
+                return;
+
+            var result = PostgreSqlHelper.ScalarAsync(
+                "SELECT id FROM forest WHERE id = @id AND name = @name::text LIMIT 1;",
+                new Dictionary<string, object>
                 {
-                    statusText.Text = @"Nothing was found";
-                    return;
+                    {"id", _clusterUser.forest},
+                    {"name", _clusterUser.name}
                 }
+            ).Result;
+            if (result == null)
+            {
+                statusText.Text = @"Nothing was found";
+                return;
+            }
 
-                var random = new Random((int)DateTime.Now.Ticks & 0x0000FFFF);
-                var r1 = random.Next(0, 100);
-                var r2 = random.Next(0, 100);
+            var random = new Random((int)DateTime.Now.Ticks & 0x0000FFFF);
+            var r1 = random.Next(0, 100);
+            var r2 = random.Next(0, 100);
+            {
+                if (Interaction.InputBox($"  For safety reasons, Please answer a question.\n\n  {r1} + {r2} = ?",
+                        "Caution")
+                    == $"{r1 + r2}")
                 {
-                    if (Interaction.InputBox($"  For safety reasons, Please answer a question.\n\n  {r1} + {r2} = ?",
-                            "Caution")
-                        == $"{r1 + r2}")
-                    {
-                        _loading.Run();
+                    _loading.Run();
 
-                        statusText.Text = @"Deleting ...";
-                        databasePanel.Enabled = false;
+                    statusText.Text = @"Deleting ...";
+                    databasePanel.Enabled = false;
 
-                        _clusterUser.status = false;
+                    _clusterUser.status = false;
 
-                        var task = new Func<bool>(
-                            () =>
-                                PostgreSqlHelper.NonQueryAsync(
-                                    "DELETE FROM forest WHERE id = @id AND name = @name::text;",
-                                    new Dictionary<string, object>
-                                    {
-                                        {"id", _clusterUser.forest},
-                                        {"name", _clusterUser.name}
-                                    }
-                                ).Result !=
-                                null
-                        );
-
-                        task.BeginInvoke(
-                            (x) =>
-                            {
-                                var success = task.EndInvoke(x);
-                                //this.
-                                    Invoke(
-                                    new Action(
-                                        () =>
-                                        {
-                                            if (success)
-                                            {
-                                                //更新 DataGrid 控件 - ClusterDate
-                                                _clusterDate?.Reset();
-                                                foreach (var statusCell in vectorFilePool.SelectedRows.Cast<DataGridViewRow>()
-                                                    .Where(row => !row.IsNewRow)
-                                                    .Select(row => vectorFilePool.CurrentCell = row.Cells[2]))
-                                                {
-                                                    statusCell.Value = "";
-                                                    statusCell.ToolTipText = "";
-                                                }
-
-                                                statusText.Text = @"Delete succeeded";
-                                            }
-                                            else
-                                            {
-                                                statusText.Text = @"Delete failed";
-                                            }
-
-                                            databasePanel.Enabled = true;
-                                            _loading.Run(false);
-                                        }
-                                    )
-                                );
-                            },
+                    var task = new Func<bool>(
+                        () =>
+                            PostgreSqlHelper.NonQueryAsync(
+                                "DELETE FROM forest WHERE id = @id AND name = @name::text;",
+                                new Dictionary<string, object>
+                                {
+                                    {"id", _clusterUser.forest},
+                                    {"name", _clusterUser.name}
+                                }
+                            ).Result !=
                             null
-                        );
-                    }
-                    else
-                    {
-                        statusText.Text = @"The delete operation was not performed";
-                    }
+                    );
+
+                    task.BeginInvoke(
+                        (x) =>
+                        {
+                            var success = task.EndInvoke(x);
+                            //this.
+                            Invoke(
+                                new Action(
+                                    () =>
+                                    {
+                                        if (success)
+                                        {
+                                            //更新 DataGrid 控件 - ClusterDate
+                                            _clusterDate?.Reset();
+                                            foreach (var statusCell in 
+                                                     vectorFilePool
+                                                         .SelectedRows
+                                                         .Cast<DataGridViewRow>()
+                                                         .Where(row => !row.IsNewRow)
+                                                         .Select(row => vectorFilePool.CurrentCell = row.Cells[2]))
+                                            {
+                                                statusCell.Value =
+                                                statusCell.ToolTipText = "";
+                                            }
+
+                                            statusText.Text = @"Delete succeeded";
+                                        }
+                                        else
+                                        {
+                                            statusText.Text = @"Delete failed";
+                                        }
+
+                                        databasePanel.Enabled = true;
+                                        _loading.Run(false);
+                                    }
+                                )
+                            );
+                        },
+                        null
+                    );
+                }
+                else
+                {
+                    statusText.Text = @"The delete operation was not performed";
                 }
             }
         }
@@ -6521,34 +6519,33 @@ namespace Geosite
                         {
                             tileType = TileType.Standard;
                             typeCode = EPSG4326.Checked ? 11001 : 11002;
-                            if (!(from dir
-                                        in Directory.GetDirectories(localTileFolder.Text)
-                                  where Regex.IsMatch(Path.GetFileName(dir), @"^\d+$",
-                                      RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Multiline)
-                                  select dir
-                                ).Any())
+                            if (!Directory
+                                    .GetDirectories(localTileFolder.Text)
+                                    .Any(dir => Regex.IsMatch(Path.GetFileName(dir), @"^\d+$",
+                                        RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Multiline))
+                               )
                                 statusError = @"Folder does not meet the requirements";
                         }
                         else if (FormatTMS.Checked)
                         {
                             tileType = TileType.TMS;
                             typeCode = EPSG4326.Checked ? 11001 : 11002;
-                            if (!(from dir
-                                        in Directory.GetDirectories(localTileFolder.Text)
-                                  where Regex.IsMatch(Path.GetFileName(dir), @"^\d+$",
-                                      RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Multiline)
-                                  select dir
-                                ).Any())
+                            if (!Directory
+                                    .GetDirectories(localTileFolder.Text)
+                                    .Any(dir => Regex.IsMatch(Path.GetFileName(dir), @"^\d+$",
+                                        RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Multiline))
+                                )
                                 statusError = @"Folder does not meet the requirements";
                         }
                         else if (FormatMapcruncher.Checked)
                         {
                             tileType = TileType.MapCruncher;
                             typeCode = 11002; //微软MapCruncher仅支持【球体墨卡托】投影
-                            if (!(from file in Directory.EnumerateFiles(localTileFolder.Text)
-                                  where Regex.IsMatch(Path.GetFileName(file), @"^[\d]+.png$",
-                                      RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Multiline)
-                                  select file).Any())
+                            if (!Directory
+                                    .EnumerateFiles(localTileFolder.Text)
+                                    .Any(file => Regex.IsMatch(Path.GetFileName(file), @"^[\d]+.png$",
+                                        RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Multiline))
+                                )
                                 statusError = @"Folder does not meet the requirements";
                         }
                         else if (FormatArcGIS.Checked)
@@ -6565,19 +6562,18 @@ namespace Geosite
                                 4）扩展名支持：".png" or ".jpg" or ".jpeg" or ".gif"
                             */
                             var tileFolder =
-                            (
-                                from dir
-                                    in Directory.GetDirectories(localTileFolder.Text)
-                                where Regex.IsMatch(Path.GetFileName(dir), @"^([\s\S]*?)(_alllayers)$",
-                                    RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Multiline)
-                                select dir
-                            ).FirstOrDefault();
+                                Directory
+                                    .GetDirectories(localTileFolder.Text)
+                                    .FirstOrDefault(dir => Regex.IsMatch(Path.GetFileName(dir), @"^([\s\S]*?)(_alllayers)$",
+                                        RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Multiline));
                             if (tileFolder != null)
                                 localTileFolder.Text = tileFolder;
 
-                            if (!(Directory.GetDirectories(localTileFolder.Text)
-                                    .Where(dir => Regex.IsMatch(Path.GetFileName(dir), "^L([0-9]+)$",
-                                        RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Multiline))).Any())
+                            if (!Directory
+                                    .GetDirectories(localTileFolder.Text)
+                                    .Any(dir => Regex.IsMatch(Path.GetFileName(dir), "^L([0-9]+)$",
+                                        RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Multiline))
+                               )
                                 statusError = @"Folder does not meet the requirements";
                         }
                         else if (FormatDeepZoom.Checked)
@@ -6586,18 +6582,16 @@ namespace Geosite
                             typeCode = 11000;
                             // 默认约定：???_files
                             var tileFolder =
-                            (
-                                from dir
-                                    in Directory.GetDirectories(localTileFolder.Text)
-                                where Regex.IsMatch(Path.GetFileName(dir), @"^([\s\S]+)(_files)$",
-                                    RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Multiline)
-                                select dir
-                            ).FirstOrDefault();
+                                Directory
+                                    .GetDirectories(localTileFolder.Text)
+                                    .FirstOrDefault(dir => Regex.IsMatch(Path.GetFileName(dir), @"^([\s\S]+)(_files)$",
+                                        RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Multiline));
                             if (tileFolder != null)
                                 localTileFolder.Text = tileFolder;
-                            if (!(Directory.GetDirectories(localTileFolder.Text)
-                                    .Where(dir => Regex.IsMatch(Path.GetFileName(dir), "([0-9]+)$",
-                                        RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Multiline))).Any())
+                            if (!Directory
+                                    .GetDirectories(localTileFolder.Text)
+                                    .Any(dir => Regex.IsMatch(Path.GetFileName(dir), "([0-9]+)$",
+                                        RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Multiline)))
                                 statusError = @"Folder does not meet the requirements";
                             else
                             {
@@ -6703,12 +6697,11 @@ namespace Geosite
                             tileType = TileType.Raster; //maptiler 软件自动产生元数据文件：metadata.json
                             typeCode = 11000;
 
-                            if (!(from dir
-                                        in Directory.GetDirectories(localTileFolder.Text)
-                                  where Regex.IsMatch(Path.GetFileName(dir), @"^\d+$",
-                                      RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Multiline)
-                                  select dir
-                                ).Any())
+                            if (!Directory
+                                    .GetDirectories(localTileFolder.Text)
+                                    .Any(dir => Regex.IsMatch(Path.GetFileName(dir), @"^\d+$",
+                                        RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Multiline))
+                                )
                                 statusError = @"Folder does not meet the requirements";
                             else
                             {
@@ -7102,11 +7095,11 @@ namespace Geosite
             var forest = _clusterUser.forest;
 
             string[] themeNames;
-            string[] rasterSourceFileArray = null;
+            string[] rasterSourceFiles = null;
             if (tabIndex == 2)
             {
-                rasterSourceFileArray = Regex.Split(ModelOpenTextBox.Text.Trim(), @"[\s]*[|][\s]*").Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
-                var rasterSourceFileCount = rasterSourceFileArray.Length; // >= 0 
+                rasterSourceFiles = Regex.Split(ModelOpenTextBox.Text.Trim(), @"[\s]*[|][\s]*").Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
+                var rasterSourceFileCount = rasterSourceFiles.Length; // >= 0 
                 //针对平铺栅格类型，可能有多个专题名称且由【|】分隔
                 themeNames = Regex.Split(parameter.theme, @"[\s]*[|][\s]*").Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
                 var themeNameCount = themeNames.Length; // >= 0 
@@ -7164,21 +7157,34 @@ namespace Geosite
                 int[] routeId;
                 long leaf; //之后将大于等于0
                 int typeCode; //非空间数据【默认】
-                XElement propertyX;
+                XElement propertyX; //叶子属性
 
                 var oldTree = PostgreSqlHelper.ScalarAsync(
-                    "SELECT (branch.tree, branch.routename, branch.routeid, leaf.id, leaf.type, leaf.property) FROM leaf," +
+                    //-------------------------------------------
+                    "WITH t1 AS" +
                     "(" +
-                    "   SELECT tree, array_agg(name) AS routename, array_agg(id) AS routeid FROM" +
-                    "   (" +
-                    "       SELECT * FROM branch WHERE tree IN" +
-                    "       (" +
-                    "           SELECT id FROM tree WHERE forest = @forest AND name ILIKE @name::text LIMIT 1" +
-                    "       ) ORDER BY tree, level" +
-                    "    ) AS branchtable" +
-                    "    GROUP BY tree" +
-                    ") AS branch " +
-                    "WHERE leaf.name ILIKE @name::text AND leaf.branch = branch.routeid[array_length(branch.routeid, 1)] LIMIT 1;",
+                    "    SELECT branch.tree, branch.routename, branch.routeid, leaf.id, leaf.type FROM leaf," +
+                    "    (" +
+                    "        SELECT tree, array_agg(name) AS routename, array_agg(id) AS routeid FROM" +
+                    "        (" +
+                    "            SELECT * FROM branch WHERE tree IN" +
+                    "            (" +
+                    "                SELECT id FROM tree WHERE forest = @forest AND name ILIKE @name::text LIMIT 1" +
+                    "            ) ORDER BY tree, level" +
+                    "        ) AS branchtable" +
+                    "        GROUP BY tree" +
+                    "    ) AS branch" +
+                    "    WHERE leaf.name ILIKE @name::text AND leaf.branch = branch.routeid[array_length(branch.routeid, 1)] LIMIT 1" +
+                    ")" +
+                    //-------------------------------------------
+                    "SELECT (t1.*, tt.description) FROM t1," +
+                    "(" +
+                    "    SELECT t2.leaf, array_agg((t2.name,t2.attribute,t2.level,t2.sequence,t2.parent,t2.flag,t2.type,t2.content)) AS description" +
+                    "    FROM leaf_description AS t2, t1" +
+                    "    WHERE t1.id = t2.leaf" +
+                    "    GROUP BY t2.leaf" +
+                    ") AS tt " +
+                    "WHERE t1.id = tt.leaf LIMIT 1;",
                     new Dictionary<string, object>
                     {
                         {"forest", forest},
@@ -7216,12 +7222,37 @@ namespace Geosite
                 if (oldTree != null)
                 {
                     var oldTreeResult = (object[])oldTree;
-                    tree = (int)oldTreeResult[0];
-                    routeName = (string[])oldTreeResult[1];
-                    routeId = (int[])oldTreeResult[2];
-                    leaf = (long)oldTreeResult[3];
-                    typeCode = (int)oldTreeResult[4];
-                    propertyX = XElement.Parse((string)oldTreeResult[5]);
+                    //oldTree包括6项：tree routename routeid id type description
+                    //其中，description包括8项：name attribute level sequence parent flag type content
+                    tree = (int)oldTreeResult[0]; //tree
+                    routeName = (string[])oldTreeResult[1]; //routename
+                    routeId = (int[])oldTreeResult[2]; //routeid
+                    leaf = (long)oldTreeResult[3]; //id
+                    typeCode = (int)oldTreeResult[4]; //type
+                    propertyX = GeositeXmlFormatting.TableToXml //将扁平化后的二维元组列表结构转换为深度嵌套的树状结构，实现二维关系模型向树状数据结构映射
+                    (
+                        ((object[]) oldTreeResult[5]) //description
+                        .Cast<object[]>()
+                        .Select
+                        (
+                            desc =>
+                            (
+                                $"{desc[0]}", //name
+                                desc[1] is string // attribute
+                                    ? System.Text.Json.Nodes.JsonNode.Parse(desc[1].ToString()!)
+                                        ?.AsObject()
+                                        .Select(kv => new XAttribute(kv.Key, kv.Value?.ToString() ?? ""))
+                                    : null,
+                                (short) desc[2], //level
+                                (short) desc[3], //sequence
+                                (short) desc[4], //parent
+                                (bool) desc[5], //flag
+                                (short) desc[6], //type
+                                $"{desc[7]}" //content
+                            )
+                        )
+                        .ToList()
+                    );
                 }
                 else
                 {
@@ -7251,13 +7282,13 @@ namespace Geosite
                                 getTreeLayers = new LayersBuilder("Untitled"); //暂将分类路由信息默认为：Untitled
                                 break;
                             case 2:
-                                getTreeLayers = new LayersBuilder(new FileInfo(rasterSourceFileArray[pointer]).FullName);
+                                getTreeLayers = new LayersBuilder(new FileInfo(rasterSourceFiles[pointer]).FullName);
                                 break;
                             default:
                                 return "This option is not supported";
                         }
                         getTreeLayers.ShowDialog();
-                        if (getTreeLayers.OK)
+                        if (getTreeLayers.Ok)
                         {
                             getTreePathString = getTreeLayers.TreePathString;
                             description = getTreeLayers.Description;
@@ -7277,7 +7308,7 @@ namespace Geosite
                                 getTreePathString = "Untitled"; //暂将分类路由信息默认为：Untitled
                                 break;
                             case 2:
-                                getTreePathString = ConsoleIO.FilePathToXPath(new FileInfo(rasterSourceFileArray[pointer]).FullName);
+                                getTreePathString = ConsoleIO.FilePathToXPath(new FileInfo(rasterSourceFiles[pointer]).FullName);
                                 break;
                             default:
                                 return "This option is not supported";
@@ -7299,7 +7330,7 @@ namespace Geosite
                                 treeLastWriteTime = DateTime.Now;
                                 break;
                             case 2:
-                                var fileInfo = new FileInfo(rasterSourceFileArray[pointer]);
+                                var fileInfo = new FileInfo(rasterSourceFiles[pointer]);
                                 treeUri = fileInfo.FullName;
                                 treeLastWriteTime = fileInfo.LastWriteTime;
                                 themeMetadataX = GeositeTilePush.GetRasterMetaData(treeUri, rasterTileSize.Text);
@@ -7334,11 +7365,8 @@ namespace Geosite
                         routeName = Regex.Split(treePathString, "[/]",
                             RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Multiline);
                         for (var i = routeName.Length - 1; i >= 0; i--)
-                        {
-                            if (layersX == null)
-                            {
-                                //最末层
-                                layersX = new XElement(
+                            layersX = layersX == null //最末层
+                                ? new XElement(
                                     "layer",
                                     new XElement("name", routeName[i]),
                                     themeMetadataX, //将元数据xml存入最末层
@@ -7356,17 +7384,12 @@ namespace Geosite
                                                 : null
                                         )
                                     )
-                                );
-                            }
-                            else
-                            {
-                                layersX = new XElement(
+                                )
+                                : new XElement(
                                     "layer",
                                     new XElement("name", routeName[i]),
                                     layersX
                                 );
-                            }
-                        }
                         treeXml.Add(layersX);
 
                         //创建【树】
@@ -7500,7 +7523,7 @@ namespace Geosite
                         {
                             var result2 = geositeTilePush.TilePush(
                                 2,
-                                rasterSourceFileArray[pointer],
+                                rasterSourceFiles[pointer],
                                 TileType.Standard, //强制为 OGC，以便识别 
                                 -1, //平铺式瓦片的【z】取【-1】
                                 true, //平铺式瓦片的投影系暂支持4326

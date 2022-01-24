@@ -14,14 +14,14 @@ namespace Geosite
 
         public XElement Description;
 
-        public bool OK;
+        public bool Ok;
 
         public bool DonotPrompt;
 
-        public LayersBuilder(string TreePathDefault = null)
+        public LayersBuilder(string treePathDefault = null)
         {
             InitializeComponent();
-            if (string.IsNullOrWhiteSpace(TreePathDefault))
+            if (string.IsNullOrWhiteSpace(treePathDefault))
             {
                 treePathTab.TabPages[0].Enabled = false;
                 treePathTab.SelectedIndex = 1;
@@ -30,7 +30,7 @@ namespace Geosite
             {
                 treePathTab.SelectedIndex = 0;
                 //尽可能从文件夹或文件路径中提取分类树
-                treePathBox.Text = ConsoleIO.FilePathToXPath(TreePathDefault);
+                treePathBox.Text = ConsoleIO.FilePathToXPath(treePathDefault);
                 treePathBox.Focus();
             }
         }
@@ -125,10 +125,10 @@ namespace Geosite
 
             if (canExit)
             {
-                OK = true;
+                Ok = true;
                 Close();
             } else 
-                OK = false;
+                Ok = false;
         }
 
         private void donotPrompt_CheckedChanged(object sender, EventArgs e)
