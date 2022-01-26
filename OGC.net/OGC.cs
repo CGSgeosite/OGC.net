@@ -1926,7 +1926,6 @@ namespace Geosite
                                                         PostgreSqlHelper.NonQuery(sqlString);
                                                     }
 
-                                                    //PostgreSqlHelper.NonQuery("CREATE SEQUENCE forest_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 9223372036854775807 START 1 CACHE 1;");
                                                     //PG自动对主键id创建索引：CREATE INDEX forest_id ON forest USING BTREE (id); 
                                                     //PostgreSQL为每一个唯一约束和主键约束创建一个索引来强制唯一性。因此，没有必要显式地为主键列创建一个索引
 
@@ -2015,7 +2014,7 @@ namespace Geosite
                                                                 PostgreSqlHelper.NonQuery(sqlString);
                                                             }
 
-                                                            PostgreSqlHelper.NonQuery("CREATE SEQUENCE tree_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 9223372036854775807 START 1 CACHE 1;");
+                                                            PostgreSqlHelper.NonQuery("CREATE SEQUENCE tree_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 START 1 CACHE 1;");
                                                             //PG自动对主键id创建索引：CREATE INDEX tree_id ON tree USING BTREE (id); 
                                                             sqlString =
                                                                 "CREATE INDEX tree_forest_sequence ON tree USING BTREE (forest, sequence);" +
@@ -2091,7 +2090,7 @@ namespace Geosite
                                                                         PostgreSqlHelper.NonQuery(sqlString);
                                                                     }
 
-                                                                    PostgreSqlHelper.NonQuery("CREATE SEQUENCE branch_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 9223372036854775807 START 1 CACHE 1;");
+                                                                    PostgreSqlHelper.NonQuery("CREATE SEQUENCE branch_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 START 1 CACHE 1;");
 
                                                                     //PG自动对主键id创建索引：CREATE INDEX branch_id ON branch USING btree (id);  
                                                                     sqlString =
@@ -2184,7 +2183,7 @@ namespace Geosite
                                                                             另外，针对文本型text字段，若创建了btree索引，只有当使用 like '关键字' 时且前面不能加%才能启用索引！
 
                                                                             在接口模块里，暗数据通常用于不便于传输的复杂几何数据、敏感数据或不便于浏览器展现的数据，该类数据不直接向外界提供检索、传输和展现服务，但可充当背景数据参与分析和运算。                                                       
-                                                                            为便于将leaf表按大数据分布式存储，为避免因多台服务器节点对bigserial类型数据均自动产生而造成重复或交叉现象，需将bigserial更改为bigint（-9223372036854775808 to +9223372036854775807），其值可通过序列函数手动赋值。
+                                                                            为便于将leaf表按大数据分布式存储，避免因多台服务器节点对bigserial类型数据均自动产生而造成重复或交叉现象，需将bigserial更改为bigint（-9223372036854775808 to +9223372036854775807），其值可通过序列函数手动赋值。
                                                                         */
 
                                                                         if (PostgreSqlHelper.NonQuery(sqlString) != null)
