@@ -14,8 +14,8 @@ For more information about the GeositeServer system, visit https://hub.docker.co
 ![OGC net4](https://user-images.githubusercontent.com/18747589/133953865-7832b9e2-adae-49e9-aa66-ea5a3bd66e4d.png)
 ![deepzoom](https://user-images.githubusercontent.com/18747589/138704082-74cb51a6-62af-49ff-81c0-694438aa82ba.png)
 ![vectoropen](https://user-images.githubusercontent.com/18747589/135033496-bdeb09e5-5094-4dc7-a7c8-0f22548f8c16.png)
-![console](https://user-images.githubusercontent.com/18747589/138637650-19224231-0e18-48f7-a2b0-5d15b7d76286.png)
-![ubuntu](https://user-images.githubusercontent.com/18747589/138806605-c6918c53-2915-4c45-a5b0-52d1210fdfdd.png)
-![ubuntumapgis](https://user-images.githubusercontent.com/18747589/139576492-26f25235-aa62-4f57-bbe5-b19d10b0a7f7.png)
-<img width="718" alt="macOS" src="https://user-images.githubusercontent.com/18747589/151783481-8b8bfd23-f1cf-4b55-8909-69362472b6b8.png">
+![windows](https://user-images.githubusercontent.com/18747589/152632061-a68ca431-efc4-4798-b1dc-cbf79c12c3b3.png)
+![linux](https://user-images.githubusercontent.com/18747589/152632064-6236e513-9bd9-485d-abbb-18c74b4fba73.png)
+![macos](https://user-images.githubusercontent.com/18747589/152632065-278e1bc0-0f48-4460-b1c9-53b34d794ba9.png)
+
 
