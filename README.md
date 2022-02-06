@@ -15,7 +15,7 @@ For more information about the GeositeServer system, visit https://hub.docker.co
 ![deepzoom](https://user-images.githubusercontent.com/18747589/138704082-74cb51a6-62af-49ff-81c0-694438aa82ba.png)
 ![vectoropen](https://user-images.githubusercontent.com/18747589/135033496-bdeb09e5-5094-4dc7-a7c8-0f22548f8c16.png)
 ![windows](https://user-images.githubusercontent.com/18747589/152632061-a68ca431-efc4-4798-b1dc-cbf79c12c3b3.png)
-![linux](https://user-images.githubusercontent.com/18747589/152632064-6236e513-9bd9-485d-abbb-18c74b4fba73.png)
+![linux](https://user-images.githubusercontent.com/18747589/152664321-9c657955-615d-4309-aad2-1750befe5bb6.png)
 ![macos](https://user-images.githubusercontent.com/18747589/152632065-278e1bc0-0f48-4460-b1c9-53b34d794ba9.png)
 
 
