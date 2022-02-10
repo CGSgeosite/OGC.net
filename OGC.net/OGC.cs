@@ -1,6 +1,6 @@
 ﻿/******************************************************************************
  *
- * Name: OGC.cs
+ * Name: OGC.net
  * Purpose: A free tool for reading ShapeFile, MapGIS, TXT/CSV, converting them
  *          into GML, GeoJSON, ShapeFile, KML and GeositeXML, and pushing vector
  *          or raster to PostgreSQL database.
@@ -78,6 +78,7 @@ namespace Geosite
         private void OGCform_Load(object sender, EventArgs e)
         {
             //-----test----
+
 
             //-------------
 
@@ -1493,9 +1494,7 @@ namespace Geosite
                     }
                 }
                 else
-                {
                     vectorSourceFile.Text = string.Empty;
-                }
             }
             catch (Exception error)
             {
@@ -1519,12 +1518,9 @@ namespace Geosite
                 Multiselect = true
 
             };
-            if (Directory.Exists(oldPath))
-            {
+            if (Directory.Exists(oldPath)) 
                 openFileDialog.InitialDirectory = oldPath;
-            }
-            vectorTargetFile.Text = string.Empty;
-            SaveAsFormat.Text = string.Empty;
+            vectorTargetFile.Text = SaveAsFormat.Text = string.Empty;
             SaveAsFormat.Items.Clear();
             SaveAsFormat.Enabled = false;
 
@@ -1553,9 +1549,7 @@ namespace Geosite
                     }
                 }
                 else
-                {
                     vectorSourceFile.Text = string.Empty;
-                }
             }
             catch (Exception error)
             {
@@ -1581,8 +1575,7 @@ namespace Geosite
             };
             if (Directory.Exists(oldPath))
                 openFileDialog.InitialDirectory = oldPath;
-            vectorTargetFile.Text = string.Empty;
-            SaveAsFormat.Text = string.Empty;
+            vectorTargetFile.Text = SaveAsFormat.Text = string.Empty;
             SaveAsFormat.Items.Clear();
             SaveAsFormat.Enabled = false;
 
@@ -1614,9 +1607,7 @@ namespace Geosite
                     }
                 }
                 else
-                {
                     vectorSourceFile.Text = string.Empty;
-                }
             }
             catch (Exception error)
             {
@@ -1642,8 +1633,7 @@ namespace Geosite
             };
             if (Directory.Exists(oldPath))
                 openFileDialog.InitialDirectory = oldPath;
-            vectorTargetFile.Text = string.Empty;
-            SaveAsFormat.Text = string.Empty;
+            vectorTargetFile.Text = SaveAsFormat.Text = string.Empty;
             SaveAsFormat.Items.Clear();
             SaveAsFormat.Enabled = false;
 
@@ -1672,9 +1662,7 @@ namespace Geosite
                     }
                 }
                 else
-                {
                     vectorSourceFile.Text = string.Empty;
-                }
             }
             catch (Exception error)
             {
@@ -2722,7 +2710,7 @@ namespace Geosite
             });
 
             task.BeginInvoke(
-                (x) =>
+                x =>
                 {
                     var resultMessage = task.EndInvoke(x);
                     //this.
@@ -7213,27 +7201,7 @@ namespace Geosite
                     typeCode = (int)oldTreeResult[4]; //type
                     propertyX = GeositeXmlFormatting.TableToXml //将扁平化后的二维元组列表结构转换为深度嵌套的树状结构，实现二维关系模型向树状数据结构映射
                     (
-                        ((object[]) oldTreeResult[5]) //description
-                        .Cast<object[]>()
-                        .Select
-                        (
-                            desc =>
-                            (
-                                $"{desc[0]}", //name
-                                desc[1] is string // attribute
-                                    ? System.Text.Json.Nodes.JsonNode.Parse(desc[1].ToString()!)
-                                        ?.AsObject()
-                                        .Select(kv => new XAttribute(kv.Key, kv.Value?.ToString() ?? ""))
-                                    : null,
-                                (short) desc[2], //level
-                                (short) desc[3], //sequence
-                                (short) desc[4], //parent
-                                (bool) desc[5], //flag
-                                (short) desc[6], //type
-                                $"{desc[7]}" //content
-                            )
-                        )
-                        .ToList()
+                        oldTreeResult[5]
                     );
                 }
                 else
