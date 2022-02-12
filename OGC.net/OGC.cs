@@ -1723,7 +1723,7 @@ namespace Geosite
             PostgresRun.Enabled =
             _postgreSqlConnection = false;
 
-            var task = new Func<(string Message, string Host, int Port, bool Administrator)>(() =>
+            var task = new Func<(string Message, string Host, int Port, bool Administrator, string DatabaseSize)>(() =>
             {
                 var userX = GeositeServerUsers.GetClusterUser(
                    serverUrl,
@@ -1732,26 +1732,29 @@ namespace Geosite
                );
                 /*  返回样例：
                     <User>
-                      <Servers>
+                        <Servers>
                         <Server> 
-                          <Host></Host>
-                          <Error></Error>
-                          <Username></Username>
-                          <Password></Password>
-                          <Database></Database>
-                          <Other></Other>
-                          <CommandTimeout></CommandTimeout>
-                          <Port></Port>
-                          <Pooling></Pooling>
+                            <Host></Host>
+                            <Error></Error>
+                            <Username></Username>
+                            <Password></Password>
+                            <Database Size="? MB"></Database>
+                            <Other></Other>
+                            <CommandTimeout></CommandTimeout>
+                            <Port></Port>
+                            <Pooling></Pooling>
+                            <LoadBalanceHosts></LoadBalanceHosts>
+                            <TargetSessionAttributes></TargetSessionAttributes>
                         </Server>
-                      </Servers>
-                      <Forest MachineName="" OSVersion="" ProcessorCount="" Administrator="False/True"></Forest>
+                        </Servers>
+                        <Forest MachineName="" OSVersion="" ProcessorCount="" Administrator="False/True"></Forest>
                     </User>             
                  */
                 string errorMessage = null;
                 string host = null;
                 var port = -1;
                 var administrator = false;
+                string databaseSize = null;
 
                 if (userX != null)
                 {
@@ -1761,7 +1764,9 @@ namespace Geosite
                     if (!int.TryParse(server?.Element("Port")?.Value.Trim(), out port))
                         port = 5432;
 
-                    var database = server?.Element("Database")?.Value.Trim();
+                    var databaseX = server?.Element("Database");
+                    var database = databaseX?.Value.Trim();
+                    databaseSize = databaseX?.Attribute("Size")?.Value;
                     var username = server?.Element("Username")?.Value.Trim();
                     var password = server?.Element("Password")?.Value.Trim();
 
@@ -2706,7 +2711,7 @@ namespace Geosite
                     errorMessage = @"Connection failed."; //通常因为服务器端管理员尚未设置账户群信息
                 }
 
-                return (Message: errorMessage, Host: host, Port: port, Administrator: administrator);
+                return (Message: errorMessage, Host: host, Port: port, Administrator: administrator, DatabaseSize: databaseSize);
             });
 
             task.BeginInvoke(
@@ -2726,6 +2731,7 @@ namespace Geosite
                                     deleteForest.Enabled = true;
                                     GeositeServerName.Text = resultMessage.Host;
                                     GeositeServerPort.Text = $@"{resultMessage.Port}";
+                                    DatabaseSize.Text = resultMessage.DatabaseSize;
 
                                     dataGridPanel.Enabled =
                                     _postgreSqlConnection = true;
@@ -2740,8 +2746,9 @@ namespace Geosite
                                     GeositeServerLink.BackgroundImage = Properties.Resources.linkfail;
 
                                     deleteForest.Enabled = false;
-                                    GeositeServerName.Text = 
-                                    GeositeServerPort.Text = "";
+                                    DatabaseSize.Text =
+                                        GeositeServerName.Text =
+                                            GeositeServerPort.Text = "";
                                 }
                                 ReIndex.Enabled = ReClean.Enabled = resultMessage.Message == null && resultMessage.Administrator;
                                 databasePanel.Enabled = true;

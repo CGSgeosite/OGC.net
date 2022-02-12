@@ -7609,6 +7609,16 @@
   <metadata name="ThemeType.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
+  <data name="pictureBox14.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADbSURBVDhPnZDNDoMgEIRJANt6aNJ46Lua+BOMPrMn6Q7Z
+        JYi1LZ1kdFyHD1R574Odc3TzqliyWFwMwQKBJJnf/qAcQGoASIyTaXk+KAdIMXEZAJIyGwDLuQqFVDmA
+        c8ULwnwYBkvedWBScwbYyAEyz/OmtcbOF4LEjjgGAUAngKoUcAVgWZbNGHOlsen7HnO8jz4AOH8E7JQD
+        IAbUArDW3mhsu64LAO49cHkHuFNe6Xtr/PlpmlYGqLZtVwGgT6NnCGcex9HTrvE5zWIAxBjEE30z+rj/
+        DYCdc+oF9O7Gs7sD4/sAAAAASUVORK5CYII=
+</value>
+  </data>
   <data name="pictureBox11.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAX4AAAF+CAYAAACF2nH8AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
