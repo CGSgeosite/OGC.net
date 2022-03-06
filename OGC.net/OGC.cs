@@ -80,6 +80,7 @@ namespace Geosite
             //-----test----
 
 
+
             //-------------
 
             //窗口标题-----
@@ -2771,11 +2772,6 @@ namespace Geosite
                 {
                     ogcCard.Enabled = false;
 
-                    // 先处理【键集】问题：刷新叶子表频度并删除键集子表内容
-                    statusText.Text = @"● Access frequency synchronization ...";
-                    Application.DoEvents();
-                    GeositeHits.Refresh();
-
                     statusText.Text = @"● forest ...";
                     Application.DoEvents();
                     if (PostgreSqlHelper.NonQuery("REINDEX TABLE forest;", timeout: 0) == null)
@@ -2887,6 +2883,11 @@ namespace Geosite
                 try
                 {
                     ogcCard.Enabled = false;
+
+                    // 先处理【键集】问题：刷新叶子表频度并删除键集子表内容
+                    statusText.Text = @"● Access frequency synchronization ...";
+                    Application.DoEvents();
+                    GeositeHits.Refresh();
 
                     statusText.Text = @"● forest ...";
                     Application.DoEvents();
