@@ -2751,7 +2751,8 @@ namespace Geosite
                                         GeositeServerName.Text =
                                             GeositeServerPort.Text = "";
                                 }
-                                ReIndex.Enabled = ReClean.Enabled = resultMessage.Message == null && resultMessage.Administrator;
+                                //ReIndex.Enabled = 
+                                    ReClean.Enabled = resultMessage.Message == null && resultMessage.Administrator;
                                 databasePanel.Enabled = true;
                                 _loading.Run(false);
                             }
@@ -2762,117 +2763,99 @@ namespace Geosite
             );
         }
 
-        private void ReIndex_Click(object sender, EventArgs e)
-        {
-            _loading.Run();
-
-            var task = new Action(() =>
-            {
-                try
-                {
-                    ogcCard.Enabled = false;
-
-                    statusText.Text = @"● forest ...";
-                    Application.DoEvents();
-                    if (PostgreSqlHelper.NonQuery("REINDEX TABLE forest;", timeout: 0) == null)
-                        throw new Exception(PostgreSqlHelper.ErrorMessage);
-
-                    statusText.Text = @"● forest_relation ...";
-                    Application.DoEvents();
-                    if (PostgreSqlHelper.NonQuery("REINDEX TABLE forest_relation;", timeout: 0) == null)
-                        throw new Exception(PostgreSqlHelper.ErrorMessage);
-
-                    statusText.Text = @"● tree ...";
-                    Application.DoEvents();
-                    if (PostgreSqlHelper.NonQuery("REINDEX TABLE tree;", timeout: 0) == null)
-                        throw new Exception(PostgreSqlHelper.ErrorMessage);
-
-                    statusText.Text = @"● tree_relation ...";
-                    Application.DoEvents();
-                    if (PostgreSqlHelper.NonQuery("REINDEX TABLE tree_relation;", timeout: 0) == null)
-                        throw new Exception(PostgreSqlHelper.ErrorMessage);
-
-                    statusText.Text = @"● branch ...";
-                    Application.DoEvents();
-                    if (PostgreSqlHelper.NonQuery("REINDEX TABLE branch;", timeout: 0) == null)
-                        throw new Exception(PostgreSqlHelper.ErrorMessage);
-
-                    statusText.Text = @"● branch_relation ...";
-                    Application.DoEvents();
-                    if (PostgreSqlHelper.NonQuery("REINDEX TABLE branch_relation;", timeout: 0) == null)
-                        throw new Exception(PostgreSqlHelper.ErrorMessage);
-
-                    statusText.Text = @"● leaf ...";
-                    Application.DoEvents();
-                    if (PostgreSqlHelper.NonQuery("REINDEX TABLE leaf;", timeout: 0) == null)
-                        throw new Exception(PostgreSqlHelper.ErrorMessage);
-
-                    statusText.Text = @"● leaf_relation ...";
-                    Application.DoEvents();
-                    if (PostgreSqlHelper.NonQuery("REINDEX TABLE leaf_relation;", timeout: 0) == null)
-                        throw new Exception(PostgreSqlHelper.ErrorMessage);
-
-                    statusText.Text = @"● leaf_route ...";
-                    Application.DoEvents();
-                    if (PostgreSqlHelper.NonQuery("REINDEX TABLE leaf_route;", timeout: 0) == null)
-                        throw new Exception(PostgreSqlHelper.ErrorMessage);
-
-                    statusText.Text = @"● leaf_description ...";
-                    Application.DoEvents();
-                    if (PostgreSqlHelper.NonQuery("REINDEX TABLE leaf_description;", timeout: 0) == null)
-                        throw new Exception(PostgreSqlHelper.ErrorMessage);
-
-                    statusText.Text = @"● leaf_style ...";
-                    Application.DoEvents();
-                    if (PostgreSqlHelper.NonQuery("REINDEX TABLE leaf_style;", timeout: 0) == null)
-                        throw new Exception(PostgreSqlHelper.ErrorMessage);
-
-                    statusText.Text = @"● leaf_geometry ...";
-                    Application.DoEvents();
-                    if (PostgreSqlHelper.NonQuery("REINDEX TABLE leaf_geometry;", timeout: 0) == null)
-                        throw new Exception(PostgreSqlHelper.ErrorMessage);
-
-                    statusText.Text = @"● leaf_tile ...";
-                    Application.DoEvents();
-                    if (PostgreSqlHelper.NonQuery("REINDEX TABLE leaf_tile;", timeout: 0) == null)
-                        throw new Exception(PostgreSqlHelper.ErrorMessage);
-
-                    statusText.Text = @"● leaf_wms ...";
-                    Application.DoEvents();
-                    if (PostgreSqlHelper.NonQuery("REINDEX TABLE leaf_wms;", timeout: 0) == null)
-                        throw new Exception(PostgreSqlHelper.ErrorMessage);
-
-                    statusText.Text = @"● leaf_age ...";
-                    Application.DoEvents();
-                    if (PostgreSqlHelper.NonQuery("REINDEX TABLE leaf_age;", timeout: 0) == null)
-                        throw new Exception(PostgreSqlHelper.ErrorMessage);
-
-                    statusText.Text = @"● leaf_hits ...";
-                    Application.DoEvents();
-                    if (PostgreSqlHelper.NonQuery("REINDEX TABLE leaf_hits;", timeout: 0) == null)
-                        throw new Exception(PostgreSqlHelper.ErrorMessage);
-
-                    statusText.Text = @"Reindex finished";
-                    Application.DoEvents();
-                }
-                catch (Exception error)
-                {
-                    statusText.Text = @$"Reindex failed ({error.Message})";
-                    Application.DoEvents();
-                }
-                finally
-                {
-                    ogcCard.Enabled = true;
-                }
-            });
-            task.BeginInvoke(
-                (x) =>
-                {
-                    task.EndInvoke(x);
-                    _loading.Run(false);
-                }, null
-            );
-        }
+        //private void ReIndex_Click(object sender, EventArgs e)
+        //{
+        //    _loading.Run();
+        //    var task = new Action(() =>
+        //    {
+        //        try
+        //        {
+        //            ogcCard.Enabled = false;
+        //            statusText.Text = @"● forest ...";
+        //            Application.DoEvents();
+        //            if (PostgreSqlHelper.NonQuery("REINDEX TABLE forest;", timeout: 0) == null)
+        //                throw new Exception(PostgreSqlHelper.ErrorMessage);
+        //            statusText.Text = @"● forest_relation ...";
+        //            Application.DoEvents();
+        //            if (PostgreSqlHelper.NonQuery("REINDEX TABLE forest_relation;", timeout: 0) == null)
+        //                throw new Exception(PostgreSqlHelper.ErrorMessage);
+        //            statusText.Text = @"● tree ...";
+        //            Application.DoEvents();
+        //            if (PostgreSqlHelper.NonQuery("REINDEX TABLE tree;", timeout: 0) == null)
+        //                throw new Exception(PostgreSqlHelper.ErrorMessage);
+        //            statusText.Text = @"● tree_relation ...";
+        //            Application.DoEvents();
+        //            if (PostgreSqlHelper.NonQuery("REINDEX TABLE tree_relation;", timeout: 0) == null)
+        //                throw new Exception(PostgreSqlHelper.ErrorMessage);
+        //            statusText.Text = @"● branch ...";
+        //            Application.DoEvents();
+        //            if (PostgreSqlHelper.NonQuery("REINDEX TABLE branch;", timeout: 0) == null)
+        //                throw new Exception(PostgreSqlHelper.ErrorMessage);
+        //            statusText.Text = @"● branch_relation ...";
+        //            Application.DoEvents();
+        //            if (PostgreSqlHelper.NonQuery("REINDEX TABLE branch_relation;", timeout: 0) == null)
+        //                throw new Exception(PostgreSqlHelper.ErrorMessage);
+        //            statusText.Text = @"● leaf ...";
+        //            Application.DoEvents();
+        //            if (PostgreSqlHelper.NonQuery("REINDEX TABLE leaf;", timeout: 0) == null)
+        //                throw new Exception(PostgreSqlHelper.ErrorMessage);
+        //            statusText.Text = @"● leaf_relation ...";
+        //            Application.DoEvents();
+        //            if (PostgreSqlHelper.NonQuery("REINDEX TABLE leaf_relation;", timeout: 0) == null)
+        //                throw new Exception(PostgreSqlHelper.ErrorMessage);
+        //            statusText.Text = @"● leaf_route ...";
+        //            Application.DoEvents();
+        //            if (PostgreSqlHelper.NonQuery("REINDEX TABLE leaf_route;", timeout: 0) == null)
+        //                throw new Exception(PostgreSqlHelper.ErrorMessage);
+        //            statusText.Text = @"● leaf_description ...";
+        //            Application.DoEvents();
+        //            if (PostgreSqlHelper.NonQuery("REINDEX TABLE leaf_description;", timeout: 0) == null)
+        //                throw new Exception(PostgreSqlHelper.ErrorMessage);
+        //            statusText.Text = @"● leaf_style ...";
+        //            Application.DoEvents();
+        //            if (PostgreSqlHelper.NonQuery("REINDEX TABLE leaf_style;", timeout: 0) == null)
+        //                throw new Exception(PostgreSqlHelper.ErrorMessage);
+        //            statusText.Text = @"● leaf_geometry ...";
+        //            Application.DoEvents();
+        //            if (PostgreSqlHelper.NonQuery("REINDEX TABLE leaf_geometry;", timeout: 0) == null)
+        //                throw new Exception(PostgreSqlHelper.ErrorMessage);
+        //            statusText.Text = @"● leaf_tile ...";
+        //            Application.DoEvents();
+        //            if (PostgreSqlHelper.NonQuery("REINDEX TABLE leaf_tile;", timeout: 0) == null)
+        //                throw new Exception(PostgreSqlHelper.ErrorMessage);
+        //            statusText.Text = @"● leaf_wms ...";
+        //            Application.DoEvents();
+        //            if (PostgreSqlHelper.NonQuery("REINDEX TABLE leaf_wms;", timeout: 0) == null)
+        //                throw new Exception(PostgreSqlHelper.ErrorMessage);
+        //            statusText.Text = @"● leaf_age ...";
+        //            Application.DoEvents();
+        //            if (PostgreSqlHelper.NonQuery("REINDEX TABLE leaf_age;", timeout: 0) == null)
+        //                throw new Exception(PostgreSqlHelper.ErrorMessage);
+        //            statusText.Text = @"● leaf_hits ...";
+        //            Application.DoEvents();
+        //            if (PostgreSqlHelper.NonQuery("REINDEX TABLE leaf_hits;", timeout: 0) == null)
+        //                throw new Exception(PostgreSqlHelper.ErrorMessage);
+        //            statusText.Text = @"Reindex finished";
+        //            Application.DoEvents();
+        //        }
+        //        catch (Exception error)
+        //        {
+        //            statusText.Text = @$"Reindex failed ({error.Message})";
+        //            Application.DoEvents();
+        //        }
+        //        finally
+        //        {
+        //            ogcCard.Enabled = true;
+        //        }
+        //    });
+        //    task.BeginInvoke(
+        //        (x) =>
+        //        {
+        //            task.EndInvoke(x);
+        //            _loading.Run(false);
+        //        }, null
+        //    );
+        //}
 
         private void ReClean_Click(object sender, EventArgs e)
         {
