@@ -4842,38 +4842,65 @@ namespace Geosite
                             }
                             break;
                         case ".xml":
+                        {
+                            try
                             {
-                                try
+                                XElement description = null;
+                                var canDo = true;
+                                if (!_noPromptLayersBuilder)
                                 {
-                                    XElement description = null;
-                                    var canDo = true;
-                                    if (!_noPromptLayersBuilder)
+                                    var getTreeLayers = new LayersBuilder(new FileInfo(path).FullName);
+                                    getTreeLayers.ShowDialog();
+                                    if (getTreeLayers.Ok)
                                     {
-                                        var getTreeLayers = new LayersBuilder(new FileInfo(path).FullName);
-                                        getTreeLayers.ShowDialog();
-                                        if (getTreeLayers.Ok)
+                                        description = getTreeLayers.Description;
+                                        _noPromptLayersBuilder = getTreeLayers.DonotPrompt;
+                                    }
+                                    else
+                                        canDo = false;
+                                }
+
+                                if (canDo)
+                                {
+                                    using var xml = new GeositeXml.GeositeXml();
+                                    xml.onGeositeEvent += delegate(object _, GeositeEventArgs thisEvent)
+                                    {
+                                        vectorBackgroundWorker.ReportProgress(thisEvent.progress ?? -1,
+                                            thisEvent.message ?? string.Empty);
+                                    };
+
+                                    XElement featureCollectionX = null;
+                                    var theTree = xml.GetTree(path);
+                                    var geositeXml = theTree as XElement[] ?? theTree.ToArray();
+                                    if (geositeXml.DescendantsAndSelf("member").Any())
+                                    {
+                                        var nameAndOthers = geositeXml
+                                            .Where(x => x.Name != "layer")
+                                            .Select(x => x)
+                                            .ToList();
+                                        var layers = geositeXml.Where(x => x.Name == "layer").Select(x => x);
+                                        var name = nameAndOthers.Where(x => x.Name == "name").Select(x => x);
+                                        if (nameAndOthers != null && name.Any() && layers.Any())
                                         {
-                                            description = getTreeLayers.Description;
-                                            _noPromptLayersBuilder = getTreeLayers.DonotPrompt;
+                                            featureCollectionX = new XElement(
+                                                "FeatureCollection",
+                                                nameAndOthers,
+                                                layers
+                                            );
                                         }
-                                        else
-                                            canDo = false;
+                                    }
+                                    else
+                                    {
+                                        featureCollectionX =
+                                            xml.GeositeXmlToGeositeXml(geositeXml, null, description).Root;
                                     }
 
-                                    if (canDo)
+                                    if (featureCollectionX != null && geositeXml.DescendantsAndSelf("member").Any())
                                     {
-                                        using var xml = new GeositeXml.GeositeXml();
-                                        xml.onGeositeEvent += delegate (object _, GeositeEventArgs thisEvent)
-                                        {
-                                            vectorBackgroundWorker.ReportProgress(thisEvent.progress ?? -1,
-                                                thisEvent.message ?? string.Empty);
-                                        };
-
-                                        var featureCollectionX = xml.GeositeXmlToGeositeXml(xml.GetTree(path), null, description).Root;
                                         featureCollectionX.Element("name").Value = theme;
                                         var treeTimeStamp =
-                                            $"{forest},{sequence},{DateTime.Parse(featureCollectionX.Attribute("timeStamp").Value): yyyyMMdd,HHmmss}";
-
+                                            $"{forest},{sequence},{DateTime.Parse(featureCollectionX?.Attribute("timeStamp")?.Value ?? DateTime.Now.ToString("s")): yyyyMMdd,HHmmss}";
+                                        
                                         var treeResult =
                                             oneForest.Tree(
                                                 treeTimeStamp,
@@ -4920,7 +4947,7 @@ namespace Geosite
                                                     var valid = 0;
                                                     var oldscale10 = -1;
                                                     var flagMany = 10.0 / leafCount;
-                                                    var scale1 = (int)Math.Ceiling(flagMany);
+                                                    var scale1 = (int) Math.Ceiling(flagMany);
                                                     var flag10 = 0;
                                                     foreach (var leafX in leafArray)
                                                     {
@@ -4936,7 +4963,7 @@ namespace Geosite
                                                         if (!createRoute.Success)
                                                         {
                                                             //this.
-                                                                Invoke(
+                                                            Invoke(
                                                                 new Action(
                                                                     () =>
                                                                     {
@@ -4951,7 +4978,8 @@ namespace Geosite
                                                         }
                                                         else
                                                         {
-                                                            var scale10 = (int)Math.Ceiling(10.0 * ++leafPointer / leafCount);
+                                                            var scale10 =
+                                                                (int) Math.Ceiling(10.0 * ++leafPointer / leafCount);
 
                                                             if (scale10 > oldscale10)
                                                             {
@@ -4976,10 +5004,11 @@ namespace Geosite
                                                             var createLeaf = oneForest.Leaf(
                                                                 route: createRoute.Route,
                                                                 leafX: leafX,
-                                                                timestamp: $"{DateTime.Parse(leafX.Attribute("timeStamp").Value): yyyyMMdd,HHmmss}",
+                                                                timestamp:
+                                                                $"{DateTime.Parse(leafX?.Attribute("timeStamp")?.Value ?? DateTime.Now.ToString("s")): yyyyMMdd,HHmmss}",
                                                                 topology: doTopology
                                                             );
-
+                                                            
                                                             if (createLeaf.Success)
                                                             {
                                                                 valid++;
@@ -4989,7 +5018,7 @@ namespace Geosite
                                                             else
                                                             {
                                                                 //this.
-                                                                    Invoke(
+                                                                Invoke(
                                                                     new Action(
                                                                         () =>
                                                                         {
@@ -5019,7 +5048,7 @@ namespace Geosite
                                             if (isOk)
                                             {
                                                 //this.
-                                                    Invoke(
+                                                Invoke(
                                                     new Action(
                                                         () =>
                                                         {
@@ -5033,7 +5062,7 @@ namespace Geosite
                                         else
                                         {
                                             //this.
-                                                Invoke(
+                                            Invoke(
                                                 new Action(
                                                     () =>
                                                     {
@@ -5046,32 +5075,37 @@ namespace Geosite
                                     }
                                     else
                                     {
-                                        //this.
-                                            Invoke(
-                                            new Action(
-                                                () =>
-                                                {
-                                                    statusCell.Value = "?";
-                                                    statusCell.ToolTipText = "Cancelled";
-                                                }
-                                            )
-                                        );
+                                        throw new Exception("Nothing");
                                     }
                                 }
-                                catch (Exception error)
+                                else
                                 {
                                     //this.
-                                        Invoke(
+                                    Invoke(
                                         new Action(
                                             () =>
                                             {
-                                                statusCell.Value = "!";
-                                                statusCell.ToolTipText = error.Message;
+                                                statusCell.Value = "?";
+                                                statusCell.ToolTipText = "Cancelled";
                                             }
                                         )
                                     );
                                 }
                             }
+                            catch (Exception error)
+                            {
+                                //this.
+                                Invoke(
+                                    new Action(
+                                        () =>
+                                        {
+                                            statusCell.Value = "!";
+                                            statusCell.ToolTipText = error.Message;
+                                        }
+                                    )
+                                );
+                            }
+                        }
                             break;
                         case ".kml":
                             {
@@ -5103,8 +5137,8 @@ namespace Geosite
                                         var featureCollectionX = kml.KmlToGeositeXml(kml.GetTree(path), null, description).Root;
                                         featureCollectionX.Element("name").Value = theme;
                                         var treeTimeStamp =
-                                            $"{forest},{sequence},{DateTime.Parse(featureCollectionX.Attribute("timeStamp").Value): yyyyMMdd,HHmmss}";
-
+                                            $"{forest},{sequence},{DateTime.Parse(featureCollectionX?.Attribute("timeStamp")?.Value ?? DateTime.Now.ToString("s")): yyyyMMdd,HHmmss}";
+                                        
                                         var treeResult =
                                             oneForest.Tree(
                                                 treeTimeStamp,
@@ -5187,10 +5221,10 @@ namespace Geosite
                                                                 route: createRoute.Route,
                                                                 leafX: leafX,
                                                                 timestamp:
-                                                                $"{DateTime.Parse(leafX.Attribute("timeStamp").Value): yyyyMMdd,HHmmss}",
+                                                                $"{DateTime.Parse(leafX?.Attribute("timeStamp")?.Value ?? DateTime.Now.ToString("s")): yyyyMMdd,HHmmss}",
                                                                 topology: doTopology
                                                             );
-
+                                                            
                                                             var scale10 = (int)Math.Ceiling(10.0 * ++leafPointer / leafCount);
 
                                                             if (scale10 > oldscale10)
@@ -5351,8 +5385,8 @@ namespace Geosite
                                             featureCollectionX.Element("name").Value = theme;
 
                                             var treeTimeStamp =
-                                                $"{forest},{sequence},{DateTime.Parse(featureCollectionX.Attribute("timeStamp").Value): yyyyMMdd,HHmmss}";
-
+                                                $"{forest},{sequence},{DateTime.Parse(featureCollectionX?.Attribute("timeStamp")?.Value ?? DateTime.Now.ToString("s")): yyyyMMdd,HHmmss}";
+                                            
                                             var treeResult =
                                                 oneForest.Tree(
                                                     treeTimeStamp,
@@ -5435,10 +5469,10 @@ namespace Geosite
                                                                     route: createRoute.Route,
                                                                     leafX: leafX,
                                                                     timestamp:
-                                                                    $"{DateTime.Parse(leafX.Attribute("timeStamp").Value): yyyyMMdd,HHmmss}",
+                                                                    $"{DateTime.Parse(leafX?.Attribute("timeStamp")?.Value ?? DateTime.Now.ToString("s")): yyyyMMdd,HHmmss}",
                                                                     topology: doTopology
                                                                 );
-
+                                                                
                                                                 var scale10 =
                                                                     (int)Math.Ceiling(10.0 * ++leafPointer /
                                                                         leafCount);
