@@ -224,6 +224,10 @@ namespace Geosite
             defaultvalue = RegEdit.Getkey(key, "False");
             ogctomaptiler.Checked = bool.Parse(defaultvalue);
 
+            key = MIMEBox.Name;
+            defaultvalue = RegEdit.Getkey(key, "png");
+            MIMEBox.Text = defaultvalue ?? "png";
+
             tilesource_SelectedIndexChanged(null, null);
 
             _loading = new LoadingBar(waitingBar);
@@ -6952,6 +6956,8 @@ namespace Geosite
                                                                     "maxZoom", wmtsMaxZoom.Text
                                                                 ), new XElement(
                                                                     "tileSize", wmtsSize.Text
+                                                                    ), new XElement(
+                                                                    "format", MIMEBox.Text
                                                                 ), new XElement(
                                                                     "boundary", new XElement(
                                                                         "north", wmtsNorth.Text
@@ -7468,7 +7474,7 @@ namespace Geosite
                         }
 
                         break;
-                    case 1: //远程wms服务地址（金字塔存储）
+                    case 1: //远程wms服务地址（金字塔存储） 
                         try
                         {
                             var result1 = geositeTilePush.TilePush(
@@ -7477,7 +7483,7 @@ namespace Geosite
                                 parameter.type,
                                 parameter.tileMatrix,
                                 EPSG4326.Checked,
-                                (wmtsNorth.Text, wmtsSouth.Text, wmtsWest.Text, wmtsEast.Text),
+                                (wmtsNorth.Text, wmtsSouth.Text, wmtsWest.Text, wmtsEast.Text), 
                                 wmtsSpider.Checked,
                                 //tabIndex == 1 && 
                                 !string.IsNullOrWhiteSpace(subdomainsBox.Text)

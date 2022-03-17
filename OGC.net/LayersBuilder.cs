@@ -45,7 +45,7 @@ namespace Geosite
                 var layers = new List<string>();
                 foreach (var layer in Regex.Split(
                         TreePathString,
-                        @"[/\\]+", //约定为正斜杠【/】或者反斜杠【\】分隔
+                        @"[/\\]+", //约定为正斜杠【/】或者反斜杠【\】分隔，尤其不能出现小数点【.】，因为在后期服务中，小数点有特殊含义！
                         RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Multiline)
                     .Select(layer => layer.Trim())
                     .Where(layer => layer.Length > 0)
@@ -53,7 +53,7 @@ namespace Geosite
                 {
                     try
                     {
-                        //GML-layer名称需符合xml元素命名规则，至少不能出现特殊字符、括号、纯数字 ...
+                        //GML-layer名称需符合xml元素命名规则，至少不能出现特殊字符、小数点、括号、纯数字 ...
                         layers.Add(new XElement(layer).Name.LocalName);
                     }
                     catch (Exception error)

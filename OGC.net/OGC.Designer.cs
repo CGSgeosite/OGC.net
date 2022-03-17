@@ -30,8 +30,8 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OGCform));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.vectorSourceFile = new System.Windows.Forms.TextBox();
             this.vectorTargetFile = new System.Windows.Forms.TextBox();
             this.OGCtoolTip = new System.Windows.Forms.ToolTip(this.components);
@@ -189,6 +189,7 @@
             this.statusText = new System.Windows.Forms.ToolStripStatusLabel();
             this.dataGridViewImageColumn1 = new System.Windows.Forms.DataGridViewImageColumn();
             this.kmllogo = new System.Windows.Forms.PictureBox();
+            this.MIMEBox = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox13)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.vectorSaveFile)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.vectorOpenFile)).BeginInit();
@@ -371,7 +372,7 @@
             // 
             // wmtsSouth
             // 
-            this.wmtsSouth.Location = new System.Drawing.Point(333, 71);
+            this.wmtsSouth.Location = new System.Drawing.Point(273, 71);
             this.wmtsSouth.Name = "wmtsSouth";
             this.wmtsSouth.Size = new System.Drawing.Size(61, 21);
             this.wmtsSouth.TabIndex = 34;
@@ -382,7 +383,7 @@
             // 
             // wmtsWest
             // 
-            this.wmtsWest.Location = new System.Drawing.Point(266, 55);
+            this.wmtsWest.Location = new System.Drawing.Point(206, 55);
             this.wmtsWest.Name = "wmtsWest";
             this.wmtsWest.Size = new System.Drawing.Size(61, 21);
             this.wmtsWest.TabIndex = 32;
@@ -393,7 +394,7 @@
             // 
             // wmtsEast
             // 
-            this.wmtsEast.Location = new System.Drawing.Point(399, 55);
+            this.wmtsEast.Location = new System.Drawing.Point(339, 55);
             this.wmtsEast.Name = "wmtsEast";
             this.wmtsEast.Size = new System.Drawing.Size(61, 21);
             this.wmtsEast.TabIndex = 33;
@@ -404,7 +405,7 @@
             // 
             // wmtsNorth
             // 
-            this.wmtsNorth.Location = new System.Drawing.Point(333, 36);
+            this.wmtsNorth.Location = new System.Drawing.Point(273, 36);
             this.wmtsNorth.Name = "wmtsNorth";
             this.wmtsNorth.Size = new System.Drawing.Size(61, 21);
             this.wmtsNorth.TabIndex = 31;
@@ -417,7 +418,7 @@
             // 
             this.textBox4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.textBox4.Enabled = false;
-            this.textBox4.Location = new System.Drawing.Point(296, 46);
+            this.textBox4.Location = new System.Drawing.Point(236, 46);
             this.textBox4.Multiline = true;
             this.textBox4.Name = "textBox4";
             this.textBox4.ReadOnly = true;
@@ -878,7 +879,7 @@
             this.wmtsSpider.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.wmtsSpider.Cursor = System.Windows.Forms.Cursors.Hand;
             this.wmtsSpider.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.wmtsSpider.Location = new System.Drawing.Point(95, 53);
+            this.wmtsSpider.Location = new System.Drawing.Point(410, 71);
             this.wmtsSpider.Name = "wmtsSpider";
             this.wmtsSpider.Size = new System.Drawing.Size(50, 24);
             this.wmtsSpider.TabIndex = 18;
@@ -1450,8 +1451,10 @@
             // 
             // RemoteTilePage
             // 
+            this.RemoteTilePage.Controls.Add(this.MIMEBox);
             this.RemoteTilePage.Controls.Add(this.tilewebapi);
             this.RemoteTilePage.Controls.Add(this.subdomainsBox);
+            this.RemoteTilePage.Controls.Add(this.wmtsSpider);
             this.RemoteTilePage.Controls.Add(this.wmtsSize);
             this.RemoteTilePage.Controls.Add(this.label5);
             this.RemoteTilePage.Controls.Add(this.label6);
@@ -1464,7 +1467,6 @@
             this.RemoteTilePage.Controls.Add(this.wmtsSouth);
             this.RemoteTilePage.Controls.Add(this.wmtsNorth);
             this.RemoteTilePage.Controls.Add(this.textBox4);
-            this.RemoteTilePage.Controls.Add(this.wmtsSpider);
             this.RemoteTilePage.Controls.Add(this.pictureBox7);
             this.RemoteTilePage.Location = new System.Drawing.Point(4, 22);
             this.RemoteTilePage.Name = "RemoteTilePage";
@@ -1485,7 +1487,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(158, 76);
+            this.label5.Location = new System.Drawing.Point(94, 76);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(47, 12);
             this.label5.TabIndex = 35;
@@ -1547,7 +1549,7 @@
             "22",
             "23",
             "24"});
-            this.wmtsMaxZoom.Location = new System.Drawing.Point(213, 72);
+            this.wmtsMaxZoom.Location = new System.Drawing.Point(149, 72);
             this.wmtsMaxZoom.Name = "wmtsMaxZoom";
             this.wmtsMaxZoom.Size = new System.Drawing.Size(48, 20);
             this.wmtsMaxZoom.TabIndex = 13;
@@ -1610,7 +1612,7 @@
             "21",
             "22",
             "23"});
-            this.wmtsMinZoom.Location = new System.Drawing.Point(213, 40);
+            this.wmtsMinZoom.Location = new System.Drawing.Point(149, 40);
             this.wmtsMinZoom.Name = "wmtsMinZoom";
             this.wmtsMinZoom.Size = new System.Drawing.Size(48, 20);
             this.wmtsMinZoom.TabIndex = 13;
@@ -1620,7 +1622,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(158, 45);
+            this.label4.Location = new System.Drawing.Point(94, 45);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(47, 12);
             this.label4.TabIndex = 35;
@@ -2041,8 +2043,8 @@
             // 
             // VectorStatus
             // 
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.VectorStatus.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.VectorStatus.DefaultCellStyle = dataGridViewCellStyle5;
             this.VectorStatus.HeaderText = "※";
             this.VectorStatus.Name = "VectorStatus";
             this.VectorStatus.ReadOnly = true;
@@ -2102,13 +2104,13 @@
             this.clusterDataPool.AllowUserToAddRows = false;
             this.clusterDataPool.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
             this.clusterDataPool.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.clusterDataPool.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.clusterDataPool.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle6;
             this.clusterDataPool.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.clusterDataPool.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.ThemeName,
@@ -2346,7 +2348,7 @@
             this.statusBar.Location = new System.Drawing.Point(0, 439);
             this.statusBar.Name = "statusBar";
             this.statusBar.ShowItemToolTips = true;
-            this.statusBar.Size = new System.Drawing.Size(584, 22);
+            this.statusBar.Size = new System.Drawing.Size(583, 22);
             this.statusBar.SizingGrip = false;
             this.statusBar.TabIndex = 18;
             // 
@@ -2362,7 +2364,7 @@
             // 
             this.statusText.DoubleClickEnabled = true;
             this.statusText.Name = "statusText";
-            this.statusText.Size = new System.Drawing.Size(569, 17);
+            this.statusText.Size = new System.Drawing.Size(568, 17);
             this.statusText.Spring = true;
             this.statusText.ToolTipText = "Dblclick to clipboard";
             this.statusText.DoubleClick += new System.EventHandler(this.statusText_DoubleClick);
@@ -2384,12 +2386,58 @@
             this.kmllogo.TabIndex = 9;
             this.kmllogo.TabStop = false;
             // 
+            // MIMEBox
+            // 
+            this.MIMEBox.AutoCompleteCustomSource.AddRange(new string[] {
+            "-1",
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10",
+            "11",
+            "12",
+            "13",
+            "14",
+            "15",
+            "16",
+            "17",
+            "18",
+            "19",
+            "20",
+            "21",
+            "22",
+            "23",
+            "24"});
+            this.MIMEBox.BackColor = System.Drawing.Color.White;
+            this.MIMEBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.MIMEBox.FormattingEnabled = true;
+            this.MIMEBox.Items.AddRange(new object[] {
+            "png",
+            "jpeg",
+            "gif",
+            "bmp",
+            "tiff",
+            "webp"});
+            this.MIMEBox.Location = new System.Drawing.Point(410, 39);
+            this.MIMEBox.Name = "MIMEBox";
+            this.MIMEBox.Size = new System.Drawing.Size(50, 20);
+            this.MIMEBox.TabIndex = 38;
+            this.OGCtoolTip.SetToolTip(this.MIMEBox, "MIME type");
+            this.MIMEBox.SelectedIndexChanged += new System.EventHandler(this.FormEventChanged);
+            // 
             // OGCform
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(584, 461);
+            this.ClientSize = new System.Drawing.Size(583, 461);
             this.Controls.Add(this.statusBar);
             this.Controls.Add(this.ogcCard);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -2639,6 +2687,7 @@
         private System.Windows.Forms.Panel panel7;
         private System.Windows.Forms.TextBox DatabaseSize;
         private System.Windows.Forms.PictureBox pictureBox14;
+        private System.Windows.Forms.ComboBox MIMEBox;
     }
 }
 
