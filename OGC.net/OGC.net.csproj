@@ -84,15 +84,11 @@
     <TargetZone>LocalIntranet</TargetZone>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="gdalconst_csharp, Version=3.4.1.0, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=MSIL">
-      <HintPath>..\packages\GDAL.3.4.1\lib\netstandard2.0\gdalconst_csharp.dll</HintPath>
+    <Reference Include="gdalconst_csharp, Version=3.4.2.0, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=MSIL">
+      <HintPath>..\packages\GDAL.3.4.2\lib\netstandard2.0\gdalconst_csharp.dll</HintPath>
     </Reference>
-    <Reference Include="gdal_csharp, Version=3.4.1.0, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=MSIL">
-      <HintPath>..\packages\GDAL.3.4.1\lib\netstandard2.0\gdal_csharp.dll</HintPath>
-    </Reference>
-    <Reference Include="Geosite.OGC, Version=6.2022.2.19, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\OGC\Geosite.OGC.dll</HintPath>
+    <Reference Include="gdal_csharp, Version=3.4.2.0, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=MSIL">
+      <HintPath>..\packages\GDAL.3.4.2\lib\netstandard2.0\gdal_csharp.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.6.0.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
@@ -107,17 +103,17 @@
     <Reference Include="Npgsql, Version=6.0.3.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
       <HintPath>..\packages\Npgsql.6.0.3\lib\netstandard2.0\Npgsql.dll</HintPath>
     </Reference>
-    <Reference Include="ogr_csharp, Version=3.4.1.0, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=MSIL">
-      <HintPath>..\packages\GDAL.3.4.1\lib\netstandard2.0\ogr_csharp.dll</HintPath>
+    <Reference Include="ogr_csharp, Version=3.4.2.0, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=MSIL">
+      <HintPath>..\packages\GDAL.3.4.2\lib\netstandard2.0\ogr_csharp.dll</HintPath>
     </Reference>
-    <Reference Include="osr_csharp, Version=3.4.1.0, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=MSIL">
-      <HintPath>..\packages\GDAL.3.4.1\lib\netstandard2.0\osr_csharp.dll</HintPath>
+    <Reference Include="osr_csharp, Version=3.4.2.0, Culture=neutral, PublicKeyToken=db5a52b08dc5b321, processorArchitecture=MSIL">
+      <HintPath>..\packages\GDAL.3.4.2\lib\netstandard2.0\osr_csharp.dll</HintPath>
     </Reference>
     <Reference Include="RestSharp, Version=107.3.0.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
       <HintPath>..\packages\RestSharp.107.3.0\lib\netstandard2.0\RestSharp.dll</HintPath>
     </Reference>
     <Reference Include="SixLabors.ImageSharp, Version=2.0.0.0, Culture=neutral, PublicKeyToken=d998eea7b14cab13, processorArchitecture=MSIL">
-      <HintPath>..\packages\SixLabors.ImageSharp.2.0.0\lib\net472\SixLabors.ImageSharp.dll</HintPath>
+      <HintPath>..\packages\SixLabors.ImageSharp.2.1.0\lib\net472\SixLabors.ImageSharp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -310,18 +306,24 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\geosite OGC.net.core\OGC\OGC.csproj">
+      <Project>{904a99bb-db1f-4b1a-ab17-96268059057a}</Project>
+      <Name>OGC</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>这台计算机上缺少此项目引用的 NuGet 程序包。使用“NuGet 程序包还原”可下载这些程序包。有关更多信息，请参见 http://go.microsoft.com/fwlink/?LinkID=322105。缺少的文件是 {0}。</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\MP.GDAL.Native.2.2.3\build\net40\MP.GDAL.Native.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MP.GDAL.Native.2.2.3\build\net40\MP.GDAL.Native.targets'))" />
-    <Error Condition="!Exists('..\packages\GDAL.Native.3.4.1\build\netstandard2.0\GDAL.Native.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\GDAL.Native.3.4.1\build\netstandard2.0\GDAL.Native.targets'))" />
-    <Error Condition="!Exists('..\packages\GDAL.Plugins.3.4.1\build\netstandard2.0\GDAL.Plugins.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\GDAL.Plugins.3.4.1\build\netstandard2.0\GDAL.Plugins.targets'))" />
     <Error Condition="!Exists('..\packages\System.Text.Json.6.0.2\build\System.Text.Json.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.Text.Json.6.0.2\build\System.Text.Json.targets'))" />
+    <Error Condition="!Exists('..\packages\GDAL.Native.3.4.2\build\netstandard2.0\GDAL.Native.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\GDAL.Native.3.4.2\build\netstandard2.0\GDAL.Native.targets'))" />
+    <Error Condition="!Exists('..\packages\GDAL.Plugins.3.4.2\build\netstandard2.0\GDAL.Plugins.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\GDAL.Plugins.3.4.2\build\netstandard2.0\GDAL.Plugins.targets'))" />
   </Target>
   <Import Project="..\packages\MP.GDAL.Native.2.2.3\build\net40\MP.GDAL.Native.targets" Condition="Exists('..\packages\MP.GDAL.Native.2.2.3\build\net40\MP.GDAL.Native.targets')" />
-  <Import Project="..\packages\GDAL.Native.3.4.1\build\netstandard2.0\GDAL.Native.targets" Condition="Exists('..\packages\GDAL.Native.3.4.1\build\netstandard2.0\GDAL.Native.targets')" />
-  <Import Project="..\packages\GDAL.Plugins.3.4.1\build\netstandard2.0\GDAL.Plugins.targets" Condition="Exists('..\packages\GDAL.Plugins.3.4.1\build\netstandard2.0\GDAL.Plugins.targets')" />
   <Import Project="..\packages\System.Text.Json.6.0.2\build\System.Text.Json.targets" Condition="Exists('..\packages\System.Text.Json.6.0.2\build\System.Text.Json.targets')" />
+  <Import Project="..\packages\GDAL.Native.3.4.2\build\netstandard2.0\GDAL.Native.targets" Condition="Exists('..\packages\GDAL.Native.3.4.2\build\netstandard2.0\GDAL.Native.targets')" />
+  <Import Project="..\packages\GDAL.Plugins.3.4.2\build\netstandard2.0\GDAL.Plugins.targets" Condition="Exists('..\packages\GDAL.Plugins.3.4.2\build\netstandard2.0\GDAL.Plugins.targets')" />
 </Project>

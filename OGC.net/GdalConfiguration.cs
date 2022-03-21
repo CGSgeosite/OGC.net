@@ -57,18 +57,18 @@ namespace Geosite
         /// </summary>
         static GdalConfiguration()
         {
-            string executingDirectory, gdalPath, nativePath;
+            string executingDirectory = null, gdalPath = null, nativePath = null;
             try
             {
                 if (!IsWindows)
                 {
                     const string notSet = "_Not_set_";
-                    var tmp = Gdal.GetConfigOption("GDAL_DATA", notSet);
+                    string tmp = Gdal.GetConfigOption("GDAL_DATA", notSet);
                     _usable = tmp != notSet;
                     return;
                 }
 
-                var executingAssemblyFile = new Uri(Assembly.GetExecutingAssembly().GetName().CodeBase).LocalPath;
+                string executingAssemblyFile = new Uri(Assembly.GetExecutingAssembly().GetName().CodeBase).LocalPath;
                 executingDirectory = Path.GetDirectoryName(executingAssemblyFile);
 
                 if (string.IsNullOrEmpty(executingDirectory))
@@ -91,18 +91,18 @@ namespace Geosite
                 AddDllDirectory(Path.Combine(nativePath, "plugins"));
 
                 // Set the additional GDAL environment variables.
-                var gdalData = Path.Combine(gdalPath, "data");
+                string gdalData = Path.Combine(gdalPath, "data");
                 Environment.SetEnvironmentVariable("GDAL_DATA", gdalData);
                 Gdal.SetConfigOption("GDAL_DATA", gdalData);
 
-                var driverPath = Path.Combine(nativePath, "plugins");
+                string driverPath = Path.Combine(nativePath, "plugins");
                 Environment.SetEnvironmentVariable("GDAL_DRIVER_PATH", driverPath);
                 Gdal.SetConfigOption("GDAL_DRIVER_PATH", driverPath);
 
                 Environment.SetEnvironmentVariable("GEOTIFF_CSV", gdalData);
                 Gdal.SetConfigOption("GEOTIFF_CSV", gdalData);
 
-                var projSharePath = Path.Combine(gdalPath, "share");
+                string projSharePath = Path.Combine(gdalPath, "share");
                 Environment.SetEnvironmentVariable("PROJ_LIB", projSharePath);
                 Gdal.SetConfigOption("PROJ_LIB", projSharePath);
                 OSGeo.OSR.Osr.SetPROJSearchPaths(new[] { projSharePath });
@@ -124,7 +124,10 @@ namespace Geosite
         /// <summary>
         /// Gets a value indicating if the GDAL package is set up properly.
         /// </summary>
-        public static bool Usable => _usable;
+        public static bool Usable
+        {
+            get { return _usable; }
+        }
 
         /// <summary>
         /// Method to ensure the static constructor is being called.
