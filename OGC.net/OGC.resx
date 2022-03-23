@@ -3485,7 +3485,7 @@
   <data name="pictureBox14.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        vgAADr4B6kKxwAAAANtJREFUOE+dkM0OgyAQhEkA23po0njou5r4E4w+syfpDtkliLUtnWR0XIcPVHnv
+        vAAADrwBlbxySQAAANtJREFUOE+dkM0OgyAQhEkA23po0njou5r4E4w+syfpDtkliLUtnWR0XIcPVHnv
         g51zdPOqWLJYXAzBAoEkmd/+oBxAagBIjJNpeT4oB0gxcRkAkjIbAMu5CoVUOYBzxQvCfBgGS951YFJz
         BtjIATLP86a1xs4XgsSOOAYBQCeAqhRwBWBZls0Yc6Wx6fsec7yPPgA4fwTslAMgBtQCsNbeaGy7rgsA
         7j1weQe4U17pe2v8+WmaVgaotm1XAaBPo2cIZx7H0dOu8TnNYgDEGMQTfTP6uP8NgJ1z6gX07sazuwPj
@@ -7086,12 +7086,6 @@
   <metadata name="tileLevels.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
-  <metadata name="label1.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="tileLevels.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
   <data name="pictureBox8.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAOQAAAC8CAYAAABoigIXAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
@@ -7598,15 +7592,6 @@
         tnmnCFbLeluLC5S10EN5UMpYe/JxB0uK0dLWTKArhAl6XsGIWv0fro9/sfirzRMAAAAASUVORK5CYII=
 </value>
   </data>
-  <metadata name="VectorTheme.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="VectorURI.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="VectorStatus.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
   <metadata name="VectorTheme.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>

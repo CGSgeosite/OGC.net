@@ -7113,7 +7113,21 @@ namespace Geosite
             long total = 0;
             for (var pointer = 0; pointer < themeNames.Length; pointer++)
             {
+                //不允许出现特殊字符，也不能有小数点【.】，因为小数点在GML元素名中有特殊含义
                 var themeName = themeNames[pointer];
+
+                try
+                {
+                    var xmlNodeName = new XElement(themeName);
+                    if (xmlNodeName.Name.LocalName != themeName || Regex.IsMatch(themeName, @"[\.]+", RegexOptions.IgnoreCase))
+                    {
+                        throw new Exception($"[{themeName}] does not conform to XML naming rules");
+                    }
+                }
+                catch(Exception errorXml)
+                {
+                    return errorXml.Message;
+                }
 
                 //先大致检测是否存在指定的树记录，重点甄别类型码是否合适
                 var oldTreeType = PostgreSqlHelper.Scalar(
