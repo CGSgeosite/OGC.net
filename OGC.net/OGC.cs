@@ -1730,11 +1730,7 @@ namespace Geosite
 
             var task = new Func<(string Message, string Host, int Port, bool Administrator, string DatabaseSize)>(() =>
             {
-                var userX = GeositeServerUsers.GetClusterUser(
-                   serverUrl,
-                   serverUser,
-                   $"{GeositeConfuser.Cryptography.hashEncoder(serverPassword)}" //出于安全考虑，密码以哈希密文形式传输，以防链路侦听密码
-               );
+                var userX = GetClusterUserX(serverUrl, serverUser, serverPassword);
                 /*  返回样例：
                     <User>
                         <Servers>
@@ -2767,6 +2763,30 @@ namespace Geosite
             );
         }
 
+        private XElement GetClusterUserX(string serverUrl,string serverUser,string serverPassword)
+        {
+            return GeositeServerUsers.GetClusterUser(
+                serverUrl,
+                serverUser,
+                //出于安全考虑，密码以哈希密文形式传输，以防链路侦听密码
+                $"{GeositeConfuser.Cryptography.hashEncoder(serverPassword)}" 
+            );
+        }
+
+        private void UpdateDatabaseSize(string serverUrl, string serverUser, string serverPassword)
+        {
+            var userX = GetClusterUserX(serverUrl, serverUser, serverPassword);
+            if (userX != null)
+            {
+                DatabaseSize.Text =
+                    userX.Element("Servers")
+                        ?.Element("Server")
+                        ?.Element("Database")
+                        ?.Attribute("Size")
+                        ?.Value ?? "";
+            }
+        }
+
         //private void ReIndex_Click(object sender, EventArgs e)
         //{
         //    _loading.Run();
@@ -2863,6 +2883,10 @@ namespace Geosite
 
         private void ReClean_Click(object sender, EventArgs e)
         {
+            var serverUrl = GeositeServerUrl.Text?.Trim();
+            var serverUser = GeositeServerUser.Text?.Trim();
+            var serverPassword = GeositeServerPassword.Text?.Trim();
+
             _loading.Run();
 
             var task = new Action(() =>
@@ -2954,6 +2978,8 @@ namespace Geosite
 
                     statusText.Text = @"Reclean finished";
                     Application.DoEvents();
+
+                    UpdateDatabaseSize(serverUrl, serverUser, serverPassword);
                 }
                 catch (Exception error)
                 {
@@ -5661,10 +5687,16 @@ namespace Geosite
             else if (e.Result != null)
                 statusText.Text = (string)e.Result;
 
+            var serverUrl = GeositeServerUrl.Text?.Trim();
+            var serverUser = GeositeServerUser.Text?.Trim();
+            var serverPassword = GeositeServerPassword.Text?.Trim();
+            UpdateDatabaseSize(serverUrl, serverUser, serverPassword);
+
             PostgresRun.Enabled = true;
 
             _loading.Run(false);
             ogcCard.Enabled = true;
+
         }
 
         private void vectorFilePool_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
@@ -7572,6 +7604,11 @@ namespace Geosite
                 statusText.Text = @"Suspended!";
             else if (e.Result != null)
                 statusText.Text = (string)e.Result;
+
+            var serverUrl = GeositeServerUrl.Text?.Trim();
+            var serverUser = GeositeServerUser.Text?.Trim();
+            var serverPassword = GeositeServerPassword.Text?.Trim();
+            UpdateDatabaseSize(serverUrl, serverUser, serverPassword);
 
             PostgresRun.Enabled = dataCards.SelectedIndex == 0 || vectorFilePool.Rows.Count > 0;
 
