@@ -2199,15 +2199,12 @@ namespace Geosite
                                                                                 "CREATE INDEX leaf_property ON leaf USING BTREE (property);" + //为 group by 提供索引，以便提取异构记录 
                                                                                 "CREATE INDEX leaf_timestamp_yyyymmdd ON leaf USING BTREE ((timestamp[1]));" +
                                                                                 "CREATE INDEX leaf_timestamp_hhmmss ON leaf USING BTREE ((timestamp[2]));" +
-                                                                                //"CREATE INDEX leaf_frequency ON leaf USING BTREE (frequency);" +
-
-                                                                                //同时创建顺序和逆序索引的目的是：
+                                                                                //创建键集索引的目的是：
                                                                                 //1、体现频度优先原则（DESC 逆序）；
                                                                                 //2、为基于【键集】分页技术提供高速定位手段（ASC顺序和DESC逆序）；
                                                                                 //3、解决负值偏移问题（ASC 顺序），因为SQL-offset必须大于等于0，若想回溯，需采用顺序和逆序联合模拟方式
                                                                                 //4、采用 frequency 和 id 联合索引的目的是确保索引具有唯一性 
-                                                                                "CREATE INDEX leaf_frequency_id_asc  ON leaf USING BTREE (frequency ASC  NULLS LAST, id ASC  NULLS LAST);" +
-                                                                                "CREATE INDEX leaf_frequency_id_desc ON leaf USING BTREE (frequency DESC NULLS LAST, id DESC NULLS LAST);";
+                                                                                "CREATE INDEX leaf_frequency_id ON leaf USING BTREE (frequency ASC NULLS LAST, id ASC NULLS LAST);";
 
                                                                             if (PostgreSqlHelper.NonQuery(sqlString) != null)
                                                                             {
