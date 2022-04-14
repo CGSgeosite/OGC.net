@@ -80,7 +80,6 @@ namespace Geosite
             //-----test----
 
 
-
             //-------------
 
             //窗口标题-----
@@ -2264,7 +2263,7 @@ namespace Geosite
                                                                                         PostgreSqlHelper.NonQuery(sqlString);
                                                                                     }
 
-                                                                                    sqlString = "CREATE INDEX leaf_route_level_branch ON leaf_route USING BTREE (level, branch);";
+                                                                                    sqlString = "CREATE INDEX leaf_route_leaf_level_branch ON leaf_route USING BTREE (leaf, level, branch);";
                                                                                     if (PostgreSqlHelper.NonQuery(sqlString) != null)
                                                                                     {
                                                                                         //this.
