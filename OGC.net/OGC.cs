@@ -2597,8 +2597,9 @@ namespace Geosite
                                                                                                                                                         "  );"
                                                                                                                                                     );
 
+                                                                                                                                            const string ogcTypeName = "ogc_typename";
                                                                                                                                             int.TryParse(
-                                                                                                                                                $"{PostgreSqlHelper.Scalar("SELECT count(*) FROM pg_proc WHERE proname = 'OGC_TypeName';")}",
+                                                                                                                                                $"{PostgreSqlHelper.Scalar($"SELECT count(*) FROM pg_proc WHERE proname = '{ogcTypeName}';")}",
                                                                                                                                                 out var ogcTypeNameExist);
                                                                                                                                             if
                                                                                                                                                 (ogcTypeNameExist ==
@@ -2606,9 +2607,11 @@ namespace Geosite
                                                                                                                                                 PostgreSqlHelper
                                                                                                                                                     .NonQuery
                                                                                                                                                     (
-                                                                                                                                                        //  用法：SELECT leaf.* FROM leaf, OGC_TypeName('*.mapgis.面') as branches WHERE leaf.branch = branches.branch
-                                                                                                                                                        "CREATE OR REPLACE FUNCTION public.OGC_TypeName(typeName text) RETURNS TABLE(branch integer) AS $$" +
-                                                                                                                                                        "  DECLARE" +
+                                                                                                                                                        //  用法：SELECT leaf.* FROM leaf, ogc_typename('*.b.c') as branches WHERE leaf.branch = branches.branch
+                                                                                                                                                        //  typename：由逗号分隔的若干分类层名称（省略时取默认值：空）：分类层需从顶级分类开始并逐级限定，分类层名称可采用星号[*]进行模糊匹配，层级之间需采用[.]分隔
+                                                                                                                                                        //  branches：是否获取本级以及全部枝干和末端树梢id？默认为false=获取本级所属全部末端树梢id
+                                                                                                                                                        $"CREATE OR REPLACE FUNCTION public.{ogcTypeName}(typename text, branches boolean = null) RETURNS TABLE(branch integer) LANGUAGE 'plpgsql' AS $$" +
+                                                                                                                                                        " DECLARE" +
                                                                                                                                                         "    layerarray text[] := string_to_array(typeName, '.');" +
                                                                                                                                                         "    levelSelectList text[];" +
                                                                                                                                                         "    levelWhereList text[];" +
@@ -2617,7 +2620,7 @@ namespace Geosite
                                                                                                                                                         "    size integer;" +
                                                                                                                                                         "    index integer;" +
                                                                                                                                                         "    sql text;" +
-                                                                                                                                                        "  BEGIN" +
+                                                                                                                                                        " BEGIN" +
                                                                                                                                                         "    size := array_length(layerarray, 1);" +
                                                                                                                                                         "    IF size IS null THEN" +
                                                                                                                                                         "      size := 1;" +
@@ -2643,24 +2646,44 @@ namespace Geosite
                                                                                                                                                         "  ELSE" +
                                                                                                                                                         "    sql := '';" +
                                                                                                                                                         "  END IF;" +
-                                                                                                                                                        "  sql :=" +
+                                                                                                                                                        "  IF branches IS true THEN" +
+                                                                                                                                                        "    sql :=" +
                                                                                                                                                         "    'WITH RECURSIVE cte AS' ||" +
+                                                                                                                                                        "    '  (' ||" +
+                                                                                                                                                        "    '    SELECT branch.* FROM branch,' ||" + //初始表
+                                                                                                                                                        "    '    (' ||" +
+                                                                                                                                                        "    '        SELECT level' || size ||'.* FROM ' || array_to_string(levelSelectList, ',') || sql ||" +
+                                                                                                                                                        "    '    ) AS levels' ||" +
+                                                                                                                                                        "    '    WHERE branch.id = levels.id' ||" +
+                                                                                                                                                        "    '    UNION ALL' ||" + //递归
+                                                                                                                                                        "    '    SELECT branch.* FROM branch' ||" +
+                                                                                                                                                        "    '    INNER JOIN cte' ||" +
+                                                                                                                                                        "    '    ON branch.parent = cte.id' ||" +
+                                                                                                                                                        "    '  )' ||" +
+                                                                                                                                                        "    '  SELECT distinct id FROM cte';" +
+                                                                                                                                                        "  ELSE" +
+                                                                                                                                                        "    sql :=" +
+                                                                                                                                                        "    'SELECT branches.id FROM' ||" +
                                                                                                                                                         "    '  (' ||" +
                                                                                                                                                         "    '    SELECT branch.* FROM branch,' ||" +
                                                                                                                                                         "    '    (' ||" +
                                                                                                                                                         "    '        SELECT level' || size ||'.* FROM ' || array_to_string(levelSelectList, ',') || sql ||" +
                                                                                                                                                         "    '    ) AS levels' ||" +
                                                                                                                                                         "    '    WHERE branch.id = levels.id' ||" +
-                                                                                                                                                        "    '    UNION ALL' ||" +
-                                                                                                                                                        "    '    SELECT branch.* FROM branch' ||" +
-                                                                                                                                                        "    '    INNER JOIN cte' ||" +
-                                                                                                                                                        "    '    ON branch.parent = cte.id' ||" +
-                                                                                                                                                        "    '  )' ||" +
-                                                                                                                                                        "    '  SELECT distinct id FROM cte';" +
+                                                                                                                                                        "    '  ) AS levels' ||" +
+                                                                                                                                                        "    '  LEFT JOIN LATERAL' ||" +
+                                                                                                                                                        "    '  (' ||" +
+                                                                                                                                                        "    '    SELECT * FROM branch' ||" +
+                                                                                                                                                        "    '    WHERE tree = levels.tree' ||" +
+                                                                                                                                                        "    '    ORDER BY level DESC' ||" +
+                                                                                                                                                        "    '    LIMIT 1' ||" +
+                                                                                                                                                        "    '  ) AS branches' ||" +
+                                                                                                                                                        "    '  ON TRUE';" +
+                                                                                                                                                        "  END IF;" +
                                                                                                                                                         //"  --raise notice '% %',sql,parameters;" +
                                                                                                                                                         "  RETURN QUERY EXECUTE sql USING parameters;" +
-                                                                                                                                                        "  END;" +
-                                                                                                                                                        "  $$ LANGUAGE plpgsql;"
+                                                                                                                                                        " END;" +
+                                                                                                                                                        " $$ LANGUAGE plpgsql;"
                                                                                                                                                     );
 
                                                                                                                                             _clusterUser.status = true;
