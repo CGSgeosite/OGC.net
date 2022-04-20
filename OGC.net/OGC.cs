@@ -2684,7 +2684,7 @@ namespace Geosite
                                                                                                                                                         //"  --raise notice '% %',sql,parameters;" +
                                                                                                                                                         "  RETURN QUERY EXECUTE sql USING parameters;" +
                                                                                                                                                         " END;" +
-                                                                                                                                                        " $$ LANGUAGE plpgsql;"
+                                                                                                                                                        " $$"
                                                                                                                                                     );
 
                                                                                                                                             _clusterUser.status = true;
