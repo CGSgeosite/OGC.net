@@ -2607,12 +2607,13 @@ namespace Geosite
                                                                                                                                                 PostgreSqlHelper
                                                                                                                                                     .NonQuery
                                                                                                                                                     (
-                                                                                                                                                        //  用法：SELECT leaf.* FROM leaf, ogc_typename('*.b.c') as branches WHERE leaf.branch = branches.branch
-                                                                                                                                                        //  typename：由逗号分隔的若干分类层名称（省略时取默认值：空）：分类层需从顶级分类开始并逐级限定，分类层名称可采用星号[*]进行模糊匹配，层级之间需采用[.]分隔
+                                                                                                                                                        //  依据分类名称获取所属子类（枝干）id，可抵御SQL注入攻击
+                                                                                                                                                        //  用法：select * from leaf where branch = any(array(select * from ogc_typename('data.地质'))) 
+                                                                                                                                                        //  typename：分类名称需从顶级分类开始并逐级限定，层名可采用星号[*]进行模糊匹配，层级之间需采用[.]分隔
                                                                                                                                                         //  branches：是否获取本级以及全部枝干和末端树梢id？默认为false=获取本级所属全部末端树梢id
                                                                                                                                                         $"CREATE OR REPLACE FUNCTION public.{ogcTypeName}(typename text, branches boolean = null) RETURNS TABLE(branch integer) LANGUAGE 'plpgsql' AS $$" +
                                                                                                                                                         " DECLARE" +
-                                                                                                                                                        "    layerarray text[] := string_to_array(typeName, '.');" +
+                                                                                                                                                        "    layerArray text[] := string_to_array(typeName, '.');" +
                                                                                                                                                         "    levelSelectList text[];" +
                                                                                                                                                         "    levelWhereList text[];" +
                                                                                                                                                         "    parameters text[];" +
@@ -2621,14 +2622,14 @@ namespace Geosite
                                                                                                                                                         "    index integer;" +
                                                                                                                                                         "    sql text;" +
                                                                                                                                                         " BEGIN" +
-                                                                                                                                                        "    size := array_length(layerarray, 1);" +
+                                                                                                                                                        "    size := array_length(layerArray, 1);" +
                                                                                                                                                         "    IF size IS null THEN" +
                                                                                                                                                         "      size := 1;" +
-                                                                                                                                                        "      layerarray[1] := '*';" +
+                                                                                                                                                        "      layerArray[1] := '*';" +
                                                                                                                                                         "    END IF;" +
                                                                                                                                                         "    index := 0;" +
                                                                                                                                                         "    FOR i IN REVERSE size .. 1 LOOP" +
-                                                                                                                                                        "      theTypeName := layerarray[i];" +
+                                                                                                                                                        "      theTypeName := layerArray[i];" +
                                                                                                                                                         "      IF theTypeName <> '' AND theTypeName <> '*' AND theTypeName <> '＊' THEN" +
                                                                                                                                                         "        index := index + 1;" +
                                                                                                                                                         "        sql := ' AND name ILIKE $1[' || index || ']::text';" +
@@ -2660,10 +2661,10 @@ namespace Geosite
                                                                                                                                                         "    '    INNER JOIN cte' ||" +
                                                                                                                                                         "    '    ON branch.parent = cte.id' ||" +
                                                                                                                                                         "    '  )' ||" +
-                                                                                                                                                        "    '  SELECT distinct id FROM cte';" +
+                                                                                                                                                        "    '  SELECT DISTINCT id FROM cte';" +
                                                                                                                                                         "  ELSE" +
                                                                                                                                                         "    sql :=" +
-                                                                                                                                                        "    'SELECT branches.id FROM' ||" +
+                                                                                                                                                        "    'SELECT DISTINCT branches.id FROM' ||" +
                                                                                                                                                         "    '  (' ||" +
                                                                                                                                                         "    '    SELECT branch.* FROM branch,' ||" +
                                                                                                                                                         "    '    (' ||" +
