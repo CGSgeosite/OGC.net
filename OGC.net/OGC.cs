@@ -2610,8 +2610,7 @@ namespace Geosite
                                                                                                                                                         //  依据分类名称获取所属子类（枝干）id，可抵御SQL注入攻击
                                                                                                                                                         //  用法：select * from leaf where branch = any(array(select * from ogc_typename('data.地质'))) 
                                                                                                                                                         //  typename：分类名称需从顶级分类开始并逐级限定，层名可采用星号[*]进行模糊匹配，层级之间需采用[.]分隔
-                                                                                                                                                        //  branches：是否获取本级以及全部枝干和末端树梢id？默认为false=获取本级所属全部末端树梢id
-                                                                                                                                                        $"CREATE OR REPLACE FUNCTION public.{ogcTypeName}(typename text, branches boolean = null) RETURNS TABLE(branch integer) LANGUAGE 'plpgsql' AS $$" +
+                                                                                                                                                        $"CREATE OR REPLACE FUNCTION public.{ogcTypeName}(typename text) RETURNS TABLE(branch integer) LANGUAGE 'plpgsql' AS $$" +
                                                                                                                                                         " DECLARE" +
                                                                                                                                                         "    layerArray text[] := string_to_array(typeName, '.');" +
                                                                                                                                                         "    levelSelectList text[];" +
@@ -2647,8 +2646,7 @@ namespace Geosite
                                                                                                                                                         "  ELSE" +
                                                                                                                                                         "    sql := '';" +
                                                                                                                                                         "  END IF;" +
-                                                                                                                                                        "  IF branches IS true THEN" +
-                                                                                                                                                        "    sql :=" +
+                                                                                                                                                        "  sql :=" +
                                                                                                                                                         "    'WITH RECURSIVE cte AS' ||" +
                                                                                                                                                         "    '  (' ||" +
                                                                                                                                                         "    '    SELECT branch.* FROM branch,' ||" + //初始表
@@ -2662,25 +2660,6 @@ namespace Geosite
                                                                                                                                                         "    '    ON branch.parent = cte.id' ||" +
                                                                                                                                                         "    '  )' ||" +
                                                                                                                                                         "    '  SELECT DISTINCT id FROM cte';" +
-                                                                                                                                                        "  ELSE" +
-                                                                                                                                                        "    sql :=" +
-                                                                                                                                                        "    'SELECT DISTINCT branches.id FROM' ||" +
-                                                                                                                                                        "    '  (' ||" +
-                                                                                                                                                        "    '    SELECT branch.* FROM branch,' ||" +
-                                                                                                                                                        "    '    (' ||" +
-                                                                                                                                                        "    '        SELECT level' || size ||'.* FROM ' || array_to_string(levelSelectList, ',') || sql ||" +
-                                                                                                                                                        "    '    ) AS levels' ||" +
-                                                                                                                                                        "    '    WHERE branch.id = levels.id' ||" +
-                                                                                                                                                        "    '  ) AS levels' ||" +
-                                                                                                                                                        "    '  LEFT JOIN LATERAL' ||" +
-                                                                                                                                                        "    '  (' ||" +
-                                                                                                                                                        "    '    SELECT * FROM branch' ||" +
-                                                                                                                                                        "    '    WHERE tree = levels.tree' ||" +
-                                                                                                                                                        "    '    ORDER BY level DESC' ||" +
-                                                                                                                                                        "    '    LIMIT 1' ||" +
-                                                                                                                                                        "    '  ) AS branches' ||" +
-                                                                                                                                                        "    '  ON TRUE';" +
-                                                                                                                                                        "  END IF;" +
                                                                                                                                                         //"  --raise notice '% %',sql,parameters;" +
                                                                                                                                                         "  RETURN QUERY EXECUTE sql USING parameters;" +
                                                                                                                                                         " END;" +
