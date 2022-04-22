@@ -2609,8 +2609,9 @@ namespace Geosite
                                                                                                                                                     (
                                                                                                                                                         //  依据分类名称获取所属子类（枝干）id，可抵御SQL注入攻击
                                                                                                                                                         //  用法：select * from leaf where branch = any(array(select * from ogc_typename('data.地质'))) 
-                                                                                                                                                        //  typename：分类名称需从顶级分类开始并逐级限定，层名可采用星号[*]进行模糊匹配，层级之间需采用[.]分隔
-                                                                                                                                                        $"CREATE OR REPLACE FUNCTION public.{ogcTypeName}(typename text) RETURNS TABLE(branch integer) LANGUAGE 'plpgsql' AS $$" +
+                                                                                                                                                        //  typename：分类名称需从顶级分类开始并逐级限定，层名可采用星号[*]进行模糊匹配，层级之间需采用小数点[.]分隔
+                                                                                                                                                        //  path：是否获取所属全部枝干id，省略时取默认值：false = 仅获取末端树梢id
+                                                                                                                                                        $"CREATE OR REPLACE FUNCTION public.{ogcTypeName}(typename text, path boolean DEFAULT NULL::boolean) RETURNS TABLE(branch integer) LANGUAGE 'plpgsql' AS $$" +
                                                                                                                                                         " DECLARE" +
                                                                                                                                                         "    layerArray text[] := string_to_array(typeName, '.');" +
                                                                                                                                                         "    levelSelectList text[];" +
@@ -2659,7 +2660,15 @@ namespace Geosite
                                                                                                                                                         "    '    INNER JOIN cte' ||" +
                                                                                                                                                         "    '    ON branch.parent = cte.id' ||" +
                                                                                                                                                         "    '  )' ||" +
-                                                                                                                                                        "    '  SELECT DISTINCT id FROM cte';" +
+                                                                                                                                                        "    '  SELECT DISTINCT id FROM cte';" + //剔除重复枝干
+                                                                                                                                                        "  IF path IS NOT true THEN" + //仅提取末端树梢
+                                                                                                                                                        "    sql := sql ||" +
+                                                                                                                                                        "    '  AS cte1 WHERE NOT EXISTS' ||" +
+                                                                                                                                                        "    '  (' ||" +
+                                                                                                                                                        "    '    SELECT id FROM cte AS cte2' ||" +
+                                                                                                                                                        "    '    WHERE cte1.id = cte2.parent' ||" +
+                                                                                                                                                        "    '  )';" +
+                                                                                                                                                        "  END IF;" +
                                                                                                                                                         //"  --raise notice '% %',sql,parameters;" +
                                                                                                                                                         "  RETURN QUERY EXECUTE sql USING parameters;" +
                                                                                                                                                         " END;" +
