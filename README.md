@@ -20,6 +20,8 @@ For more information about the GeositeServer system, visit https://hub.docker.co
 ![WMTS-ArcGIS](https://user-images.githubusercontent.com/18747589/160277314-553eff16-27b4-49e3-afe9-ce56d3db9cd6.png)
 ![WMTS-QGIS](https://user-images.githubusercontent.com/18747589/160277320-4e67859c-4201-4762-83a4-6e8dd35b4714.png)
 ![WFS-QGIS](https://user-images.githubusercontent.com/18747589/160277325-5345cc29-4011-4eaa-85c3-76e1f06fdf11.png)
+![WMTS-ArcGlobe](https://user-images.githubusercontent.com/18747589/164638432-761fe32e-b56d-4ec5-85cd-d3f32cd89ebc.png)
+
 
 
 
