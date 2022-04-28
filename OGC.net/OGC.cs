@@ -4179,7 +4179,7 @@ namespace Geosite
                                                 foreach (var feature in shapeFile.GetFeature())
                                                 {
                                                     pointer++;
-                                                    if (feature != null)
+                                                    if (feature != null) // 如果实体要素不合理，feature 等于 null
                                                     {
                                                         var featureType = $"{feature["geometry"]["type"]}";
                                                         shapeFile.fire(
