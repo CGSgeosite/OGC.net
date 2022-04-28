@@ -3736,8 +3736,11 @@ namespace Geosite
                                                                 else
                                                                     elementdescriptionX = null;
 
-                                                                //几何坐标
-                                                                var coordinates = (JArray)((JObject)feature["geometry"])["coordinates"];
+                                                                //几何坐标 = GeoJson
+                                                                var coordinates =
+                                                                    //(JArray)((JObject)feature["geometry"])["coordinates"];
+                                                                    feature["geometry"].ToString(Formatting.None);
+                                                              
                                                                 //内点
                                                                 var centroid = (JArray)feature["centroid"];
                                                                 //边框 (double west, double south, double east, double north)
@@ -3779,7 +3782,8 @@ namespace Geosite
                                                                             elementdescriptionX,
                                                                             new XElement(
                                                                                 "geometry",
-                                                                                $"POINT({coordinates[0]} {coordinates[1]})"
+                                                                                //$"POINT({coordinates[0]} {coordinates[1]})"
+                                                                                coordinates
                                                                             ),
                                                                             featureBoundaryX,
                                                                             new XElement(
@@ -3803,13 +3807,8 @@ namespace Geosite
                                                                             elementdescriptionX,
                                                                             new XElement(
                                                                                 "geometry",
-                                                                                "LINESTRING(" +
-                                                                                string.Join(
-                                                                                    ",",
-                                                                                    coordinates.Select(coor =>
-                                                                                        $"{coor[0]} {coor[1]}").ToArray()
-                                                                                ) +
-                                                                                ")"
+                                                                                //"LINESTRING(" + string.Join(",", coordinates.Select(coor => $"{coor[0]} {coor[1]}").ToArray()) + ")"
+                                                                                coordinates
                                                                             ),
                                                                             featureBoundaryX,
                                                                             new XElement(
@@ -3838,22 +3837,8 @@ namespace Geosite
                                                                                 //单面 POLYGON((x y z ...,x y z ...,x y z ...)) 
                                                                                 //母子面 POLYGON((x y z ...,x y z ...,x y z ...),(x y z ...,x y z ...,x y z ...),(x y z ...,x y z ...,x y z ...),...)
                                                                                 //多面已处理为单面或母子面 MULTIPOLYGON(((x y z ...,x y z ...,x y z ...),(x y z ...,x y z ...,x y z ...)), ((x y z ...,x y z ...,x y z ...)))
-                                                                                "POLYGON(" +
-                                                                                string.Join
-                                                                                (
-                                                                                    ",",
-                                                                                    coordinates
-                                                                                        .Cast<JArray>()
-                                                                                        .Select(coordinate =>
-                                                                                            "(" + 
-                                                                                            string.Join(",",
-                                                                                                coordinate.Select(xy =>
-                                                                                                        $"{xy[0]} {xy[1]}")
-                                                                                                .ToArray()) + 
-                                                                                            ")")
-                                                                                    .ToList()
-                                                                                ) +
-                                                                                ")"
+                                                                                //"POLYGON(" + string.Join(",", coordinates.Cast<JArray>().Select(coordinate => "(" + string.Join(",", coordinate.Select(xy => $"{xy[0]} {xy[1]}").ToArray()) + ")").ToList()) + ")"
+                                                                                coordinates
                                                                             ),
                                                                             featureBoundaryX,
                                                                             new XElement(
@@ -4245,9 +4230,11 @@ namespace Geosite
                                                             else
                                                                 elementdescriptionX = null;
 
-                                                            //处理坐标问题
+                                                            //处理坐标问题 - GeoJson
                                                             var coordinates =
-                                                                (JArray)((JObject)feature["geometry"])["coordinates"];
+                                                                //(JArray)((JObject)feature["geometry"])["coordinates"];
+                                                                feature["geometry"].ToString(Formatting.None);
+
                                                             //内点
                                                             var centroid = (JArray)feature["centroid"];
                                                             //边框 (double west, double south, double east, double north)
@@ -4274,49 +4261,53 @@ namespace Geosite
                                                                 feature["timeStamp"]
                                                                     ?.Value<string>(); //DateTime.Now.ToString("s");
 
-                                                            XElement featureX = featureType switch
+                                                            var featureX = featureType switch
                                                             {
                                                                 "Point" => new XElement("member",
                                                                     new XAttribute("type", "Point"),
                                                                     new XAttribute("typeCode", "1"),
                                                                     new XAttribute("id", featureId),
                                                                     new XAttribute("timeStamp", featureTimeStamp),
-                                                                    elementdescriptionX, new XElement("geometry",
+                                                                    elementdescriptionX,
+                                                                    new XElement(
+                                                                        "geometry",
                                                                         //单点 POINT(x y z ...)
                                                                         //多点 MULTIPOINT(x y z ...,x y z ...,x y z ...) 
-                                                                        $"POINT({coordinates[0]} {coordinates[1]})"),
-                                                                    featureBoundaryX, styleX),
+                                                                        //$"POINT({coordinates[0]} {coordinates[1]})"
+                                                                        coordinates
+                                                                        ),
+                                                                    featureBoundaryX, 
+                                                                    styleX),
                                                                 "LineString" => new XElement("member",
                                                                     new XAttribute("type", "Line"),
                                                                     new XAttribute("typeCode", "2"),
                                                                     new XAttribute("id", featureId),
                                                                     new XAttribute("timeStamp", featureTimeStamp),
-                                                                    elementdescriptionX, new XElement("geometry",
+                                                                    elementdescriptionX, 
+                                                                    new XElement(
+                                                                        "geometry",
                                                                         //单线 LINESTRING(x y z ...,x y z ...,x y z ...)
                                                                         //多线 MULTILINESTRING((x y z ...,x y z ...,x y z ...),(x y z ...,x y z ...,x y z ...))
-                                                                        "LINESTRING(" + string.Join(",",
-                                                                            coordinates.Select(coor =>
-                                                                                    $"{coor[0]} {coor[1]}")
-                                                                                .ToArray()) + ")"), featureBoundaryX,
+                                                                        //"LINESTRING(" + string.Join(",", coordinates.Select(coor => $"{coor[0]} {coor[1]}").ToArray()) + ")"
+                                                                        coordinates
+                                                                        ),
+                                                                    featureBoundaryX,
                                                                     styleX),
                                                                 "Polygon" => new XElement("member",
                                                                     new XAttribute("type", "Polygon"),
                                                                     new XAttribute("typeCode", "3"),
                                                                     new XAttribute("id", featureId),
                                                                     new XAttribute("timeStamp", featureTimeStamp),
-                                                                    elementdescriptionX, new XElement("geometry",
+                                                                    elementdescriptionX, 
+                                                                    new XElement("geometry",
                                                                         //单面 POLYGON((x y z ...,x y z ...,x y z ...)) 
                                                                         //母子面 POLYGON((x y z ...,x y z ...,x y z ...),(x y z ...,x y z ...,x y z ...),(x y z ...,x y z ...,x y z ...),...)
                                                                         //多面已处理为单面或母子面  MULTIPOLYGON(((x y z ...,x y z ...,x y z ...),(x y z ...,x y z ...,x y z ...)), ((x y z ...,x y z ...,x y z ...)))
-                                                                        "POLYGON(" + string.Join(",",
-                                                                            (coordinates.Cast<JArray>()
-                                                                                .Select(coordinate =>
-                                                                                    "(" + string.Join(",",
-                                                                                        coordinate.Select(xy =>
-                                                                                                $"{xy[0]} {xy[1]}")
-                                                                                            .ToArray()) +
-                                                                                    ")")).ToList()) +
-                                                                        ")"), featureBoundaryX, styleX),
+                                                                        //"POLYGON(" + string.Join(",", (coordinates.Cast<JArray>().Select(coordinate => "(" + string.Join(",", coordinate.Select(xy => $"{xy[0]} {xy[1]}").ToArray()) + ")")).ToList()) + ")"
+                                                                        coordinates
+                                                                        ), 
+                                                                    featureBoundaryX, 
+                                                                    styleX),
                                                                 _ => null
                                                             };
                                                             if (featureX != null)
@@ -4681,8 +4672,11 @@ namespace Geosite
                                                                     else
                                                                         elementdescriptionX = null;
 
-                                                                    //处理坐标问题
-                                                                    var coordinates = (JArray)((JObject)feature["geometry"])["coordinates"];
+                                                                    //处理坐标问题 - GeoJson
+                                                                    var coordinates =
+                                                                        //(JArray)((JObject)feature["geometry"])["coordinates"];
+                                                                        feature["geometry"].ToString(Formatting.None);
+
                                                                     //内点
                                                                     var centroid = (JArray)feature["centroid"];
                                                                     //边框 (double west, double south, double east, double north)
@@ -4722,7 +4716,8 @@ namespace Geosite
                                                                                 elementdescriptionX,
                                                                                 new XElement(
                                                                                     "geometry",
-                                                                                    $"POINT({coordinates[0]} {coordinates[1]})"
+                                                                                    //$"POINT({coordinates[0]} {coordinates[1]})"
+                                                                                    coordinates
                                                                                 ),
                                                                                 featureBoundaryX
                                                                             //,
@@ -4748,13 +4743,14 @@ namespace Geosite
                                                                                 elementdescriptionX,
                                                                                 new XElement(
                                                                                     "geometry",
-                                                                                    "LINESTRING(" +
-                                                                                    string.Join(
-                                                                                        ",",
-                                                                                        coordinates.Select(coor =>
-                                                                                            $"{coor[0]} {coor[1]}").ToArray()
-                                                                                    ) +
-                                                                                    ")"
+                                                                                    //"LINESTRING(" +
+                                                                                    //string.Join(
+                                                                                    //    ",",
+                                                                                    //    coordinates.Select(coor =>
+                                                                                    //        $"{coor[0]} {coor[1]}").ToArray()
+                                                                                    //) +
+                                                                                    //")"
+                                                                                    coordinates
                                                                                 ),
                                                                                 featureBoundaryX
                                                                             //,
@@ -4780,17 +4776,18 @@ namespace Geosite
                                                                                 elementdescriptionX,
                                                                                 new XElement(
                                                                                     "geometry",
-                                                                                    "POLYGON(" +
-                                                                                    string.Join
-                                                                                    (
-                                                                                        ",",
-                                                                                        coordinates
-                                                                                            .Cast<JArray>()
-                                                                                            .Select(coordinate =>
-                                                                                                $"({string.Join(",", (coordinate.Select(xy => $"{xy[0]} {xy[1]}")).ToArray())})")
-                                                                                        .ToList()
-                                                                                    ) +
-                                                                                    ")"
+                                                                                    //"POLYGON(" +
+                                                                                    //string.Join
+                                                                                    //(
+                                                                                    //    ",",
+                                                                                    //    coordinates
+                                                                                    //        .Cast<JArray>()
+                                                                                    //        .Select(coordinate =>
+                                                                                    //            $"({string.Join(",", (coordinate.Select(xy => $"{xy[0]} {xy[1]}")).ToArray())})")
+                                                                                    //    .ToList()
+                                                                                    //) +
+                                                                                    //")"
+                                                                                    coordinates
                                                                                 ),
                                                                                 featureBoundaryX
                                                                             //,
