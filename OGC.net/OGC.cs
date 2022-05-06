@@ -30,7 +30,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -2135,7 +2134,7 @@ namespace Geosite
                                                                         sqlString =
                                                                             "CREATE TABLE leaf " +
                                                                             "(" +
-                                                                            "branch INTEGER, id BigInt, rank SmallInt DEFAULT 1, type INT DEFAULT 0, name TEXT, property BigInt, timestamp INT[], frequency BigInt DEFAULT 0" +
+                                                                            "branch INTEGER, id BigInt, rank SmallInt DEFAULT 1, type INT DEFAULT 0, name TEXT, property INTEGER, timestamp INT[], frequency BigInt DEFAULT 0" +
                                                                             ",CONSTRAINT leaf_pkey PRIMARY KEY (id)" +
                                                                             ",CONSTRAINT leaf_cascade FOREIGN KEY (branch) REFERENCES branch (id) MATCH SIMPLE ON DELETE CASCADE NOT VALID" +
                                                                             ") PARTITION BY HASH (id);" + //为应对大数据，特按哈希键进行了分区，以便提升查询性能
@@ -2230,497 +2229,585 @@ namespace Geosite
                                                                                     "CREATE INDEX leaf_relation_action ON leaf_relation USING GIN (action);";
                                                                                 PostgreSqlHelper.NonQuery(sqlString);
 
-                                                                                ///////////////////////////////////////////////////////////////////////////////////////
                                                                                 //this.
-                                                                                    Invoke(
+                                                                                Invoke(
                                                                                     new Action(
                                                                                         () =>
                                                                                         {
-                                                                                            statusText.Text = @"Create leaf table（leaf_route）...";
+                                                                                            statusText.Text =
+                                                                                                @"Create leaf table（leaf_description）...";
                                                                                         }
                                                                                     )
                                                                                 );
 
-                                                                                //叶子要素表（leaf）的枝干路由子表（leaf_route）
                                                                                 sqlString =
-                                                                                    "CREATE TABLE leaf_route " +
-                                                                                    "(" +
-                                                                                    "leaf BigInt, level SmallInt, branch BigInt" +
-                                                                                    ",CONSTRAINT leaf_route_pkey PRIMARY KEY (leaf, level, branch)" +
-                                                                                    ",CONSTRAINT leaf_route_cascade FOREIGN KEY (leaf) REFERENCES leaf (id) MATCH SIMPLE ON DELETE CASCADE NOT VALID" +
-                                                                                    ") PARTITION BY HASH (leaf, level, branch);" + //为应对大数据，特按哈希键进行了分区，以便提升查询性能
-                                                                                    "COMMENT ON TABLE leaf_route IS '叶子要素表（leaf）所属枝干路由子表';" +
-                                                                                    "COMMENT ON COLUMN leaf_route.leaf IS '叶子要素的标识码';" + //leaf表中的id
-                                                                                    "COMMENT ON COLUMN leaf_route.level IS '叶子要素所属枝干的分类级别';" +
-                                                                                    "COMMENT ON COLUMN leaf_route.branch IS '叶子要素所属树梢（父级枝干）标识码';";
-                                                                                if (PostgreSqlHelper.NonQuery(sqlString) != null)
+                                                                                    "CREATE TABLE leaf_description " +
+                                                                                    "(" + //parent字段增设于 2022年1月20日，便于实现xml重构
+                                                                                    "leaf bigint, level SmallInt, sequence SmallInt, parent SmallInt, name TEXT, attribute JSONB, flag BOOLEAN DEFAULT false, type SmallInt DEFAULT 0, content Text, numericvalue Numeric" +
+                                                                                    ",CONSTRAINT leaf_description_pkey PRIMARY KEY (leaf, level, sequence, parent)" + //唯一性
+                                                                                    ",CONSTRAINT leaf_description_cascade FOREIGN KEY (leaf) REFERENCES leaf (id) MATCH SIMPLE ON DELETE CASCADE NOT VALID" +
+                                                                                    ") PARTITION BY HASH (leaf, level, sequence, parent);" + //(leaf, level, sequence, parent) 为应对大数据，特按哈希键进行了分区，以便提升查询性能
+                                                                                    "COMMENT ON TABLE leaf_description IS '叶子要素表（leaf）的属性描述子表';" +
+                                                                                    "COMMENT ON COLUMN leaf_description.leaf IS '叶子要素的标识码';" + //leaf表中的id
+                                                                                    "COMMENT ON COLUMN leaf_description.level IS '字段（键）的嵌套层级';" +
+                                                                                    "COMMENT ON COLUMN leaf_description.sequence IS '字段（键）的同级序号';" +
+                                                                                    "COMMENT ON COLUMN leaf_description.parent IS '字段所属父级层级的排列序号';" +
+                                                                                    "COMMENT ON COLUMN leaf_description.name IS '字段（键）的名称';" +
+                                                                                    "COMMENT ON COLUMN leaf_description.attribute IS '字段（键）的属性，由若干扁平化键值对（KVP）构成';" +
+                                                                                    "COMMENT ON COLUMN leaf_description.flag IS '字段（键）的逻辑标识（false：此键无值；true：此键有值）';" +
+                                                                                    "COMMENT ON COLUMN leaf_description.type IS '字段（值）的数据类型码，目前支持：-1【分类型字段】、0【string（null）】、1【integer】、2【decimal】、3【hybrid】、4【boolean】';" +
+                                                                                    "COMMENT ON COLUMN leaf_description.content IS '字段（值）的全文内容，以便实施全文检索以及自然语言处理';" + //若开展自然语言处理，可将语义规则存入leaf_relation
+                                                                                    "COMMENT ON COLUMN leaf_description.numericvalue IS '字段（值）的数值型（1【integer】、2【decimal】、3【hybrid】、4【boolean】）容器，以便支持超大值域聚合计算';";
+
+                                                                                if (PostgreSqlHelper
+                                                                                     .NonQuery(sqlString) != null)
                                                                                 {
                                                                                     //暂采用CPU核数充当分区个数
-                                                                                    for (var i = 0; i < processorCount; i++)
+                                                                                    for (var i = 0;
+                                                                                     i < processorCount;
+                                                                                     i++)
                                                                                     {
                                                                                         sqlString =
-                                                                                            $"CREATE TABLE leaf_route_{i} PARTITION OF leaf_route FOR VALUES WITH (MODULUS {processorCount}, REMAINDER {i});";
-                                                                                        PostgreSqlHelper.NonQuery(sqlString);
+                                                                                            $"CREATE TABLE leaf_description_{i} PARTITION OF leaf_description FOR VALUES WITH (MODULUS {processorCount}, REMAINDER {i});";
+                                                                                        PostgreSqlHelper.NonQuery(
+                                                                                            sqlString);
                                                                                     }
 
-                                                                                    sqlString = "CREATE INDEX leaf_route_leaf_level_branch ON leaf_route USING BTREE (leaf, level, branch);";
-                                                                                    if (PostgreSqlHelper.NonQuery(sqlString) != null)
+                                                                                    sqlString =
+                                                                                        "CREATE INDEX leaf_description_name ON leaf_description USING BTREE (name);" +
+                                                                                        "CREATE INDEX leaf_description_name_FTS ON leaf_description USING PGROONGA (name);" +
+                                                                                        "CREATE INDEX leaf_description_flag ON leaf_description USING BTREE (flag);" +
+                                                                                        "CREATE INDEX leaf_description_type ON leaf_description USING BTREE (type);" +
+                                                                                        "CREATE INDEX leaf_description_content ON leaf_description USING PGROONGA (content);" + //全文检索（FTS）采用了 PGROONGA 扩展
+                                                                                        "CREATE INDEX leaf_description_numericvalue ON leaf_description USING BTREE (numericvalue);";
+
+                                                                                    if (PostgreSqlHelper.NonQuery(
+                                                                                         sqlString) != null)
                                                                                     {
+                                                                                        ///////////////////////////////////////////////////////////////////////////////////////
                                                                                         //this.
-                                                                                            Invoke(
+                                                                                        Invoke(
                                                                                             new Action(
                                                                                                 () =>
                                                                                                 {
-                                                                                                    statusText.Text = @"Create leaf table（leaf_description）...";
+                                                                                                    statusText.Text =
+                                                                                                        @"Create leaf table（leaf_style）...";
                                                                                                 }
                                                                                             )
                                                                                         );
 
                                                                                         sqlString =
-                                                                                            "CREATE TABLE leaf_description " +
-                                                                                            "(" + //parent字段增设于 2022年1月20日，便于实现xml重构
-                                                                                            "leaf bigint, level SmallInt, sequence SmallInt, parent SmallInt, name TEXT, attribute JSONB, flag BOOLEAN DEFAULT false, type SmallInt DEFAULT 0, content Text, numericvalue Numeric" +
-                                                                                            ",CONSTRAINT leaf_description_pkey PRIMARY KEY (leaf, level, sequence, parent)" + //唯一性
-                                                                                            ",CONSTRAINT leaf_description_cascade FOREIGN KEY (leaf) REFERENCES leaf (id) MATCH SIMPLE ON DELETE CASCADE NOT VALID" +
-                                                                                            ") PARTITION BY HASH (leaf, level, sequence, parent);" + //(leaf, level, sequence, parent) 为应对大数据，特按哈希键进行了分区，以便提升查询性能
-                                                                                            "COMMENT ON TABLE leaf_description IS '叶子要素表（leaf）的属性描述子表';" +
-                                                                                            "COMMENT ON COLUMN leaf_description.leaf IS '叶子要素的标识码';" + //leaf表中的id
-                                                                                            "COMMENT ON COLUMN leaf_description.level IS '字段（键）的嵌套层级';" +
-                                                                                            "COMMENT ON COLUMN leaf_description.sequence IS '字段（键）的同级序号';" +
-                                                                                            "COMMENT ON COLUMN leaf_description.parent IS '字段所属父级层级的排列序号';" +
-                                                                                            "COMMENT ON COLUMN leaf_description.name IS '字段（键）的名称';" +
-                                                                                            "COMMENT ON COLUMN leaf_description.attribute IS '字段（键）的属性，由若干扁平化键值对（KVP）构成';" +
-                                                                                            "COMMENT ON COLUMN leaf_description.flag IS '字段（键）的逻辑标识（false：此键无值；true：此键有值）';" +
-                                                                                            "COMMENT ON COLUMN leaf_description.type IS '字段（值）的数据类型码，目前支持：-1【分类型字段】、0【string（null）】、1【integer】、2【decimal】、3【hybrid】、4【boolean】';" +
-                                                                                            "COMMENT ON COLUMN leaf_description.content IS '字段（值）的全文内容，以便实施全文检索以及自然语言处理';" + //若开展自然语言处理，可将语义规则存入leaf_relation
-                                                                                            "COMMENT ON COLUMN leaf_description.numericvalue IS '字段（值）的数值型（1【integer】、2【decimal】、3【hybrid】、4【boolean】）容器，以便支持超大值域聚合计算';";
+                                                                                            "CREATE TABLE leaf_style " +
+                                                                                            "(" +
+                                                                                            "leaf BigInt, style JSONB" +
+                                                                                            ",CONSTRAINT leaf_style_pkey PRIMARY KEY (leaf)" +
+                                                                                            ",CONSTRAINT leaf_style_cascade FOREIGN KEY (leaf) REFERENCES leaf (id) MATCH SIMPLE ON DELETE CASCADE NOT VALID" +
+                                                                                            ") PARTITION BY HASH (leaf);" + //为应对大数据，特按哈希键进行了分区，以便提升查询性能
+                                                                                            "COMMENT ON TABLE leaf_style IS '叶子要素表（leaf）的样式子表';" +
+                                                                                            "COMMENT ON COLUMN leaf_style.leaf IS '叶子要素的标识码';" + //leaf表中的id
+                                                                                            "COMMENT ON COLUMN leaf_style.style IS '叶子要素可视化样式信息，由若干键值对（KVP）构成';";
 
-                                                                                        if (PostgreSqlHelper.NonQuery(sqlString) != null)
+                                                                                        if (PostgreSqlHelper.NonQuery(
+                                                                                             sqlString) != null)
                                                                                         {
                                                                                             //暂采用CPU核数充当分区个数
-                                                                                            for (var i = 0; i < processorCount; i++)
+                                                                                            for (var i = 0;
+                                                                                             i < processorCount;
+                                                                                             i++)
                                                                                             {
                                                                                                 sqlString =
-                                                                                                    $"CREATE TABLE leaf_description_{i} PARTITION OF leaf_description FOR VALUES WITH (MODULUS {processorCount}, REMAINDER {i});";
-                                                                                                PostgreSqlHelper.NonQuery(sqlString);
+                                                                                                    $"CREATE TABLE leaf_style_{i} PARTITION OF leaf_style FOR VALUES WITH (MODULUS {processorCount}, REMAINDER {i});";
+                                                                                                PostgreSqlHelper
+                                                                                                    .NonQuery(
+                                                                                                        sqlString);
                                                                                             }
 
                                                                                             sqlString =
-                                                                                                "CREATE INDEX leaf_description_name ON leaf_description USING BTREE (name);" +
-                                                                                                "CREATE INDEX leaf_description_name_FTS ON leaf_description USING PGROONGA (name);" +
-                                                                                                "CREATE INDEX leaf_description_flag ON leaf_description USING BTREE (flag);" +
-                                                                                                "CREATE INDEX leaf_description_type ON leaf_description USING BTREE (type);" +
-                                                                                                "CREATE INDEX leaf_description_content ON leaf_description USING PGROONGA (content);" + //全文检索（FTS）采用了 PGROONGA 扩展
-                                                                                                "CREATE INDEX leaf_description_numericvalue ON leaf_description USING BTREE (numericvalue);";
-
-                                                                                            if (PostgreSqlHelper.NonQuery(sqlString) != null)
+                                                                                                "CREATE INDEX leaf_style_style_FTS ON leaf_style USING PGROONGA (style);" +
+                                                                                                "CREATE INDEX leaf_style_style ON leaf_style USING GIN (style);";
+                                                                                            if (PostgreSqlHelper
+                                                                                                 .NonQuery(
+                                                                                                     sqlString) !=
+                                                                                             null)
                                                                                             {
                                                                                                 ///////////////////////////////////////////////////////////////////////////////////////
                                                                                                 //this.
-                                                                                                    Invoke(
+                                                                                                Invoke(
                                                                                                     new Action(
                                                                                                         () =>
                                                                                                         {
-                                                                                                            statusText.Text = @"Create leaf table（leaf_style）...";
+                                                                                                            statusText
+                                                                                                                    .Text =
+                                                                                                                @"Create leaf table（leaf_geometry）...";
                                                                                                         }
                                                                                                     )
                                                                                                 );
 
                                                                                                 sqlString =
-                                                                                                    "CREATE TABLE leaf_style " +
+                                                                                                    "CREATE TABLE leaf_geometry " +
                                                                                                     "(" +
-                                                                                                    "leaf BigInt, style JSONB" +
-                                                                                                    ",CONSTRAINT leaf_style_pkey PRIMARY KEY (leaf)" +
-                                                                                                    ",CONSTRAINT leaf_style_cascade FOREIGN KEY (leaf) REFERENCES leaf (id) MATCH SIMPLE ON DELETE CASCADE NOT VALID" +
+                                                                                                    "leaf BigInt, coordinate GEOMETRY, boundary GEOMETRY, centroid GEOMETRY" +
+                                                                                                    ",CONSTRAINT leaf_geometry_pkey PRIMARY KEY (leaf)" +
+                                                                                                    ",CONSTRAINT leaf_geometry_cascade FOREIGN KEY (leaf) REFERENCES leaf (id) MATCH SIMPLE ON DELETE CASCADE NOT VALID" +
                                                                                                     ") PARTITION BY HASH (leaf);" + //为应对大数据，特按哈希键进行了分区，以便提升查询性能
-                                                                                                    "COMMENT ON TABLE leaf_style IS '叶子要素表（leaf）的样式子表';" +
-                                                                                                    "COMMENT ON COLUMN leaf_style.leaf IS '叶子要素的标识码';" + //leaf表中的id
-                                                                                                    "COMMENT ON COLUMN leaf_style.style IS '叶子要素可视化样式信息，由若干键值对（KVP）构成';";
-
-                                                                                                if (PostgreSqlHelper.NonQuery(sqlString) != null)
+                                                                                                    "COMMENT ON TABLE leaf_geometry IS '叶子要素表（leaf）的几何坐标子表';" +
+                                                                                                    "COMMENT ON COLUMN leaf_geometry.leaf IS '叶子要素的标识码';" + //leaf表中的id
+                                                                                                    "COMMENT ON COLUMN leaf_geometry.coordinate IS '叶子要素几何坐标（【EPSG:4326】）';" + //EPSG：4326 地理坐标 - 十进制经纬度格式
+                                                                                                    "COMMENT ON COLUMN leaf_geometry.boundary IS '叶子要素几何边框（【EPSG:4326】）';" + //EPSG：4326 地理坐标 - 十进制经纬度格式
+                                                                                                    "COMMENT ON COLUMN leaf_geometry.centroid IS '叶子要素几何内点（通常用于几何瘦身、标注锚点等场景）';";
+                                                                                                if (PostgreSqlHelper
+                                                                                                     .NonQuery(
+                                                                                                         sqlString) !=
+                                                                                                 null)
                                                                                                 {
                                                                                                     //暂采用CPU核数充当分区个数
-                                                                                                    for (var i = 0; i < processorCount; i++)
+                                                                                                    for (var i = 0;
+                                                                                                     i <
+                                                                                                     processorCount;
+                                                                                                     i++)
                                                                                                     {
-                                                                                                        sqlString = $"CREATE TABLE leaf_style_{i} PARTITION OF leaf_style FOR VALUES WITH (MODULUS {processorCount}, REMAINDER {i});";
-                                                                                                        PostgreSqlHelper.NonQuery(sqlString);
+                                                                                                        sqlString =
+                                                                                                            $"CREATE TABLE leaf_geometry_{i} PARTITION OF leaf_geometry FOR VALUES WITH (MODULUS {processorCount}, REMAINDER {i});";
+                                                                                                        PostgreSqlHelper
+                                                                                                            .NonQuery(
+                                                                                                                sqlString);
                                                                                                     }
 
                                                                                                     sqlString =
-                                                                                                        "CREATE INDEX leaf_style_style_FTS ON leaf_style USING PGROONGA (style);" +
-                                                                                                        "CREATE INDEX leaf_style_style ON leaf_style USING GIN (style);";
-                                                                                                    if (PostgreSqlHelper.NonQuery(sqlString) != null)
+                                                                                                        "CREATE INDEX leaf_geometry_coordinate ON leaf_geometry USING GIST (coordinate);" + //需要postgis扩展
+                                                                                                        "CREATE INDEX leaf_geometry_boundary ON leaf_geometry USING GIST (boundary);" + //需要postgis扩展
+                                                                                                        "CREATE INDEX leaf_geometry_centroid ON leaf_geometry USING GIST (centroid);"; //需要postgis扩展
+                                                                                                    if (PostgreSqlHelper
+                                                                                                         .NonQuery(
+                                                                                                             sqlString) !=
+                                                                                                     null)
                                                                                                     {
                                                                                                         ///////////////////////////////////////////////////////////////////////////////////////
                                                                                                         //this.
-                                                                                                            Invoke(
+                                                                                                        Invoke(
                                                                                                             new Action(
                                                                                                                 () =>
                                                                                                                 {
-                                                                                                                    statusText.Text = @"Create leaf table（leaf_geometry）...";
+                                                                                                                    statusText
+                                                                                                                            .Text =
+                                                                                                                        @"Create leaf table（leaf_tile）...";
                                                                                                                 }
                                                                                                             )
                                                                                                         );
-
                                                                                                         sqlString =
-                                                                                                            "CREATE TABLE leaf_geometry " +
+                                                                                                            "CREATE TABLE leaf_tile " +
                                                                                                             "(" +
-                                                                                                            "leaf BigInt, coordinate GEOMETRY, boundary GEOMETRY, centroid GEOMETRY" +
-                                                                                                            ",CONSTRAINT leaf_geometry_pkey PRIMARY KEY (leaf)" +
-                                                                                                            ",CONSTRAINT leaf_geometry_cascade FOREIGN KEY (leaf) REFERENCES leaf (id) MATCH SIMPLE ON DELETE CASCADE NOT VALID" +
-                                                                                                            ") PARTITION BY HASH (leaf);" + //为应对大数据，特按哈希键进行了分区，以便提升查询性能
-                                                                                                            "COMMENT ON TABLE leaf_geometry IS '叶子要素表（leaf）的几何坐标子表';" +
-                                                                                                            "COMMENT ON COLUMN leaf_geometry.leaf IS '叶子要素的标识码';" + //leaf表中的id
-                                                                                                            "COMMENT ON COLUMN leaf_geometry.coordinate IS '叶子要素几何坐标（【EPSG:4326】）';" + //EPSG：4326 地理坐标 - 十进制经纬度格式
-                                                                                                            "COMMENT ON COLUMN leaf_geometry.boundary IS '叶子要素几何边框（【EPSG:4326】）';" + //EPSG：4326 地理坐标 - 十进制经纬度格式
-                                                                                                            "COMMENT ON COLUMN leaf_geometry.centroid IS '叶子要素几何内点（通常用于几何瘦身、标注锚点等场景）';";
-                                                                                                        if (PostgreSqlHelper.NonQuery(sqlString) != null)
+                                                                                                            "leaf BigInt, z INTEGER, x INTEGER, y INTEGER, tile RASTER, boundary geometry" +
+                                                                                                            ",CONSTRAINT leaf_tile_pkey PRIMARY KEY (leaf, z, x, y)" +
+                                                                                                            ",CONSTRAINT leaf_tile_cascade FOREIGN KEY (leaf) REFERENCES leaf (id) MATCH SIMPLE ON DELETE CASCADE NOT VALID" +
+                                                                                                            ") PARTITION BY HASH (leaf, z, x, y);" + //为应对大数据，特按哈希键进行了分区，以便提升查询性能
+                                                                                                            "COMMENT ON TABLE leaf_tile IS '叶子要素表（leaf）的栅格瓦片子表，支持【四叉树金字塔式瓦片】和【平铺式地图瓦片】两种类型，每类瓦片的元数据信息需在叶子属性子表中的type进行表述';" +
+                                                                                                            "COMMENT ON COLUMN leaf_tile.leaf IS '叶子要素的标识码';" + //leaf表中的id
+                                                                                                            "COMMENT ON COLUMN leaf_tile.z IS '叶子瓦片缩放级（注：平铺式瓦片类型的z值强制为【-1】，四叉树金字塔式瓦片类型的z值通常介于【0～24】之间）';" +
+                                                                                                            "COMMENT ON COLUMN leaf_tile.x IS '叶子瓦片横向坐标编码';" +
+                                                                                                            "COMMENT ON COLUMN leaf_tile.y IS '叶子瓦片纵向坐标编码';" +
+                                                                                                            "COMMENT ON COLUMN leaf_tile.tile IS '叶子瓦片栅格影像（RASTER类型-WKB格式，目前支持【EPSG:4326】、【EPSG:3857】、【EPSG:0】）';" +
+                                                                                                            "COMMENT ON COLUMN leaf_tile.boundary IS '叶子瓦片几何边框（【EPSG:4326】）';"; //经纬度，针对deepzoom或者raster无投影类型，边框为null
+                                                                                                        if
+                                                                                                            (PostgreSqlHelper
+                                                                                                                 .NonQuery(
+                                                                                                                     sqlString) !=
+                                                                                                             null)
                                                                                                         {
-                                                                                                            //暂采用CPU核数充当分区个数
-                                                                                                            for (var i = 0; i < processorCount; i++)
+                                                                                                            //暂采用CPU核数充当分区个数 当采用多列哈希分区表的分区时，无论使用多少列，都只需要指定一个界限即可
+                                                                                                            for (var i =
+                                                                                                                 0;
+                                                                                                             i <
+                                                                                                             processorCount;
+                                                                                                             i++)
                                                                                                             {
-                                                                                                                sqlString = $"CREATE TABLE leaf_geometry_{i} PARTITION OF leaf_geometry FOR VALUES WITH (MODULUS {processorCount}, REMAINDER {i});";
-                                                                                                                PostgreSqlHelper.NonQuery(sqlString);
+                                                                                                                sqlString =
+                                                                                                                    $"CREATE TABLE leaf_tile_{i} PARTITION OF leaf_tile FOR VALUES WITH (MODULUS {processorCount}, REMAINDER {i});";
+                                                                                                                PostgreSqlHelper
+                                                                                                                    .NonQuery(
+                                                                                                                        sqlString);
                                                                                                             }
 
                                                                                                             sqlString =
-                                                                                                                "CREATE INDEX leaf_geometry_coordinate ON leaf_geometry USING GIST (coordinate);" + //需要postgis扩展
-                                                                                                                "CREATE INDEX leaf_geometry_boundary ON leaf_geometry USING GIST (boundary);" + //需要postgis扩展
-                                                                                                                "CREATE INDEX leaf_geometry_centroid ON leaf_geometry USING GIST (centroid);"; //需要postgis扩展
-                                                                                                            if (PostgreSqlHelper.NonQuery(sqlString) != null)
+                                                                                                                "CREATE INDEX leaf_tile_tile ON leaf_tile USING GIST (st_convexhull(tile));" //需要postgis_raster扩展
+                                                                                                                + "CREATE INDEX leaf_tile_boundary ON leaf_tile USING gist(boundary);" //需要postgis扩展
+                                                                                                                + "CREATE INDEX leaf_tile_leaf_z ON leaf_tile USING btree (leaf ASC NULLS LAST, z DESC NULLS LAST)" //为提取最大缩放级提供逆序索引
+                                                                                                                + ";";
+                                                                                                            if
+                                                                                                                (PostgreSqlHelper
+                                                                                                                     .NonQuery(
+                                                                                                                         sqlString) !=
+                                                                                                                 null)
                                                                                                             {
                                                                                                                 ///////////////////////////////////////////////////////////////////////////////////////
                                                                                                                 //this.
-                                                                                                                    Invoke(
-                                                                                                                    new Action(
-                                                                                                                        () =>
-                                                                                                                        {
-                                                                                                                            statusText.Text = @"Create leaf table（leaf_tile）...";
-                                                                                                                        }
-                                                                                                                    )
+                                                                                                                Invoke(
+                                                                                                                    new
+                                                                                                                        Action(
+                                                                                                                            () =>
+                                                                                                                            {
+                                                                                                                                statusText
+                                                                                                                                        .Text =
+                                                                                                                                    @"Create leaf table（leaf_wms）...";
+                                                                                                                            }
+                                                                                                                        )
                                                                                                                 );
+
                                                                                                                 sqlString =
-                                                                                                                    "CREATE TABLE leaf_tile " +
+                                                                                                                    "CREATE TABLE leaf_wms " +
                                                                                                                     "(" +
-                                                                                                                    "leaf BigInt, z INTEGER, x INTEGER, y INTEGER, tile RASTER, boundary geometry" +
-                                                                                                                    ",CONSTRAINT leaf_tile_pkey PRIMARY KEY (leaf, z, x, y)" +
-                                                                                                                    ",CONSTRAINT leaf_tile_cascade FOREIGN KEY (leaf) REFERENCES leaf (id) MATCH SIMPLE ON DELETE CASCADE NOT VALID" +
-                                                                                                                    ") PARTITION BY HASH (leaf, z, x, y);" + //为应对大数据，特按哈希键进行了分区，以便提升查询性能
-                                                                                                                    "COMMENT ON TABLE leaf_tile IS '叶子要素表（leaf）的栅格瓦片子表，支持【四叉树金字塔式瓦片】和【平铺式地图瓦片】两种类型，每类瓦片的元数据信息需在叶子属性子表中的type进行表述';" +
-                                                                                                                    "COMMENT ON COLUMN leaf_tile.leaf IS '叶子要素的标识码';" + //leaf表中的id
-                                                                                                                    "COMMENT ON COLUMN leaf_tile.z IS '叶子瓦片缩放级（注：平铺式瓦片类型的z值强制为【-1】，四叉树金字塔式瓦片类型的z值通常介于【0～24】之间）';" +
-                                                                                                                    "COMMENT ON COLUMN leaf_tile.x IS '叶子瓦片横向坐标编码';" +
-                                                                                                                    "COMMENT ON COLUMN leaf_tile.y IS '叶子瓦片纵向坐标编码';" +
-                                                                                                                    "COMMENT ON COLUMN leaf_tile.tile IS '叶子瓦片栅格影像（RASTER类型-WKB格式，目前支持【EPSG:4326】、【EPSG:3857】、【EPSG:0】）';" +
-                                                                                                                    "COMMENT ON COLUMN leaf_tile.boundary IS '叶子瓦片几何边框（【EPSG:4326】）';"; //经纬度，针对deepzoom或者raster无投影类型，边框为null
-                                                                                                                if (PostgreSqlHelper.NonQuery(sqlString) != null)
+                                                                                                                    "leaf BigInt, wms TEXT, boundary geometry" +
+                                                                                                                    ",CONSTRAINT leaf_wms_pkey PRIMARY KEY (leaf)" +
+                                                                                                                    ",CONSTRAINT leaf_wms_cascade FOREIGN KEY (leaf) REFERENCES leaf (id) MATCH SIMPLE ON DELETE CASCADE NOT VALID" +
+                                                                                                                    ") PARTITION BY HASH (leaf);" +
+                                                                                                                    "COMMENT ON TABLE leaf_wms IS '叶子要素表（leaf）的瓦片服务子表，元数据信息需在叶子属性表中的type中进行表述';" +
+                                                                                                                    "COMMENT ON COLUMN leaf_wms.leaf IS '叶子要素的标识码';" + //leaf表中的id
+                                                                                                                    "COMMENT ON COLUMN leaf_wms.wms IS '叶子要素服务地址模板，暂支持【OGC】、【BingMap】、【DeepZoom】和【ESRI】瓦片编码类型';" +
+                                                                                                                    "COMMENT ON COLUMN leaf_wms.boundary IS '叶子要素几何边框（EPSG:4326）';"; //经纬度
+                                                                                                                if
+                                                                                                                    (PostgreSqlHelper
+                                                                                                                         .NonQuery(
+                                                                                                                             sqlString) !=
+                                                                                                                     null)
                                                                                                                 {
                                                                                                                     //暂采用CPU核数充当分区个数 当采用多列哈希分区表的分区时，无论使用多少列，都只需要指定一个界限即可
-                                                                                                                    for (var i = 0; i < processorCount; i++)
+                                                                                                                    for
+                                                                                                                        (var
+                                                                                                                         i =
+                                                                                                                             0;
+                                                                                                                         i <
+                                                                                                                         processorCount;
+                                                                                                                         i++)
                                                                                                                     {
-                                                                                                                        sqlString = $"CREATE TABLE leaf_tile_{i} PARTITION OF leaf_tile FOR VALUES WITH (MODULUS {processorCount}, REMAINDER {i});";
-                                                                                                                        PostgreSqlHelper.NonQuery(sqlString);
+                                                                                                                        sqlString =
+                                                                                                                            $"CREATE TABLE leaf_wms_{i} PARTITION OF leaf_wms FOR VALUES WITH (MODULUS {processorCount}, REMAINDER {i});";
+                                                                                                                        PostgreSqlHelper
+                                                                                                                            .NonQuery(
+                                                                                                                                sqlString);
                                                                                                                     }
 
                                                                                                                     sqlString =
-                                                                                                                        "CREATE INDEX leaf_tile_tile ON leaf_tile USING GIST (st_convexhull(tile));" //需要postgis_raster扩展
-                                                                                                                        + "CREATE INDEX leaf_tile_boundary ON leaf_tile USING gist(boundary);" //需要postgis扩展
-                                                                                                                        + "CREATE INDEX leaf_tile_leaf_z ON leaf_tile USING btree (leaf ASC NULLS LAST, z DESC NULLS LAST)" //为提取最大缩放级提供逆序索引
-                                                                                                                        + ";";
-                                                                                                                    if (PostgreSqlHelper.NonQuery(sqlString) != null)
+                                                                                                                        "CREATE INDEX leaf_wms_boundary ON leaf_wms USING gist(boundary);" //需要postgis扩展
+                                                                                                                        ;
+                                                                                                                    if
+                                                                                                                        (PostgreSqlHelper
+                                                                                                                             .NonQuery(
+                                                                                                                                 sqlString) !=
+                                                                                                                         null)
                                                                                                                     {
-                                                                                                                        ///////////////////////////////////////////////////////////////////////////////////////
+                                                                                                                        //仅用于充当访问频度缓冲区，重建索引时将自动清除/////////////////////////////////////////////////////////////////////////////////////
                                                                                                                         //this.
-                                                                                                                            Invoke(
-                                                                                                                            new Action(
-                                                                                                                                () =>
-                                                                                                                                {
-                                                                                                                                    statusText.Text = @"Create leaf table（leaf_wms）...";
-                                                                                                                                }
-                                                                                                                            )
+                                                                                                                        Invoke(
+                                                                                                                            new
+                                                                                                                                Action(
+                                                                                                                                    () =>
+                                                                                                                                    {
+                                                                                                                                        statusText
+                                                                                                                                                .Text =
+                                                                                                                                            @"Create leaf table（leaf_hits）...";
+                                                                                                                                    }
+                                                                                                                                )
                                                                                                                         );
 
                                                                                                                         sqlString =
-                                                                                                                            "CREATE TABLE leaf_wms " +
+                                                                                                                            "CREATE TABLE leaf_hits " +
                                                                                                                             "(" +
-                                                                                                                            "leaf BigInt, wms TEXT, boundary geometry" +
-                                                                                                                            ",CONSTRAINT leaf_wms_pkey PRIMARY KEY (leaf)" +
-                                                                                                                            ",CONSTRAINT leaf_wms_cascade FOREIGN KEY (leaf) REFERENCES leaf (id) MATCH SIMPLE ON DELETE CASCADE NOT VALID" +
-                                                                                                                            ") PARTITION BY HASH (leaf);" +
-                                                                                                                            "COMMENT ON TABLE leaf_wms IS '叶子要素表（leaf）的瓦片服务子表，元数据信息需在叶子属性表中的type中进行表述';" +
-                                                                                                                            "COMMENT ON COLUMN leaf_wms.leaf IS '叶子要素的标识码';" + //leaf表中的id
-                                                                                                                            "COMMENT ON COLUMN leaf_wms.wms IS '叶子要素服务地址模板，暂支持【OGC】、【BingMap】、【DeepZoom】和【ESRI】瓦片编码类型';" +
-                                                                                                                            "COMMENT ON COLUMN leaf_wms.boundary IS '叶子要素几何边框（EPSG:4326）';"; //经纬度
-                                                                                                                        if (PostgreSqlHelper.NonQuery(sqlString) != null)
+                                                                                                                            "leaf BigInt, hits BigInt DEFAULT 0" +
+                                                                                                                            ",CONSTRAINT leaf_hits_pkey PRIMARY KEY (leaf)" +
+                                                                                                                            ",CONSTRAINT leaf_hits_cascade FOREIGN KEY (leaf) REFERENCES leaf (id) MATCH SIMPLE ON DELETE CASCADE NOT VALID" +
+                                                                                                                            ") PARTITION BY HASH (leaf);" + //为应对大数据，特按哈希键进行了分区，以便提升查询性能
+                                                                                                                            "COMMENT ON TABLE leaf_hits IS '叶子要素表（leaf）的搜索命中率子表';" +
+                                                                                                                            "COMMENT ON COLUMN leaf_hits.leaf IS '叶子要素的标识码';" + //leaf表中的id
+                                                                                                                            "COMMENT ON COLUMN leaf_hits.hits IS '叶子要素的命中次数';";
+
+                                                                                                                        if
+                                                                                                                            (PostgreSqlHelper
+                                                                                                                                 .NonQuery(
+                                                                                                                                     sqlString) !=
+                                                                                                                             null)
                                                                                                                         {
-                                                                                                                            //暂采用CPU核数充当分区个数 当采用多列哈希分区表的分区时，无论使用多少列，都只需要指定一个界限即可
-                                                                                                                            for (var i = 0; i < processorCount; i++)
+                                                                                                                            //暂采用CPU核数充当分区个数
+                                                                                                                            for
+                                                                                                                                (var
+                                                                                                                                 i =
+                                                                                                                                     0;
+                                                                                                                                 i <
+                                                                                                                                 processorCount;
+                                                                                                                                 i++)
                                                                                                                             {
-                                                                                                                                sqlString = $"CREATE TABLE leaf_wms_{i} PARTITION OF leaf_wms FOR VALUES WITH (MODULUS {processorCount}, REMAINDER {i});";
-                                                                                                                                PostgreSqlHelper.NonQuery(sqlString);
+                                                                                                                                sqlString =
+                                                                                                                                    $"CREATE TABLE leaf_hits_{i} PARTITION OF leaf_hits FOR VALUES WITH (MODULUS {processorCount}, REMAINDER {i});";
+                                                                                                                                PostgreSqlHelper
+                                                                                                                                    .NonQuery(
+                                                                                                                                        sqlString);
                                                                                                                             }
 
-                                                                                                                            sqlString =
-                                                                                                                                "CREATE INDEX leaf_wms_boundary ON leaf_wms USING gist(boundary);" //需要postgis扩展
-                                                                                                                                ;
-                                                                                                                            if (PostgreSqlHelper.NonQuery(sqlString) != null)
-                                                                                                                            {
-                                                                                                                                //仅用于充当访问频度缓冲区，重建索引时将自动清除/////////////////////////////////////////////////////////////////////////////////////
-                                                                                                                                //this.
-                                                                                                                                    Invoke(
-                                                                                                                                    new Action(
+                                                                                                                            ///////////////////////////////////////////////////////////////////////////////////////
+                                                                                                                            //this.
+                                                                                                                            Invoke(
+                                                                                                                                new
+                                                                                                                                    Action(
                                                                                                                                         () =>
                                                                                                                                         {
-                                                                                                                                            statusText.Text = @"Create leaf table（leaf_hits）...";
+                                                                                                                                            statusText
+                                                                                                                                                    .Text =
+                                                                                                                                                @"Create the age sub table of leaf table（leaf_age）...";
                                                                                                                                         }
                                                                                                                                     )
-                                                                                                                                );
+                                                                                                                            );
+
+                                                                                                                            sqlString =
+                                                                                                                                "CREATE TABLE leaf_age " +
+                                                                                                                                "(" +
+                                                                                                                                "leaf BigInt, age BigInt[]" + //DDE 深时数字地球计划 -- 地质年龄表
+                                                                                                                                ",CONSTRAINT leaf_age_pkey PRIMARY KEY (leaf)" +
+                                                                                                                                ",CONSTRAINT leaf_age_cascade FOREIGN KEY (leaf) REFERENCES leaf (id) MATCH SIMPLE ON DELETE CASCADE NOT VALID" +
+                                                                                                                                ") PARTITION BY HASH (leaf);" +
+                                                                                                                                "COMMENT ON TABLE leaf_age IS '叶子要素表（leaf）的年龄子表';" +
+                                                                                                                                "COMMENT ON COLUMN leaf_age.leaf IS '叶子要素的标识码';" + //leaf表中的id
+                                                                                                                                "COMMENT ON COLUMN leaf_age.age IS '叶子要素的年龄（通常为地质年龄，由【±年月日、时分秒】构成）';";
+                                                                                                                            if
+                                                                                                                                (PostgreSqlHelper
+                                                                                                                                     .NonQuery(
+                                                                                                                                         sqlString) !=
+                                                                                                                                 null)
+                                                                                                                            {
+                                                                                                                                for
+                                                                                                                                    (var
+                                                                                                                                     i =
+                                                                                                                                         0;
+                                                                                                                                     i <
+                                                                                                                                     processorCount;
+                                                                                                                                     i++)
+                                                                                                                                {
+                                                                                                                                    sqlString =
+                                                                                                                                        $"CREATE TABLE leaf_age_{i} PARTITION OF leaf_age FOR VALUES WITH (MODULUS {processorCount}, REMAINDER {i});";
+                                                                                                                                    PostgreSqlHelper
+                                                                                                                                        .NonQuery(
+                                                                                                                                            sqlString);
+                                                                                                                                }
 
                                                                                                                                 sqlString =
-                                                                                                                                    "CREATE TABLE leaf_hits " +
-                                                                                                                                    "(" +
-                                                                                                                                    "leaf BigInt, hits BigInt DEFAULT 0" +
-                                                                                                                                    ",CONSTRAINT leaf_hits_pkey PRIMARY KEY (leaf)" +
-                                                                                                                                    ",CONSTRAINT leaf_hits_cascade FOREIGN KEY (leaf) REFERENCES leaf (id) MATCH SIMPLE ON DELETE CASCADE NOT VALID" +
-                                                                                                                                    ") PARTITION BY HASH (leaf);" + //为应对大数据，特按哈希键进行了分区，以便提升查询性能
-                                                                                                                                    "COMMENT ON TABLE leaf_hits IS '叶子要素表（leaf）的搜索命中率子表';" +
-                                                                                                                                    "COMMENT ON COLUMN leaf_hits.leaf IS '叶子要素的标识码';" + //leaf表中的id
-                                                                                                                                    "COMMENT ON COLUMN leaf_hits.hits IS '叶子要素的命中次数';";
-
-                                                                                                                                if (PostgreSqlHelper.NonQuery(sqlString) != null)
+                                                                                                                                    "CREATE INDEX leaf_age_yearmmdd ON leaf_age USING BTREE ((age[1]));" +
+                                                                                                                                    "CREATE INDEX leaf_age_hhmmss ON leaf_age USING BTREE ((age[2]));";
+                                                                                                                                if
+                                                                                                                                    (PostgreSqlHelper
+                                                                                                                                         .NonQuery(
+                                                                                                                                             sqlString) !=
+                                                                                                                                     null)
                                                                                                                                 {
-                                                                                                                                    //暂采用CPU核数充当分区个数
-                                                                                                                                    for (var i = 0; i < processorCount; i++)
-                                                                                                                                    {
-                                                                                                                                        sqlString = $"CREATE TABLE leaf_hits_{i} PARTITION OF leaf_hits FOR VALUES WITH (MODULUS {processorCount}, REMAINDER {i});";
-                                                                                                                                        PostgreSqlHelper.NonQuery(sqlString);
-                                                                                                                                    }
+                                                                                                                                    //嵌入式自定义SQL函数/////////////////////////////////////////////////////////////
 
-                                                                                                                                    ///////////////////////////////////////////////////////////////////////////////////////
-                                                                                                                                    //this.
-                                                                                                                                        Invoke(
-                                                                                                                                        new Action(
-                                                                                                                                            () =>
-                                                                                                                                            {
-                                                                                                                                                statusText.Text = @"Create the age sub table of leaf table（leaf_age）...";
-                                                                                                                                            }
-                                                                                                                                        )
-                                                                                                                                    );
+                                                                                                                                    /*
+                                                                                                                                        * 嵌入式SQL函数区
+                                                                                                                                        */
 
-                                                                                                                                    sqlString =
-                                                                                                                                        "CREATE TABLE leaf_age " +
-                                                                                                                                        "(" +
-                                                                                                                                        "leaf BigInt, age BigInt[]" + //DDE 深时数字地球计划 -- 地质年龄表
-                                                                                                                                        ",CONSTRAINT leaf_age_pkey PRIMARY KEY (leaf)" +
-                                                                                                                                        ",CONSTRAINT leaf_age_cascade FOREIGN KEY (leaf) REFERENCES leaf (id) MATCH SIMPLE ON DELETE CASCADE NOT VALID" +
-                                                                                                                                        ") PARTITION BY HASH (leaf);" +
-                                                                                                                                        "COMMENT ON TABLE leaf_age IS '叶子要素表（leaf）的年龄子表';" +
-                                                                                                                                        "COMMENT ON COLUMN leaf_age.leaf IS '叶子要素的标识码';" + //leaf表中的id
-                                                                                                                                        "COMMENT ON COLUMN leaf_age.age IS '叶子要素的年龄（通常为地质年龄，由【±年月日、时分秒】构成）';";
-                                                                                                                                    if (PostgreSqlHelper.NonQuery(sqlString) != null)
-                                                                                                                                    {
-                                                                                                                                        for (var i = 0; i < processorCount; i++)
-                                                                                                                                        {
-                                                                                                                                            sqlString = $"CREATE TABLE leaf_age_{i} PARTITION OF leaf_age FOR VALUES WITH (MODULUS {processorCount}, REMAINDER {i});";
-                                                                                                                                            PostgreSqlHelper.NonQuery(sqlString);
-                                                                                                                                        }
-                                                                                                                                        sqlString =
-                                                                                                                                            "CREATE INDEX leaf_age_yearmmdd ON leaf_age USING BTREE ((age[1]));" +
-                                                                                                                                            "CREATE INDEX leaf_age_hhmmss ON leaf_age USING BTREE ((age[2]));";
-                                                                                                                                        if (PostgreSqlHelper.NonQuery(sqlString) != null)
-                                                                                                                                        {
-                                                                                                                                            //嵌入式自定义SQL函数/////////////////////////////////////////////////////////////
-                                                                                                                                            //针对大数据表，不宜直接执行【count】函数，特提供高速概略计数函数：count_estimate()
-                                                                                                                                            //特别注意：PostgreSQL约束条件中若有单引号，需用2个连续单引号替换！
-                                                                                                                                            const string countEstimate = "count_estimate";
-                                                                                                                                            int.TryParse(
-                                                                                                                                                $"{PostgreSqlHelper.Scalar($"SELECT count(*) FROM pg_proc WHERE proname = '{countEstimate}';")}",
-                                                                                                                                                out var countEstimateExist);
-                                                                                                                                            if (countEstimateExist == 0)
-                                                                                                                                                //count_estimate函数用法：SELECT count_estimate('SELECT * FROM 表名 WHERE 约束条件'); 
-                                                                                                                                                PostgreSqlHelper.NonQuery
-                                                                                                                                                    (
-                                                                                                                                                        $@"CREATE OR REPLACE FUNCTION public.{countEstimate}(query text)" +
-                                                                                                                                                        "  RETURNS integer" +
-                                                                                                                                                        "  LANGUAGE plpgsql AS" +
-                                                                                                                                                        "  $func$" +
-                                                                                                                                                        "  DECLARE" +
-                                                                                                                                                        "    rec record;" +
-                                                                                                                                                        "    rows integer;" +
-                                                                                                                                                        "  BEGIN" +
-                                                                                                                                                        "    FOR rec IN EXECUTE 'EXPLAIN ' || query LOOP" +
-                                                                                                                                                        "      rows := substring(rec.\"QUERY PLAN\" FROM ' rows=([[:digit:]]+)');" +
-                                                                                                                                                        "      EXIT WHEN rows IS NOT NULL;" +
-                                                                                                                                                        "    END LOOP;" +
-                                                                                                                                                        "    RETURN rows;" +
-                                                                                                                                                        "  END" +
-                                                                                                                                                        "  $func$;"
-                                                                                                                                                    );
+                                                                                                                                    /* 扩展聚合函数类，为【GROUP BY】提供首部和尾部成员
+                                                                                                                                       例如：
+                                                                                                                                            SELECT first(id order by id), customer, first(total order by id) 
+                                                                                                                                            FROM 班级 
+                                                                                                                                            GROUP BY 性别 
+                                                                                                                                            ORDER BY first(total);
+                                                                                                                                    */
+                                                                                                                                    int.TryParse($"{PostgreSqlHelper.Scalar("SELECT count(*) FROM pg_proc WHERE proname = 'first_agg' OR proname = 'first';")}", out var firstAggregateExist);
+                                                                                                                                    if (firstAggregateExist != 2)
+                                                                                                                                        PostgreSqlHelper.NonQuery(
+                                                                                                                                                "CREATE OR REPLACE FUNCTION public.first_agg (anyelement, anyelement)" +
+                                                                                                                                                "  RETURNS anyelement" +
+                                                                                                                                                "  LANGUAGE sql IMMUTABLE STRICT PARALLEL SAFE AS" +
+                                                                                                                                                "  'SELECT $1';" +
+                                                                                                                                                "  CREATE OR REPLACE AGGREGATE public.first (anyelement) (" +
+                                                                                                                                                "    SFUNC = public.first_agg" +
+                                                                                                                                                "    , STYPE = anyelement" +
+                                                                                                                                                "    , PARALLEL = safe" +
+                                                                                                                                                "    );"
+                                                                                                                                            );
 
-                                                                                                                                            /* 扩展聚合函数类，为【GROUP BY】提供首部和尾部成员
-                                                                                                                                                例如：
-                                                                                                                                                SELECT first(id order by id), customer, first(total order by id) FROM purchases 
-                                                                                                                                                GROUP BY customer 
-                                                                                                                                                ORDER BY first(total);
-                                                                                                                                             */
-                                                                                                                                            int.TryParse(
-                                                                                                                                                $"{PostgreSqlHelper.Scalar("SELECT count(*) FROM pg_proc WHERE proname = 'first_agg' OR proname = 'first';")}",
-                                                                                                                                                out var firstAggregateExist);
-                                                                                                                                            if (firstAggregateExist != 2)
-                                                                                                                                                PostgreSqlHelper.NonQuery
-                                                                                                                                                    (
-                                                                                                                                                        "CREATE OR REPLACE FUNCTION public.first_agg (anyelement, anyelement)" +
-                                                                                                                                                        "  RETURNS anyelement" +
-                                                                                                                                                        "  LANGUAGE sql IMMUTABLE STRICT PARALLEL SAFE AS" +
-                                                                                                                                                        "  'SELECT $1';" +
-                                                                                                                                                        "  CREATE OR REPLACE AGGREGATE public.first (anyelement) (" +
-                                                                                                                                                        "    SFUNC = public.first_agg" +
-                                                                                                                                                        "    , STYPE = anyelement" +
-                                                                                                                                                        "    , PARALLEL = safe" +
-                                                                                                                                                        "  );"
-                                                                                                                                                    );
+                                                                                                                                    int.TryParse($"{PostgreSqlHelper.Scalar("SELECT count(*) FROM pg_proc WHERE proname = 'last_agg' OR proname = 'last';")}",
+                                                                                                                                        out var lastAggregateExist);
+                                                                                                                                    if (lastAggregateExist != 2)
+                                                                                                                                        PostgreSqlHelper.NonQuery
+                                                                                                                                            (
+                                                                                                                                                "CREATE OR REPLACE FUNCTION public.last_agg (anyelement, anyelement)" +
+                                                                                                                                                "  RETURNS anyelement" +
+                                                                                                                                                "  LANGUAGE sql IMMUTABLE STRICT PARALLEL SAFE AS" +
+                                                                                                                                                "  'SELECT $2';" +
+                                                                                                                                                "  CREATE OR REPLACE AGGREGATE public.last (anyelement) (" +
+                                                                                                                                                "    SFUNC = public.last_agg" +
+                                                                                                                                                "    , STYPE = anyelement" +
+                                                                                                                                                "    , PARALLEL = safe" +
+                                                                                                                                                "    );"
+                                                                                                                                            );
 
-                                                                                                                                            int.TryParse(
-                                                                                                                                                $"{PostgreSqlHelper.Scalar("SELECT count(*) FROM pg_proc WHERE proname = 'last_agg' OR proname = 'last';")}",
-                                                                                                                                                out var lastAggregateExist);
-                                                                                                                                            if (lastAggregateExist != 2)
-                                                                                                                                                PostgreSqlHelper.NonQuery
-                                                                                                                                                    (
-                                                                                                                                                        "CREATE OR REPLACE FUNCTION public.last_agg (anyelement, anyelement)" +
-                                                                                                                                                        "  RETURNS anyelement" +
-                                                                                                                                                        "  LANGUAGE sql IMMUTABLE STRICT PARALLEL SAFE AS" +
-                                                                                                                                                        "  'SELECT $2';" +
-                                                                                                                                                        "  CREATE OR REPLACE AGGREGATE public.last (anyelement) (" +
-                                                                                                                                                        "    SFUNC = public.last_agg" +
-                                                                                                                                                        "    , STYPE = anyelement" +
-                                                                                                                                                        "    , PARALLEL = safe" +
-                                                                                                                                                        "  );"
-                                                                                                                                                    );
+                                                                                                                                    const string ogcBranches = "ogc_branches";
+                                                                                                                                    int.TryParse($"{PostgreSqlHelper.Scalar($"SELECT count(*) FROM pg_proc WHERE proname = '{ogcBranches}';")}", out var ogcBranchesExist);
+                                                                                                                                    if (ogcBranchesExist == 0)
+                                                                                                                                        PostgreSqlHelper.NonQuery
+                                                                                                                                            (
+                                                                                                                                                //  依据分类名称获取所属子类（枝干）id，可抵御SQL注入攻击
+                                                                                                                                                //  用法：select * from leaf where branch = any(array(select * from ogc_branches('data.地质'))) 
+                                                                                                                                                //  typename：分类名称需从顶级分类开始并逐级限定，层名可采用星号[*]进行模糊匹配，层级之间需采用小数点[.]分隔
+                                                                                                                                                //  path：是否获取所属全部枝干id，省略时取默认值：false = 仅获取末端树梢id；若指定为tree，将返回所属全部子代类别（枝干）id
+                                                                                                                                                $"CREATE OR REPLACE FUNCTION public.{ogcBranches}(typename text, path boolean DEFAULT NULL::boolean) RETURNS TABLE(branch integer) LANGUAGE 'plpgsql' AS $$" +
+                                                                                                                                                " DECLARE" +
+                                                                                                                                                "    layerArray text[] := string_to_array(typeName, '.');" +
+                                                                                                                                                "    levelSelectList text[];" +
+                                                                                                                                                "    levelWhereList text[];" +
+                                                                                                                                                "    parameters text[];" +
+                                                                                                                                                "    theTypeName text;" +
+                                                                                                                                                "    size integer;" +
+                                                                                                                                                "    index integer;" +
+                                                                                                                                                "    sql text;" +
+                                                                                                                                                " BEGIN" +
+                                                                                                                                                "    size := array_length(layerArray, 1);" +
+                                                                                                                                                "    IF size IS null THEN" +
+                                                                                                                                                "      size := 1;" +
+                                                                                                                                                "      layerArray[1] := '*';" +
+                                                                                                                                                "    END IF;" +
+                                                                                                                                                "    index := 0;" +
+                                                                                                                                                "    FOR i IN REVERSE size .. 1 LOOP" +
+                                                                                                                                                "      theTypeName := layerArray[i];" +
+                                                                                                                                                "      IF theTypeName <> '' AND theTypeName <> '*' AND theTypeName <> '＊' THEN" +
+                                                                                                                                                "        index := index + 1;" +
+                                                                                                                                                "        sql := ' AND name ILIKE $1[' || index || ']::text';" +
+                                                                                                                                                "        parameters[index] := theTypeName;" +
+                                                                                                                                                "      ELSE" +
+                                                                                                                                                "        sql := '';" +
+                                                                                                                                                "      END IF;" +
+                                                                                                                                                "      levelSelectList := array_append(levelSelectList, '(SELECT * FROM branch WHERE level = ' || i || sql || ') AS level' || i);" +
+                                                                                                                                                "      IF i > 1 THEN" +
+                                                                                                                                                "        levelWhereList := array_append(levelWhereList, 'level' || i || '.parent = level' || (i - 1) || '.id');" +
+                                                                                                                                                "      END IF;" +
+                                                                                                                                                "  END LOOP;" +
+                                                                                                                                                "  IF array_length(levelWhereList, 1) >= 1 THEN" +
+                                                                                                                                                "    sql := ' WHERE ' || array_to_string(levelWhereList, ' AND ');" +
+                                                                                                                                                "  ELSE" +
+                                                                                                                                                "    sql := '';" +
+                                                                                                                                                "  END IF;" +
+                                                                                                                                                "  sql :=" +
+                                                                                                                                                "    'WITH RECURSIVE cte AS' ||" +
+                                                                                                                                                "    '  (' ||" +
+                                                                                                                                                "    '    SELECT branch.* FROM branch,' ||" + //初始表
+                                                                                                                                                "    '    (' ||" +
+                                                                                                                                                "    '        SELECT level' || size ||'.* FROM ' || array_to_string(levelSelectList, ',') || sql ||" +
+                                                                                                                                                "    '    ) AS levels' ||" +
+                                                                                                                                                "    '    WHERE branch.id = levels.id' ||" +
+                                                                                                                                                "    '    UNION ALL' ||" + //递归
+                                                                                                                                                "    '    SELECT branch.* FROM branch' ||" +
+                                                                                                                                                "    '    INNER JOIN cte' ||" +
+                                                                                                                                                "    '    ON branch.parent = cte.id' ||" +
+                                                                                                                                                "    '  )' ||" +
+                                                                                                                                                "    '  SELECT DISTINCT id FROM cte';" + //剔除重复枝干
+                                                                                                                                                "  IF path IS NOT true THEN" + //仅提取末端树梢
+                                                                                                                                                "    sql := sql ||" +
+                                                                                                                                                "    '  AS cte1 WHERE NOT EXISTS' ||" +
+                                                                                                                                                "    '  (' ||" +
+                                                                                                                                                "    '    SELECT id FROM cte AS cte2' ||" +
+                                                                                                                                                "    '    WHERE cte1.id = cte2.parent' ||" +
+                                                                                                                                                "    '  )';" +
+                                                                                                                                                "  END IF;" +
+                                                                                                                                                //"  --RAISE NOTICE '% %',sql,parameters;" +
+                                                                                                                                                "  RETURN QUERY EXECUTE sql USING parameters;" +
+                                                                                                                                                " END;" +
+                                                                                                                                                " $$"
+                                                                                                                                            );
 
-                                                                                                                                            const string ogcTypeName = "ogc_typename";
-                                                                                                                                            int.TryParse(
-                                                                                                                                                $"{PostgreSqlHelper.Scalar($"SELECT count(*) FROM pg_proc WHERE proname = '{ogcTypeName}';")}",
-                                                                                                                                                out var ogcTypeNameExist);
-                                                                                                                                            if
-                                                                                                                                                (ogcTypeNameExist ==
-                                                                                                                                                 0)
-                                                                                                                                                PostgreSqlHelper
-                                                                                                                                                    .NonQuery
-                                                                                                                                                    (
-                                                                                                                                                        //  依据分类名称获取所属子类（枝干）id，可抵御SQL注入攻击
-                                                                                                                                                        //  用法：select * from leaf where branch = any(array(select * from ogc_typename('data.地质'))) 
-                                                                                                                                                        //  typename：分类名称需从顶级分类开始并逐级限定，层名可采用星号[*]进行模糊匹配，层级之间需采用小数点[.]分隔
-                                                                                                                                                        //  path：是否获取所属全部枝干id，省略时取默认值：false = 仅获取末端树梢id
-                                                                                                                                                        $"CREATE OR REPLACE FUNCTION public.{ogcTypeName}(typename text, path boolean DEFAULT NULL::boolean) RETURNS TABLE(branch integer) LANGUAGE 'plpgsql' AS $$" +
-                                                                                                                                                        " DECLARE" +
-                                                                                                                                                        "    layerArray text[] := string_to_array(typeName, '.');" +
-                                                                                                                                                        "    levelSelectList text[];" +
-                                                                                                                                                        "    levelWhereList text[];" +
-                                                                                                                                                        "    parameters text[];" +
-                                                                                                                                                        "    theTypeName text;" +
-                                                                                                                                                        "    size integer;" +
-                                                                                                                                                        "    index integer;" +
-                                                                                                                                                        "    sql text;" +
-                                                                                                                                                        " BEGIN" +
-                                                                                                                                                        "    size := array_length(layerArray, 1);" +
-                                                                                                                                                        "    IF size IS null THEN" +
-                                                                                                                                                        "      size := 1;" +
-                                                                                                                                                        "      layerArray[1] := '*';" +
-                                                                                                                                                        "    END IF;" +
-                                                                                                                                                        "    index := 0;" +
-                                                                                                                                                        "    FOR i IN REVERSE size .. 1 LOOP" +
-                                                                                                                                                        "      theTypeName := layerArray[i];" +
-                                                                                                                                                        "      IF theTypeName <> '' AND theTypeName <> '*' AND theTypeName <> '＊' THEN" +
-                                                                                                                                                        "        index := index + 1;" +
-                                                                                                                                                        "        sql := ' AND name ILIKE $1[' || index || ']::text';" +
-                                                                                                                                                        "        parameters[index] := theTypeName;" +
-                                                                                                                                                        "      ELSE" +
-                                                                                                                                                        "        sql := '';" +
-                                                                                                                                                        "      END IF;" +
-                                                                                                                                                        "      levelSelectList := array_append(levelSelectList, '(SELECT * FROM branch WHERE level = ' || i || sql || ') AS level' || i);" +
-                                                                                                                                                        "      IF i > 1 THEN" +
-                                                                                                                                                        "        levelWhereList := array_append(levelWhereList, 'level' || i || '.parent = level' || (i - 1) || '.id');" +
-                                                                                                                                                        "      END IF;" +
-                                                                                                                                                        "  END LOOP;" +
-                                                                                                                                                        "  IF array_length(levelWhereList, 1) >= 1 THEN" +
-                                                                                                                                                        "    sql := ' WHERE ' || array_to_string(levelWhereList, ' AND ');" +
-                                                                                                                                                        "  ELSE" +
-                                                                                                                                                        "    sql := '';" +
-                                                                                                                                                        "  END IF;" +
-                                                                                                                                                        "  sql :=" +
-                                                                                                                                                        "    'WITH RECURSIVE cte AS' ||" +
-                                                                                                                                                        "    '  (' ||" +
-                                                                                                                                                        "    '    SELECT branch.* FROM branch,' ||" + //初始表
-                                                                                                                                                        "    '    (' ||" +
-                                                                                                                                                        "    '        SELECT level' || size ||'.* FROM ' || array_to_string(levelSelectList, ',') || sql ||" +
-                                                                                                                                                        "    '    ) AS levels' ||" +
-                                                                                                                                                        "    '    WHERE branch.id = levels.id' ||" +
-                                                                                                                                                        "    '    UNION ALL' ||" + //递归
-                                                                                                                                                        "    '    SELECT branch.* FROM branch' ||" +
-                                                                                                                                                        "    '    INNER JOIN cte' ||" +
-                                                                                                                                                        "    '    ON branch.parent = cte.id' ||" +
-                                                                                                                                                        "    '  )' ||" +
-                                                                                                                                                        "    '  SELECT DISTINCT id FROM cte';" + //剔除重复枝干
-                                                                                                                                                        "  IF path IS NOT true THEN" + //仅提取末端树梢
-                                                                                                                                                        "    sql := sql ||" +
-                                                                                                                                                        "    '  AS cte1 WHERE NOT EXISTS' ||" +
-                                                                                                                                                        "    '  (' ||" +
-                                                                                                                                                        "    '    SELECT id FROM cte AS cte2' ||" +
-                                                                                                                                                        "    '    WHERE cte1.id = cte2.parent' ||" +
-                                                                                                                                                        "    '  )';" +
-                                                                                                                                                        "  END IF;" +
-                                                                                                                                                        //"  --raise notice '% %',sql,parameters;" +
-                                                                                                                                                        "  RETURN QUERY EXECUTE sql USING parameters;" +
-                                                                                                                                                        " END;" +
-                                                                                                                                                        " $$"
-                                                                                                                                                    );
+                                                                                                                                    const string ogcBranch = "ogc_branch"; //相当于【ogc_branches】的反函数
+                                                                                                                                    int.TryParse($"{PostgreSqlHelper.Scalar($"SELECT count(*) FROM pg_proc WHERE proname = '{ogcBranch}';")}",
+                                                                                                                                        out var ogcBranchExist);
+                                                                                                                                    if (ogcBranchExist == 0)
+                                                                                                                                        PostgreSqlHelper.NonQuery
+                                                                                                                                            (
+                                                                                                                                                // 依据树梢id回溯至树根，返回隶属的枝干信息
+                                                                                                                                                // id：通常为树梢id
+                                                                                                                                                /* 返回样例
+                                                                                                                                                    tree|levels |layer              |layerproperty|layerdetail|
+                                                                                                                                                    ----+-------+-------------------+-------------+-----------+
+                                                                                                                                                       1|{1,2,3}|{test,mapgis,POINT}|{,,}         |{,,}       |                                                                                                                                                 
+                                                                                                                                                 */
+                                                                                                                                                $"CREATE OR REPLACE FUNCTION public.{ogcBranch}(id integer) RETURNS TABLE(tree integer, levels smallint[], layer text[], layerproperty jsonb[], layerdetail xml[]) LANGUAGE 'plpgsql' AS $$" +
+                                                                                                                                                " BEGIN" +
+                                                                                                                                                "    RETURN QUERY" +
+                                                                                                                                                "    WITH RECURSIVE cte AS" +
+                                                                                                                                                "    (" +
+                                                                                                                                                "      SELECT branch.* FROM branch" +
+                                                                                                                                                "      WHERE branch.id = $1" + //此处启用参数：id
+                                                                                                                                                "      UNION ALL" +
+                                                                                                                                                "      SELECT branch.* FROM branch" +
+                                                                                                                                                "      INNER JOIN cte" +
+                                                                                                                                                "      ON branch.id = cte.parent" + //自树梢递归回溯至树根
+                                                                                                                                                "    )" +
+                                                                                                                                                "    SELECT * FROM" +
+                                                                                                                                                "    (" +
+                                                                                                                                                "      SELECT FIRST(t.tree) AS tree, ARRAY_AGG(t.level) as levels, ARRAY_AGG(t.name) AS layer, ARRAY_AGG(t.property) AS layerproperty, ARRAY_AGG(tt.detail) AS layerdetail" +
+                                                                                                                                                "      FROM" +
+                                                                                                                                                "      (" +
+                                                                                                                                                "        SELECT * FROM cte ORDER BY level" +
+                                                                                                                                                "      ) AS t" +
+                                                                                                                                                "      LEFT JOIN branch_relation AS tt" +
+                                                                                                                                                "      ON t.id = tt.branch" +
+                                                                                                                                                "    ) AS t" +
+                                                                                                                                                "    WHERE t.tree IS NOT NULL;" +
+                                                                                                                                                " END;" +
+                                                                                                                                                " $$"
+                                                                                                                                            );
 
-                                                                                                                                            _clusterUser.status = true;
-                                                                                                                                        }
-                                                                                                                                        else
-                                                                                                                                            errorMessage = $"Failed to create some indexes of leaf_age - {PostgreSqlHelper.ErrorMessage}";
-                                                                                                                                    }
-                                                                                                                                    else
-                                                                                                                                        errorMessage = $"Failed to create leaf_age - {PostgreSqlHelper.ErrorMessage}";
+                                                                                                                                    _clusterUser
+                                                                                                                                            .status =
+                                                                                                                                        true;
                                                                                                                                 }
                                                                                                                                 else
-                                                                                                                                    errorMessage = $"Failed to create leaf_hits - {PostgreSqlHelper.ErrorMessage}";
+                                                                                                                                    errorMessage =
+                                                                                                                                        $"Failed to create some indexes of leaf_age - {PostgreSqlHelper.ErrorMessage}";
                                                                                                                             }
                                                                                                                             else
-                                                                                                                                errorMessage = $"Failed to create some indexes of leaf_wms - {PostgreSqlHelper.ErrorMessage}";
+                                                                                                                                errorMessage =
+                                                                                                                                    $"Failed to create leaf_age - {PostgreSqlHelper.ErrorMessage}";
                                                                                                                         }
                                                                                                                         else
-                                                                                                                            errorMessage = $"Failed to create leaf_wms - {PostgreSqlHelper.ErrorMessage}";
+                                                                                                                            errorMessage =
+                                                                                                                                $"Failed to create leaf_hits - {PostgreSqlHelper.ErrorMessage}";
                                                                                                                     }
                                                                                                                     else
-                                                                                                                        errorMessage = $"Failed to create some indexes of leaf_tile - {PostgreSqlHelper.ErrorMessage}";
+                                                                                                                        errorMessage =
+                                                                                                                            $"Failed to create some indexes of leaf_wms - {PostgreSqlHelper.ErrorMessage}";
                                                                                                                 }
                                                                                                                 else
-                                                                                                                    errorMessage = $"Failed to create leaf_tile - {PostgreSqlHelper.ErrorMessage}";
+                                                                                                                    errorMessage =
+                                                                                                                        $"Failed to create leaf_wms - {PostgreSqlHelper.ErrorMessage}";
                                                                                                             }
                                                                                                             else
-                                                                                                                errorMessage = $"Failed to create some indexes of leaf_geometry - {PostgreSqlHelper.ErrorMessage}";
+                                                                                                                errorMessage =
+                                                                                                                    $"Failed to create some indexes of leaf_tile - {PostgreSqlHelper.ErrorMessage}";
                                                                                                         }
                                                                                                         else
-                                                                                                            errorMessage = $"Failed to create leaf_geometry - {PostgreSqlHelper.ErrorMessage}";
+                                                                                                            errorMessage =
+                                                                                                                $"Failed to create leaf_tile - {PostgreSqlHelper.ErrorMessage}";
                                                                                                     }
                                                                                                     else
-                                                                                                        errorMessage = $"Failed to create some indexes of leaf_style - {PostgreSqlHelper.ErrorMessage}";
+                                                                                                        errorMessage =
+                                                                                                            $"Failed to create some indexes of leaf_geometry - {PostgreSqlHelper.ErrorMessage}";
                                                                                                 }
                                                                                                 else
-                                                                                                    errorMessage = $"Failed to create leaf_style - {PostgreSqlHelper.ErrorMessage}";
+                                                                                                    errorMessage =
+                                                                                                        $"Failed to create leaf_geometry - {PostgreSqlHelper.ErrorMessage}";
                                                                                             }
                                                                                             else
-                                                                                                errorMessage = $"Failed to create some indexes of leaf_description - {PostgreSqlHelper.ErrorMessage}";
+                                                                                                errorMessage =
+                                                                                                    $"Failed to create some indexes of leaf_style - {PostgreSqlHelper.ErrorMessage}";
                                                                                         }
                                                                                         else
-                                                                                            errorMessage = $"Failed to create leaf_description - {PostgreSqlHelper.ErrorMessage}";
+                                                                                            errorMessage =
+                                                                                                $"Failed to create leaf_style - {PostgreSqlHelper.ErrorMessage}";
                                                                                     }
                                                                                     else
-                                                                                        errorMessage = $"Failed to create some indexes of leaf_route - {PostgreSqlHelper.ErrorMessage}";
+                                                                                        errorMessage =
+                                                                                            $"Failed to create some indexes of leaf_description - {PostgreSqlHelper.ErrorMessage}";
                                                                                 }
                                                                                 else
-                                                                                    errorMessage = $"Failed to create leaf_route - {PostgreSqlHelper.ErrorMessage}";
+                                                                                    errorMessage =
+                                                                                        $"Failed to create leaf_description - {PostgreSqlHelper.ErrorMessage}";
+
                                                                             }
                                                                             else
                                                                                 errorMessage = $"Failed to create some indexes of leaf - {PostgreSqlHelper.ErrorMessage}";
@@ -2901,10 +2988,6 @@ namespace Geosite
         //            Application.DoEvents();
         //            if (PostgreSqlHelper.NonQuery("REINDEX TABLE leaf_relation;", timeout: 0) == null)
         //                throw new Exception(PostgreSqlHelper.ErrorMessage);
-        //            statusText.Text = @"● leaf_route ...";
-        //            Application.DoEvents();
-        //            if (PostgreSqlHelper.NonQuery("REINDEX TABLE leaf_route;", timeout: 0) == null)
-        //                throw new Exception(PostgreSqlHelper.ErrorMessage);
         //            statusText.Text = @"● leaf_description ...";
         //            Application.DoEvents();
         //            if (PostgreSqlHelper.NonQuery("REINDEX TABLE leaf_description;", timeout: 0) == null)
@@ -3009,12 +3092,7 @@ namespace Geosite
                     Application.DoEvents();
                     if (PostgreSqlHelper.NonQuery("VACUUM ANALYZE leaf_relation;", timeout: 0) == null)
                         throw new Exception(PostgreSqlHelper.ErrorMessage);
-
-                    statusText.Text = @"● leaf_route ...";
-                    Application.DoEvents();
-                    if (PostgreSqlHelper.NonQuery("VACUUM ANALYZE leaf_route;", timeout: 0) == null)
-                        throw new Exception(PostgreSqlHelper.ErrorMessage);
-
+                    
                     statusText.Text = @"● leaf_description ...";
                     Application.DoEvents();
                     if (PostgreSqlHelper.NonQuery("VACUUM ANALYZE leaf_description;", timeout: 0) == null)
@@ -4381,8 +4459,7 @@ namespace Geosite
                                                                     () =>
                                                                     {
                                                                         statusCell.Value = "!";
-                                                                        statusCell.ToolTipText =
-                                                                            localError.Message;
+                                                                        statusCell.ToolTipText = $"Feature Id {featureId} : {localError.Message}";
                                                                     }
                                                                 )
                                                             );
@@ -7149,7 +7226,6 @@ namespace Geosite
             ); // 异步执行：RasterWorkStart 函数
         }
 
-        [SuppressMessage("ReSharper.DPA", "DPA0002: Excessive memory allocations in SOH", MessageId = "type: ContingentProperties")]
         private string RasterWorkStart(BackgroundWorker rasterBackgroundWorker, DoWorkEventArgs e)
         {
             if (rasterBackgroundWorker.CancellationPending)

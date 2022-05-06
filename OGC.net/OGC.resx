@@ -10524,14 +10524,6 @@ public (bool Success, string Message, int[] Route) Branch();
 public (bool Success, string Message, long Id, int Type, XElement Property) Leaf();
 
 /// &lt;summary&gt;
-/// 叶子路由（此表主要用于回溯叶子所属枝干的分类谱系）
-/// &lt;/summary&gt;
-/// &lt;param name="leaf"&gt;叶子标识码&lt;/param&gt;
-/// &lt;param name="routeArray"&gt;叶子要素隶属枝干id路由序列，前三个分别是【节点森林（群）编号，文档树序号，文档树标识码】，后面依次为枝干id序列&lt;/param&gt;
-/// &lt;returns&gt;二元组：记录插入是否成功，异常信息&lt;/returns&gt;
-public (bool Success, string Message) leaf_route();
-
-/// &lt;summary&gt;
 /// 叶子样式（扁平化对象序列）
 /// &lt;/summary&gt;
 /// &lt;param name="leaf"&gt;叶子标识码&lt;/param&gt;
