@@ -1730,24 +1730,26 @@ namespace Geosite
             {
                 var userX = GetClusterUserX(serverUrl, serverUser, serverPassword);
                 /*  返回样例：
-                    <User>
-                        <Servers>
-                        <Server> 
-                            <Host></Host>
-                            <Error></Error>
-                            <Username></Username>
-                            <Password></Password>
-                            <Database Size="? MB"></Database>
-                            <Other></Other>
-                            <CommandTimeout></CommandTimeout>
-                            <Port></Port>
-                            <Pooling></Pooling>
-                            <LoadBalanceHosts></LoadBalanceHosts>
-                            <TargetSessionAttributes></TargetSessionAttributes>
-                        </Server>
-                        </Servers>
-                        <Forest MachineName="" OSVersion="" ProcessorCount="" Administrator="False/True"></Forest>
-                    </User>             
+                <User>
+                    <Servers>
+                    <Server> 
+                        <Host></Host>
+                        <Version></Version>
+                        <Copyright></Copyright>
+                        <Error></Error>
+                        <Username></Username>
+                        <Password></Password>
+                        <Database Size="? MB"></Database>
+                        <Other></Other>
+                        <CommandTimeout></CommandTimeout>
+                        <Port></Port>
+                        <Pooling></Pooling>
+                        <LoadBalanceHosts></LoadBalanceHosts>
+                        <TargetSessionAttributes></TargetSessionAttributes>
+                    </Server>
+                    </Servers>
+                    <Forest MachineName="" OSVersion="" ProcessorCount="" Administrator="False/True"></Forest>
+                </User>           
                  */
                 string errorMessage = null;
                 string host = null;
