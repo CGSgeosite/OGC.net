@@ -7,7 +7,7 @@ OGC.net provides a dynamic link library (Geosite.OGC.dll) for embedded developme
 OGC.net is written in 100% C# language and can be recompiled through Visual Studio 2022 / .Net Framework 4.8. Support WinForm & CLI.
 
 For more information about the GeositeServer system, visit https://hub.docker.com/r/geosite/geositeserver
-![OGC net](https://user-images.githubusercontent.com/18747589/146144208-959eb6b4-02b7-48e1-8f53-a811cb7ff4a9.png)
+![OGC net 国际标准化地学大数据转换与存储软件 架构图](https://user-images.githubusercontent.com/18747589/167786593-af302380-dc30-4e43-be5b-6a7c94918e37.png)
 ![main](https://user-images.githubusercontent.com/18747589/140446546-12d14265-36f3-4dfe-b17f-01ba24334dd3.png)
 ![database](https://user-images.githubusercontent.com/18747589/140446576-31b371b0-7bac-40b2-9e66-220e4c7e89f9.png)
 ![OGC net3](https://user-images.githubusercontent.com/18747589/133953864-e796053c-880e-44c3-a121-5ffd14f572e9.png)
