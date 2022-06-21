@@ -10085,7 +10085,7 @@
     "AllowedHosts": "*"
   }
   之后，OGC.net可在局域网里连接GeositeServer并可推送矢量或栅格数据。
-  提示：地质年龄可通过属性字段【age】表达，格式为：【±年:月:日T时:分:秒 或者 ±年-月-日T时-分-秒】
+  提示：地质年龄可通过属性字段【temporal】表达，格式为：【±年:月:日T时:分:秒 或者 ±年-月-日T时-分-秒】
 
 ⦁ 控制台应用
   针对MapGIS、ShapeFile或者Txt/Csv文件，可直接采用命令行方式进行格式转换，用法说明如下：
@@ -10586,13 +10586,13 @@ public (bool Success, string Message, int TypeCode)? leaf_tile();
 public (bool Success, string Message, int TypeCode)? leaf_wms();
 
 /// &lt;summary&gt;
-/// 叶子年龄
+/// 叶子生命期
 /// &lt;/summary&gt;
 /// &lt;param name="leaf"&gt;叶子要素的标识码&lt;/param&gt;
 /// &lt;param name="age"&gt;年龄字符串，格式为：【±年:月:日T时:分:秒 / ±年-月-日T时-分-秒】&lt;/param&gt;
 /// &lt;param name="update"&gt;当记录已存在时是否更新？默认：true&lt;/param&gt;
 /// &lt;returns&gt;二元组：记录插入是否成功，异常信息&lt;/returns&gt;
-public (bool Success, string Message)? leaf_age();
+public (bool Success, string Message)? leaf_temporal();
 
 8、瓦片类型枚举
 public enum TileType{

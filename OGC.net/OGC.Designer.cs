@@ -95,6 +95,8 @@
             this.PostgresRun = new System.Windows.Forms.Button();
             this.pictureBox14 = new System.Windows.Forms.PictureBox();
             this.MIMEBox = new System.Windows.Forms.ComboBox();
+            this.rankList = new System.Windows.Forms.ComboBox();
+            this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.tilewebapi = new System.Windows.Forms.TextBox();
             this.panel3 = new System.Windows.Forms.Panel();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
@@ -108,6 +110,7 @@
             this.ogcCard = new System.Windows.Forms.TabControl();
             this.fileCard = new System.Windows.Forms.TabPage();
             this.databaseCard = new System.Windows.Forms.TabPage();
+            this.panel9 = new System.Windows.Forms.Panel();
             this.panel7 = new System.Windows.Forms.Panel();
             this.panel8 = new System.Windows.Forms.Panel();
             this.dataCards = new System.Windows.Forms.TabControl();
@@ -155,7 +158,6 @@
             this.TileFormatOpenBox = new System.Windows.Forms.TextBox();
             this.pictureBox9 = new System.Windows.Forms.PictureBox();
             this.VectorPage = new System.Windows.Forms.TabPage();
-            this.panel9 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
             this.vectorFilePool = new System.Windows.Forms.DataGridView();
             this.VectorTheme = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -201,6 +203,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox14)).BeginInit();
+            this.groupBox7.SuspendLayout();
             this.panel3.SuspendLayout();
             this.groupBox6.SuspendLayout();
             this.panel12.SuspendLayout();
@@ -211,6 +214,7 @@
             this.ogcCard.SuspendLayout();
             this.fileCard.SuspendLayout();
             this.databaseCard.SuspendLayout();
+            this.panel9.SuspendLayout();
             this.panel8.SuspendLayout();
             this.dataCards.SuspendLayout();
             this.RasterPage.SuspendLayout();
@@ -230,7 +234,6 @@
             this.panel6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox9)).BeginInit();
             this.VectorPage.SuspendLayout();
-            this.panel9.SuspendLayout();
             this.panel4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.vectorFilePool)).BeginInit();
             this.databasePanel.SuspendLayout();
@@ -915,13 +918,12 @@
             this.topologyCheckBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.topologyCheckBox.Cursor = System.Windows.Forms.Cursors.Hand;
             this.topologyCheckBox.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.topologyCheckBox.Location = new System.Drawing.Point(4, 2);
+            this.topologyCheckBox.Location = new System.Drawing.Point(10, 3);
             this.topologyCheckBox.Name = "topologyCheckBox";
             this.topologyCheckBox.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.topologyCheckBox.Size = new System.Drawing.Size(46, 23);
+            this.topologyCheckBox.Size = new System.Drawing.Size(44, 21);
             this.topologyCheckBox.TabIndex = 18;
             this.topologyCheckBox.Text = "      ";
-            this.topologyCheckBox.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.OGCtoolTip.SetToolTip(this.topologyCheckBox, "Topology ? (line and polygon only)\r\nline + length\r\npolygon + perimeter&area");
             this.topologyCheckBox.UseVisualStyleBackColor = true;
             this.topologyCheckBox.CheckedChanged += new System.EventHandler(this.FormEventChanged);
@@ -935,9 +937,9 @@
             this.VectorFileClear.Enabled = false;
             this.VectorFileClear.Font = new System.Drawing.Font("宋体", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.VectorFileClear.ForeColor = System.Drawing.Color.Black;
-            this.VectorFileClear.Location = new System.Drawing.Point(6, 103);
+            this.VectorFileClear.Location = new System.Drawing.Point(6, 121);
             this.VectorFileClear.Name = "VectorFileClear";
-            this.VectorFileClear.Size = new System.Drawing.Size(55, 45);
+            this.VectorFileClear.Size = new System.Drawing.Size(55, 64);
             this.VectorFileClear.TabIndex = 16;
             this.OGCtoolTip.SetToolTip(this.VectorFileClear, "Clear selected");
             this.VectorFileClear.UseVisualStyleBackColor = false;
@@ -951,7 +953,7 @@
             this.VectorOpen.Cursor = System.Windows.Forms.Cursors.Hand;
             this.VectorOpen.Location = new System.Drawing.Point(6, 6);
             this.VectorOpen.Name = "VectorOpen";
-            this.VectorOpen.Size = new System.Drawing.Size(55, 91);
+            this.VectorOpen.Size = new System.Drawing.Size(55, 109);
             this.VectorOpen.TabIndex = 15;
             this.OGCtoolTip.SetToolTip(this.VectorOpen, "Open vector files");
             this.VectorOpen.UseVisualStyleBackColor = false;
@@ -1051,9 +1053,9 @@
             this.PostgresRun.Enabled = false;
             this.PostgresRun.Font = new System.Drawing.Font("Arial", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.PostgresRun.ForeColor = System.Drawing.Color.Black;
-            this.PostgresRun.Location = new System.Drawing.Point(494, 243);
+            this.PostgresRun.Location = new System.Drawing.Point(490, 327);
             this.PostgresRun.Name = "PostgresRun";
-            this.PostgresRun.Size = new System.Drawing.Size(67, 154);
+            this.PostgresRun.Size = new System.Drawing.Size(71, 64);
             this.PostgresRun.TabIndex = 14;
             this.OGCtoolTip.SetToolTip(this.PostgresRun, "Start");
             this.PostgresRun.UseVisualStyleBackColor = false;
@@ -1115,6 +1117,41 @@
             this.MIMEBox.TabIndex = 38;
             this.OGCtoolTip.SetToolTip(this.MIMEBox, "MIME type");
             this.MIMEBox.SelectedIndexChanged += new System.EventHandler(this.FormEventChanged);
+            // 
+            // rankList
+            // 
+            this.rankList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.rankList.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.rankList.FormattingEnabled = true;
+            this.rankList.Items.AddRange(new object[] {
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9"});
+            this.rankList.Location = new System.Drawing.Point(6, 14);
+            this.rankList.Name = "rankList";
+            this.rankList.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.rankList.Size = new System.Drawing.Size(62, 20);
+            this.rankList.TabIndex = 22;
+            this.OGCtoolTip.SetToolTip(this.rankList, "0 for all users, Other escalation");
+            this.rankList.SelectedIndexChanged += new System.EventHandler(this.rankList_SelectedIndexChanged);
+            // 
+            // groupBox7
+            // 
+            this.groupBox7.Controls.Add(this.rankList);
+            this.groupBox7.Location = new System.Drawing.Point(490, 280);
+            this.groupBox7.Name = "groupBox7";
+            this.groupBox7.Size = new System.Drawing.Size(71, 41);
+            this.groupBox7.TabIndex = 23;
+            this.groupBox7.TabStop = false;
+            this.groupBox7.Text = "Rank";
+            this.OGCtoolTip.SetToolTip(this.groupBox7, "Access level");
             // 
             // tilewebapi
             // 
@@ -1256,6 +1293,8 @@
             // 
             // databaseCard
             // 
+            this.databaseCard.Controls.Add(this.groupBox7);
+            this.databaseCard.Controls.Add(this.panel9);
             this.databaseCard.Controls.Add(this.panel7);
             this.databaseCard.Controls.Add(this.panel8);
             this.databaseCard.Controls.Add(this.dataCards);
@@ -1267,6 +1306,16 @@
             this.databaseCard.TabIndex = 2;
             this.databaseCard.Text = "Database";
             this.databaseCard.UseVisualStyleBackColor = true;
+            // 
+            // panel9
+            // 
+            this.panel9.BackColor = System.Drawing.Color.White;
+            this.panel9.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel9.Controls.Add(this.topologyCheckBox);
+            this.panel9.Location = new System.Drawing.Point(490, 243);
+            this.panel9.Name = "panel9";
+            this.panel9.Size = new System.Drawing.Size(71, 30);
+            this.panel9.TabIndex = 17;
             // 
             // panel7
             // 
@@ -1281,9 +1330,9 @@
             this.panel8.BackColor = System.Drawing.Color.White;
             this.panel8.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel8.Controls.Add(this.PostgresLight);
-            this.panel8.Location = new System.Drawing.Point(494, 209);
+            this.panel8.Location = new System.Drawing.Point(490, 209);
             this.panel8.Name = "panel8";
-            this.panel8.Size = new System.Drawing.Size(67, 28);
+            this.panel8.Size = new System.Drawing.Size(71, 28);
             this.panel8.TabIndex = 17;
             // 
             // dataCards
@@ -2022,7 +2071,6 @@
             // 
             // VectorPage
             // 
-            this.VectorPage.Controls.Add(this.panel9);
             this.VectorPage.Controls.Add(this.panel4);
             this.VectorPage.Controls.Add(this.VectorFileClear);
             this.VectorPage.Controls.Add(this.VectorOpen);
@@ -2033,16 +2081,6 @@
             this.VectorPage.TabIndex = 0;
             this.VectorPage.Text = "Vector";
             this.VectorPage.UseVisualStyleBackColor = true;
-            // 
-            // panel9
-            // 
-            this.panel9.BackColor = System.Drawing.Color.White;
-            this.panel9.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel9.Controls.Add(this.topologyCheckBox);
-            this.panel9.Location = new System.Drawing.Point(6, 154);
-            this.panel9.Name = "panel9";
-            this.panel9.Size = new System.Drawing.Size(55, 30);
-            this.panel9.TabIndex = 17;
             // 
             // panel4
             // 
@@ -2459,6 +2497,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox14)).EndInit();
+            this.groupBox7.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.groupBox6.ResumeLayout(false);
             this.groupBox6.PerformLayout();
@@ -2473,6 +2512,7 @@
             this.fileCard.ResumeLayout(false);
             this.fileCard.PerformLayout();
             this.databaseCard.ResumeLayout(false);
+            this.panel9.ResumeLayout(false);
             this.panel8.ResumeLayout(false);
             this.dataCards.ResumeLayout(false);
             this.RasterPage.ResumeLayout(false);
@@ -2503,7 +2543,6 @@
             this.panel6.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox9)).EndInit();
             this.VectorPage.ResumeLayout(false);
-            this.panel9.ResumeLayout(false);
             this.panel4.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.vectorFilePool)).EndInit();
             this.databasePanel.ResumeLayout(false);
@@ -2688,6 +2727,8 @@
         private System.Windows.Forms.TextBox DatabaseSize;
         private System.Windows.Forms.PictureBox pictureBox14;
         private System.Windows.Forms.ComboBox MIMEBox;
+        private System.Windows.Forms.ComboBox rankList;
+        private System.Windows.Forms.GroupBox groupBox7;
     }
 }
 
