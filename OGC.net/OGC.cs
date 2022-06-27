@@ -227,8 +227,8 @@ namespace Geosite
             MIMEBox.Text = defaultvalue ?? "png";
 
             key = rankList.Name;
-            defaultvalue = RegEdit.Getkey(key, "0");
-            rankList.Text = defaultvalue ?? "0";
+            defaultvalue = RegEdit.Getkey(key, "-1");
+            rankList.Text = defaultvalue ?? "-1";
 
             tilesource_SelectedIndexChanged(null, null);
 
@@ -2168,14 +2168,14 @@ namespace Geosite
                                                                             sqlString =
                                                                                 "CREATE TABLE leaf " +
                                                                                 "(" +
-                                                                                "branch INTEGER, id BigInt, rank SmallInt DEFAULT 0, type INT DEFAULT 0, name TEXT, property INTEGER, timestamp INT[], frequency BigInt DEFAULT 0" +
+                                                                                "branch INTEGER, id BigInt, rank SmallInt DEFAULT -1, type INT DEFAULT 0, name TEXT, property INTEGER, timestamp INT[], frequency BigInt DEFAULT 0" +
                                                                                 ",CONSTRAINT leaf_pkey PRIMARY KEY (id)" +
                                                                                 ",CONSTRAINT leaf_cascade FOREIGN KEY (branch) REFERENCES branch (id) MATCH SIMPLE ON DELETE CASCADE NOT VALID" +
                                                                                 ") PARTITION BY HASH (id);" + //为应对大数据，特按哈希键进行了分区，以便提升查询性能
                                                                                 "COMMENT ON TABLE leaf IS '叶子表，此表是本系统第四表，用于存放某个树梢挂接的若干叶子（实体要素）的摘要信息';" +
                                                                                 "COMMENT ON COLUMN leaf.branch IS '叶子要素隶属树梢（父级枝干）标识码';" + //branch表中的id字段 
                                                                                 "COMMENT ON COLUMN leaf.id IS '叶子要素标识码，充当主键（唯一性约束）';" +
-                                                                                "COMMENT ON COLUMN leaf.rank IS '叶子要素访问级别或权限序号，通常用于充当交互访问层的约束条件（比如：0=可编辑；1=可查看属性（默认值）；2=可浏览提示；...）';" +
+                                                                                "COMMENT ON COLUMN leaf.rank IS '叶子要素访问级别或权限序号，通常用于充当交互访问层的约束条件（比如：-1=不限制；0～n=逐级提升访问权限）';" +
                                                                                 "COMMENT ON COLUMN leaf.type IS '叶子要素类别码（0：非空间数据【默认】、1：Point点、2：Line线、3：Polygon面、4：Image地理贴图、10000：Wmts栅格金字塔瓦片服务类型[epsg:0 - 无投影瓦片]、10001：Wmts瓦片服务类型[epsg:4326 - 地理坐标系瓦片]、10002：Wmts栅格金字塔瓦片服务类型[epsg:3857 - 球体墨卡托瓦片]、11000：Tile栅格金字塔瓦片类型[epsg:0 - 无投影瓦片]、11001：Tile栅格金字塔瓦片类型[epsg:4326 - 地理坐标系瓦片]、11002：Tile栅格金字塔瓦片类型[epsg:3857 - 球体墨卡托瓦片]、12000：Tile栅格平铺式瓦片类型[epsg:0 - 无投影瓦片]、12001：Tile栅格平铺式瓦片类型[epsg:4326 - 地理坐标系瓦片]、12002：Tile栅格平铺式瓦片类型[epsg:3857 - 球体墨卡托瓦片]）';" +
                                                                                 "COMMENT ON COLUMN leaf.name IS '叶子要素名称';" +
                                                                                 "COMMENT ON COLUMN leaf.property IS '叶子要素属性架构哈希值';" +
