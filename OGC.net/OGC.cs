@@ -1766,14 +1766,14 @@ namespace Geosite
                     var server = userX.Element("Servers")?.Element("Server");
                     host = server?.Element("Host")?.Value.Trim();
 
-                    //形如：2.2022.6.20
+                    //要求GeositeServer最低版本：2.2022.6.20
                     var versionArray = Regex.Split(server?.Element("Version")?.Value.Trim() ?? "0.0.0.0", @"[\.]+");
-                    var versionMain = int.Parse(versionArray[0]);
-                    var versionYear=int.Parse(versionArray[1]);
-                    var versionMonth=int.Parse(versionArray[2]);
-                    var versionDay = int.Parse(versionArray[3]);
+                    var versionMain = long.Parse(versionArray[0]) * 1e8;
+                    var versionYear = long.Parse(versionArray[1]) * 1e4;
+                    var versionMonth = long.Parse(versionArray[2]) * 1e2;
+                    var versionDay = long.Parse(versionArray[3]);
 
-                    if (versionMain >= 2 && versionYear >= 2022 && versionMonth >= 6 && versionDay >= 20)
+                    if (versionMain + versionYear + versionMonth + versionDay >= 220220620)
                     {
                         if (!int.TryParse(server?.Element("Port")?.Value.Trim(), out port))
                             port = 5432;
